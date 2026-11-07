@@ -2483,14 +2483,20 @@ function bindCopy(r){
     var lines = ['【相处方式小调查】',
       '综合：'+r.total+'/100 · '+band(r.total).n,
       '答案一致度：'+r.agreement+'%',
-      '关系风险：'+Math.round(r.riskAvg)+'/100', ''];
+      '关系风险：'+Math.round(r.riskAvg)+'/100',
+      '三观匹配：'+r.valuesFit+'/100', ''];
     ORDER.forEach(function(k){
-      lines.push(SELF[k].name+' 你'+r.p1[k]+' / TA'+r.p2[k]);
+      lines.push(SELF[k].name+'  你'+r.p1[k]+' / '+PRONOUN.p+r.p2[k]);
     });
     lines.push('');
-    lines.push('最踏实：'+SELF[r.high[0]].name);
-    lines.push('最需要补：'+SELF[r.low[0]]);
-    lines.push(FIX[r.low[0]][0]);
+    lines.push('最踏实：'+SELF[r.high[0]].name+'（'+r.combo[r.high[0]]+'）');
+    lines.push('最需要补：'+SELF[r.low[0]].name+'（'+r.combo[r.low[0]]+'）');
+    lines.push('→ '+P(FIX[r.low[0]][0]));
+    if (r.axGap[r.worstAxis] >= 30){
+      lines.push('三观差最远：'+AX[r.worstAxis].name+'（相差 '+r.axGap[r.worstAxis]+' 分）');
+    }
+    lines.push('');
+    lines.push('—— 一起走很久 · 双人自评');
     copy(lines.join('\n'),'结果已复制');
   };
 }
