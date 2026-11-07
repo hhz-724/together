@@ -273,6 +273,13 @@ details.ref p b{color:var(--ink2);font-weight:700}
   box-shadow:0 12px 32px rgba(46,39,35,.3);letter-spacing:.02em}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
 
+@keyframes optIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.qin .q,.qin .qhint,.qin .opt{will-change:transform,opacity}
+.autotip{text-align:center;font-size:11px;color:var(--ink4);margin-top:14px;letter-spacing:.03em}
+.navrow{justify-content:space-between}
+.navrow .tlink{flex:0 0 auto}
+.opt{animation:optIn .3s cubic-bezier(.2,.8,.3,1) both}
+
 @media (max-width:380px){
   .wrap{padding:18px 14px 40px}
   h1{font-size:24px}
@@ -301,8 +308,9 @@ details.ref p b{color:var(--ink2);font-weight:700}
         <div><b>0</b><span>上传</span></div>
       </div>
       <hr>
-      <button class="btn" id="goStart">我先做</button>
-      <button class="btn ghost" id="goJoin" style="margin-top:10px">我拿到号码了</button>
+      <button class="btn" id="goStart">我开始答题</button>
+      <button class="btn ghost" id="goJoin" style="margin-top:10px">我有 TA 的号码，接着答</button>
+      <button class="btn ghost" id="goBoth" style="margin-top:10px">我们俩都答完了，直接看结果</button>
       <p class="note">不用注册，答案不离开手机——它们只被编进你手里那串号码。</p>
     </div>
     <div class="foot">题目按公开的关系研究设计 · 结果只是参考</div>
@@ -311,15 +319,16 @@ details.ref p b{color:var(--ink2);font-weight:700}
   <section id="s-quiz" class="hide">
     <div class="pnum"><span id="pStep">1 / 51</span><span id="pRole"></span></div>
     <div class="pbar"><i id="pFill"></i></div>
-    <div class="card in">
+    <div class="card qin" id="qCard">
       <div class="q" id="qText"></div>
       <div class="qhint" id="qHint"></div>
       <div id="opts"></div>
       <div class="navrow">
-        <button class="tlink" id="qBack">上一题</button>
-        <button class="btn" id="qNext" disabled>下一题</button>
+        <button class="tlink" id="qBack">← 上一题</button>
+        <button class="tlink" id="qSkip">跳过 →</button>
       </div>
     </div>
+    <p class="autotip">选中就自动进入下一题</p>
   </section>
 
   <section id="s-code" class="hide">
@@ -352,6 +361,25 @@ details.ref p b{color:var(--ink2);font-weight:700}
         <button class="btn" id="doJoin">核对并开始</button>
         <button class="tlink" id="enterBack" style="display:block;margin:10px auto 0">返回</button>
       </div>
+    </div>
+  </section>
+
+  <section id="s-both" class="hide">
+    <div class="card">
+      <h1 style="font-size:22px">输入两个人的号码</h1>
+      <p class="lead">各自做完拿到的号码，按顺序填进来，直接出完整分析。</p>
+      <div style="margin-top:18px">
+        <label class="fl" for="codeA">第一个号码</label>
+        <input class="code" id="codeA" maxlength="34" inputmode="text" autocomplete="off"
+               autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XX">
+        <label class="fl" for="codeB" style="margin-top:14px">第二个号码</label>
+        <input class="code" id="codeB" maxlength="34" inputmode="text" autocomplete="off"
+               autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XX">
+        <div class="err" id="bothErr"></div>
+        <button class="btn" id="doBoth">查看结果</button>
+        <button class="tlink" id="bothBack" style="display:block;margin:10px auto 0">返回</button>
+      </div>
+      <p class="note">分不清哪个是哪个也没关系——顺序只影响"你 / TA"的标注，不影响匹配计算。</p>
     </div>
   </section>
 
@@ -1118,7 +1146,7 @@ var PERC_MEANING = {
    ============================================================ */
 var S = {role:null, partnerAns:null, ans:[], idx:0, result:null, code:'', busy:false};
 function $(id){return document.getElementById(id);}
-var SECTIONS = ['s-home','s-quiz','s-code','s-enter','s-result'];
+var SECTIONS = ['s-home','s-quiz','s-code','s-enter','s-both','s-result'];
 function show(id){
   SECTIONS.forEach(function(s){ var e=$(s); if(e) e.classList.add('hide'); });
   var el = $(id); if(!el) return;
@@ -1145,66 +1173,172 @@ function copy(text, ok){
 }
 
 /* ============================================================
-   答题流程
+   答题流程（顺滑版）
+   - 选中即自动跳下一题，不再需要点按钮
+   - 上一题/撤销，误点也能退回来
+   - 选项本身有按压反馈，切换有滑动过渡
+   - 底部常驻进度，随时知道还剩多少
    ============================================================ */
 var KEYS = ['A','B','C','D'];
+var ADV_DELAY = 190;      /* 自动前进延迟，够看到选中反馈 */
+var advTimer = null;
+
 function startQuiz(role, partnerAns){
-  S.role = role; S.partnerAns = partnerAns || null;
-  S.ans = []; for (var i=0;i<NQ;i++) S.ans.push(null);
-  S.idx = 0; S.result = null;
-  show('s-quiz'); renderQ();
+  S.role = role;
+  S.partnerAns = partnerAns || null;
+  S.ans = [];
+  for (var i=0;i<NQ;i++) S.ans.push(null);
+  S.idx = 0;
+  S.result = null;
+  show('s-quiz');
+  renderQ();
 }
+
+function answerCount(){
+  var n = 0;
+  for (var i=0;i<NQ;i++) if (S.ans[i] !== null) n++;
+  return n;
+}
+
 function renderQ(){
   var q = QS[S.idx];
   if (!q){ toast('题目出错了，请刷新'); return; }
-  $('pStep').textContent = (S.idx+1)+' / '+NQ;
-  $('pRole').textContent = (S.role==='starter')?'先做的这一位':'轮到你';
-  $('pFill').style.width = Math.round(S.idx/NQ*100)+'%';
+
+  $('pStep').innerHTML = '<b>'+(S.idx+1)+'</b> / '+NQ;
+  $('pRole').textContent = (S.role==='starter') ? '先做的这一位' : '轮到你';
+  $('pFill').style.width = Math.round((S.idx+1)/NQ*100)+'%';
+
+  /* 题目切换动画 */
+  var card = $('qCard');
+  if (card){
+    card.classList.remove('qin');
+    void card.offsetWidth;
+    card.classList.add('qin');
+  }
+
   $('qText').textContent = q.q;
   var hint = '';
-  if (q.d && SELF[q.d]) hint = '关于你自己在这段关系里的情况';
-  else if (q.d && PERC[q.d]) hint = '关于你怎么看他';
+  if (q.d && SELF[q.d]) hint = '关于你自己在这段关系里';
+  else if (q.d && PERC[q.d]) hint = '关于你怎么看 TA';
   else if (q.d && RISK[q.d]) hint = '关于你们现在的状态';
+  else if (q.d === 'dur') hint = '会影响判读标准';
+  else if (q.ax) hint = '没有对错，选更像你的那个';
   $('qHint').textContent = hint;
 
-  var box = $('opts'); box.innerHTML='';
+  var box = $('opts');
+  box.innerHTML = '';
   for (var i=0;i<q.o.length;i++){
     (function(i){
       var b = document.createElement('button');
-      b.type='button';
-      b.className='opt'+(S.ans[S.idx]===i?' sel':'');
-      var k=document.createElement('span'); k.className='k'; k.textContent=KEYS[i];
-      var t=document.createElement('span'); t.textContent=q.o[i].t;
+      b.type = 'button';
+      b.className = 'opt' + (S.ans[S.idx] === i ? ' sel' : '');
+      b.style.animationDelay = (i*34)+'ms';
+      b.style.animation = 'optIn .3s cubic-bezier(.2,.8,.3,1) both';
+      var k = document.createElement('span'); k.className='k'; k.textContent=KEYS[i];
+      var t = document.createElement('span'); t.textContent=q.o[i].t;
       b.appendChild(k); b.appendChild(t);
       b.addEventListener('click', function(){ choose(i); });
       box.appendChild(b);
     })(i);
   }
-  var next = $('qNext');
-  next.disabled = (S.ans[S.idx]===null);
-  next.textContent = (S.idx===NQ-1)
-    ? (S.role==='starter'?'完成，生成号码':'完成，查看结果')
-    : '下一题';
-  $('qBack').style.visibility = (S.idx===0)?'hidden':'visible';
+
+  updateNav();
 }
+
+function updateNav(){
+  var back = $('qBack');
+  if (back){
+    var canBack = S.idx > 0 || S.ans[S.idx] !== null;
+    back.style.visibility = canBack ? 'visible' : 'hidden';
+    back.textContent = (S.idx > 0) ? '← 上一题' : '← 改一下';
+  }
+  var skip = $('qSkip');
+  if (skip) skip.style.visibility = (S.idx < NQ-1) ? 'visible' : 'hidden';
+}
+
+function saveProgress(){
+  try{
+    sessionStorage.setItem('hw_progress', JSON.stringify({
+      role:S.role, idx:S.idx, ans:S.ans, partner:S.partnerAns || null
+    }));
+  }catch(_){}
+}
+function clearProgress(){
+  try{ sessionStorage.removeItem('hw_progress'); }catch(_){}
+}
+function restoreProgress(){
+  try{
+    var raw = sessionStorage.getItem('hw_progress');
+    if (!raw) return false;
+    var d = JSON.parse(raw);
+    if (!d || !d.ans || d.ans.length !== NQ) return false;
+    var answered = d.ans.filter(function(x){ return x !== null; }).length;
+    if (answered < 2) return false;
+    S.role = d.role;
+    S.partnerAns = d.partner || null;
+    S.ans = d.ans;
+    S.idx = Math.min(d.idx || 0, NQ-1);
+    show('s-quiz');
+    renderQ();
+    return true;
+  }catch(_){ return false; }
+}
+
 function choose(i){
+  if (S.busy) return;
   S.ans[S.idx] = i;
+  saveProgress();
   var kids = $('opts').children;
   for (var j=0;j<kids.length;j++) kids[j].classList.remove('sel');
   if (kids[i]) kids[i].classList.add('sel');
-  $('qNext').disabled = false;
+
+  /* 轻微震动反馈（支持的设备） */
+  if (navigator.vibrate) { try { navigator.vibrate(8); } catch(_){} }
+
+  clearTimeout(advTimer);
+  advTimer = setTimeout(function(){
+    if (S.idx < NQ-1){
+      S.idx++;
+      renderQ();
+    } else {
+      finishQuiz();
+    }
+  }, ADV_DELAY);
 }
-function nextQ(){
-  if (S.ans[S.idx] === null){ toast('先选一个再继续'); return; }
-  if (S.idx < NQ-1){ S.idx++; renderQ(); try{window.scrollTo(0,0);}catch(_){} }
-  else finishQuiz();
+
+function goBack(){
+  clearTimeout(advTimer);
+  saveProgress();
+  if (S.idx > 0){
+    S.idx--;
+    renderQ();
+  } else {
+    /* 第一题时清空当前选择，方便改 */
+    S.ans[0] = null;
+    renderQ();
+  }
 }
+
+function skipQ(){
+  clearTimeout(advTimer);
+  if (S.idx < NQ-1){ S.idx++; renderQ(); }
+}
+
 function finishQuiz(){
+  clearTimeout(advTimer);
   if (S.busy) return;
   S.busy = true;
   try{
+    /* 找第一道没答的 */
     for (var i=0;i<NQ;i++){
-      if (S.ans[i] === null){ S.busy=false; S.idx=i; renderQ(); toast('第 '+(i+1)+' 题还没选'); return; }
+      if (S.ans[i] === null){
+        S.busy = false;
+        var wasHere = (i === S.idx);
+        S.idx = i;
+        renderQ();
+        toast(wasHere ? '这题还没选' : ('第 '+(i+1)+' 题还没选'));
+        return;
+      }
     }
     if (S.role === 'starter'){
       var mine = scorePerson(S.ans);
@@ -1215,11 +1349,15 @@ function finishQuiz(){
       $('selfPreview').innerHTML =
         '按你一个人的答案，这段关系在你这里大概是 <b>'+Math.round(selfAvg)+' / 100</b>，'+
         '最踏实的一项是「'+SELF[best].name+'」。<br>'+
-        '完整分数、TA 眼中的你、以及风险提示，都要等 TA 也做完才会出现——两个视角放一起才有意义。';
+        '完整分数、TA 眼中的你、以及风险提示，要等 TA 也做完。两个视角放一起才有意义。';
+      clearProgress();
       show('s-code');
     } else {
       var r = evaluate(S.partnerAns, S.ans);
-      S.result = r; renderResult(r); show('s-result');
+      S.result = r;
+      renderResult(r);
+      clearProgress();
+      show('s-result');
     }
   } catch(e){
     console.error(e);
@@ -1604,9 +1742,54 @@ function bindCopy(r){
    ============================================================ */
 $('goStart').addEventListener('click', function(){ startQuiz('starter'); });
 $('goJoin').addEventListener('click', function(){ $('codeErr').textContent=''; show('s-enter'); });
+$('goBoth').addEventListener('click', function(){
+  $('bothErr').textContent='';
+  show('s-both');
+});
+$('bothBack').addEventListener('click', function(){ show('s-home'); });
+
+/* 双号码直接出结果 */
+function setupCodeInput(id, errId){
+  var inp = $(id);
+  inp.addEventListener('input', function(e){
+    var raw = e.target.value.toUpperCase().replace(/[^0-9A-F]/g,'').slice(0, CHEX);
+    var out = raw.replace(/(.{4})(?=.)/g,'$1-');
+    if (e.target.value !== out) e.target.value = out;
+    if (errId) $(errId).textContent = '';
+  });
+  inp.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') $('doBoth').click();
+  });
+}
+setupCodeInput('codeA','bothErr');
+setupCodeInput('codeB','bothErr');
+
+$('doBoth').addEventListener('click', function(){
+  var a = $('codeA').value, b = $('codeB').value;
+  if (!a.trim() && !b.trim()){ $('bothErr').textContent = '请先填入两个号码'; return; }
+  if (!a.trim()){ $('bothErr').textContent = '还差第一个号码'; return; }
+  if (!b.trim()){ $('bothErr').textContent = '还差第二个号码'; return; }
+  var pa = parseCode(a);
+  if (pa.err){ $('bothErr').textContent = '第一个号码：' + pa.err; return; }
+  var pb = parseCode(b);
+  if (pb.err){ $('bothErr').textContent = '第二个号码：' + pb.err; return; }
+  $('bothErr').textContent = '';
+  try{
+    var r = evaluate(pa.ans, pb.ans);
+    S.result = r;
+    S.role = 'both';
+    S.partnerAns = pb.ans;
+    renderResult(r);
+    clearProgress();
+    show('s-result');
+  } catch(e){
+    console.error(e);
+    $('bothErr').textContent = '计算时出错了：' + (e && e.message ? e.message : e);
+  }
+});
 $('enterBack').addEventListener('click', function(){ show('s-home'); });
-$('qBack').addEventListener('click', function(){ if(S.idx>0){ S.idx--; renderQ(); } });
-$('qNext').addEventListener('click', nextQ);
+$('qBack').addEventListener('click', goBack);
+$('qSkip').addEventListener('click', skipQ);
 $('again').addEventListener('click', function(){ S.result=null; show('s-home'); });
 $('doJoin').addEventListener('click', function(){
   var r = parseCode($('codeIn').value);
@@ -1631,10 +1814,18 @@ $('copyInvite').addEventListener('click', function(){
 });
 document.addEventListener('keydown', function(e){
   if ($('s-quiz').classList.contains('hide')) return;
+  if (e.key === 'ArrowLeft'){ goBack(); return; }
+  if (e.key === 'ArrowRight'){ skipQ(); return; }
   var i = KEYS.indexOf(String(e.key||'').toUpperCase());
   if (i>=0 && QS[S.idx] && QS[S.idx].o[i]) choose(i);
-  if (e.key === 'Enter') nextQ();
 });
+/* 页面加载时尝试恢复未完成的答题 */
+(function(){
+  if (!restoreProgress()){
+    /* 没有暂存就正常停留在首页 */
+  }
+})();
+
 window.__diag = function(){
   return {NQ:NQ, NS:NS, DMAX:DMAX, code:makeCode(S.ans.map(function(v){return v===null?0:v;}))};
 };
