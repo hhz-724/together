@@ -382,21 +382,70 @@ details.ref p b{color:var(--ink2);font-weight:700}
     <p class="autotip">选中就自动进入下一题</p>
   </section>
 
+  <section id="s-self" class="hide">
+    <div class="card">
+      <div class="score-head">
+        <div class="ring">
+          <svg width="172" height="172" viewBox="0 0 172 172" aria-hidden="true">
+            <circle cx="86" cy="86" r="72" fill="none" stroke="#f0e8df" stroke-width="11"/>
+            <circle id="selfArc" cx="86" cy="86" r="72" fill="none" stroke="url(#ringGrad2)"
+              stroke-width="11" stroke-linecap="round"
+              stroke-dasharray="452.4" stroke-dashoffset="452.4"
+              style="transition:stroke-dashoffset 1.1s cubic-bezier(.22,.9,.3,1)"/>
+            <defs>
+              <linearGradient id="ringGrad2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#b96a63"/>
+                <stop offset="100%" stop-color="#c98a5e"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="val"><b id="selfNum">—</b><span>你的关系体感</span></div>
+        </div>
+        <div class="band" id="selfBand"></div>
+        <div class="say" id="selfSay"></div>
+      </div>
+
+      <h3 class="sec">你是哪一种 <i>从你的答案读出来</i></h3>
+      <div id="selfType"></div>
+
+      <h3 class="sec">你的八个方面 <i>你自己的视角</i></h3>
+      <div id="selfDims"></div>
+
+      <h3 class="sec">你的相处风格 <i>吵架时你是什么样</i></h3>
+      <div id="selfStyle"></div>
+
+      <h3 class="sec">你可以先做的三件事</h3>
+      <div class="todo" id="selfTodo"></div>
+
+      <hr>
+      <p class="note" id="selfNextHint"></p>
+      <div class="btns" style="margin-top:14px">
+        <button class="btn sm" id="selfCopy">复制我的分析</button>
+        <button class="btn ghost sm" id="selfToCode">去拿配对码</button>
+      </div>
+    </div>
+  </section>
+
   <section id="s-code" class="hide">
     <div class="card">
-      <h1 style="font-size:22px">把这串号码给 TA</h1>
-      <p class="lead">对方打开同一个网址，点「我拿到号码了」，输进来、答完，就能看到完整分析。</p>
+      <h1 style="font-size:22px">把这串配对码给 TA</h1>
+      <p class="lead">TA 打开同一个网址，点「我有 TA 的号码」，输进这串码、答完，就能看到你们两人的完整分析。</p>
       <div class="codebox">
-        <div class="l">你的号码</div>
+        <div class="l">你的配对码</div>
         <div class="v" id="codeVal">——</div>
         <div class="h">不区分大小写，横线可以不打</div>
       </div>
       <div class="btns">
-        <button class="btn sm" id="copyCode">复制号码</button>
+        <button class="btn sm" id="copyCode">复制配对码</button>
         <button class="btn ghost sm" id="copyInvite">复制邀请</button>
       </div>
+      <p class="note">这串码里只有你那 51 道题的选择，没有别的东西。TA 答完后，你们两人的分析会一起显示。</p>
       <hr>
-      <p class="note" id="selfPreview"></p>
+      <p class="note" style="margin-top:0">如果 TA 已经答完了，也可以直接用两串码看结果：</p>
+      <div class="btns" style="margin-top:10px">
+        <button class="btn ghost sm" id="codeBackSelf">← 我的分析</button>
+        <button class="btn ghost sm" id="codeToBoth">双方码看结果</button>
+      </div>
     </div>
   </section>
 
@@ -461,13 +510,13 @@ details.ref p b{color:var(--ink2);font-weight:700}
       <h3 class="sec">你们是什么样的两个人 <i>各自的类型画像</i></h3>
       <div id="rPortrait"></div>
 
-      <h3 class="sec">TA 眼中的你 <i>对方怎么描述你 vs 你怎么说自己</i></h3>
+      <h3 class="sec"><span id="seeYouTitle">TA 眼中的你</span> <i>TA 怎么描述你 vs 你怎么说自己</i></h3>
       <div id="rSeeYou"></div>
 
       <h3 class="sec">三观合不合 <i>不是好坏，是站得近不近</i></h3>
       <div id="rValues"></div>
 
-      <h3 class="sec">八个方面 <i>红 = 你 · 绿 = TA</i></h3>
+      <h3 class="sec">八个方面 <i>红 = 你 · <span id="dimLegend">TA</span></i></h3>
       <div id="rDims"></div>
 
       <h3 class="sec">关系风险 <i>脆弱性，不是证据</i></h3>
@@ -514,10 +563,10 @@ var SELF = {
   aut:{name:'各自的空间',w:.05,hi:'能各自完整，也能在一起。',lo:'靠得越近，越需要给彼此留一点缝。'}
 };
 var PERC = {
-  pwarm:{name:'TA 的温度',w:.30,hi:'你觉得他是暖的，这很可能真的是暖的。',lo:'你不太感受到他的在意，或他表达的方式你接不住。'},
-  pcom:{name:'TA 的投入',w:.28,hi:'你相信他把这段关系当回事。',lo:'你不太确定他有多认真——这是最该当面问清的一件事。'},
-  pstab:{name:'TA 的稳定',w:.22,hi:'他的情绪基本可预期，你不用小心翼翼地说话。',lo:'他的起伏让你需要常常揣摩气氛。'},
-  popen:{name:'TA 好不好谈',w:.20,hi:'有话能说，这是最值钱的一项。',lo:'你有一些话一直没敢讲，或讲了他也不接。'}
+  pwarm:{name:'TA 的温度',w:.30,hi:'你觉得 {P} 是暖的，这很可能真的是暖的。',lo:'你不太感受到 {P} 的在意，或 {P} 表达的方式你接不住。'},
+  pcom:{name:'TA 的投入',w:.28,hi:'你相信 {P} 把这段关系当回事。',lo:'你不太确定 {P} 有多认真——这是最该当面问清的一件事。'},
+  pstab:{name:'TA 的稳定',w:.22,hi:'{P} 的情绪基本可预期，你不用小心翼翼地说话。',lo:'{P} 的起伏让你需要常常揣摩气氛。'},
+  popen:{name:'TA 好不好谈',w:.20,hi:'有话能说，这是最值钱的一项。',lo:'你有一些话一直没敢讲，或讲了 {P} 也不接。'}
 };
 var RISK = {
   ralt:{name:'外部引力',w:.30},
@@ -562,7 +611,7 @@ var QS = [
       {t:'到现在那件事还悬着',s:0}]},
   /* -- 4 -- */
   {q:'对方半天没回消息，你那半天：',d:'sec',o:[
-      {t:'完全没在意，各忙各的',s:3},{t:'扫过一眼，知道他忙就算了',s:2},
+      {t:'完全没在意，各忙各的',s:3},{t:'扫过一眼，知道 {P} 在忙就算了',s:2},
       {t:'会多看几次手机',s:1},{t:'会开始想很多',s:0}]},
   /* -- 5 -- */
   {q:'遇到心烦的事，你更习惯：',o:[
@@ -585,7 +634,7 @@ var QS = [
       {t:'看当时的心情'},{t:'喜欢就买，不太纠结'}]},
   /* -- 10 -- */
   {q:'想到接下来大半年，你脑子里浮现的是：',d:'com',o:[
-      {t:'有不少想一起去做的事',s:3},{t:'有点模糊，但画面里有他',s:2},
+      {t:'有不少想一起去做的事',s:3},{t:'有点模糊，但画面里有 {P}',s:2},
       {t:'走一步看一步',s:1},{t:'不太确定那时候还在不在一起',s:0}]},
   /* -- 11 -- */
   {q:'你们有自己的固定节目吗？（专属称呼、晚安、周末那顿饭）',d:'mea',o:[
@@ -595,21 +644,21 @@ var QS = [
       {t:'很挑，但固定那几家'},{t:'什么都行，好吃就行'},
       {t:'喜欢尝新的'},{t:'吃饱最重要'}]},
   /* -- 13 -- */
-  {q:'难过的时候，你觉得他会怎么反应？',d:'pwarm',o:[
+  {q:'难过的时候，你觉得 {P} 会怎么反应？',d:'pwarm',o:[
       {t:'会放下手里的事来陪我',s:3},{t:'会安慰，但有点笨拙',s:2},
       {t:'会给建议，让我别想太多',s:1},{t:'好像不太知道怎么接',s:0}]},
   /* -- 14 -- */
-  {q:'关于你们的未来，他的态度让你觉得：',d:'pcom',o:[
-      {t:'他是认真在计划的',s:3},{t:'他是愿意的，但没具体说过',s:2},
-      {t:'他不太主动提',s:1},{t:'他好像在回避这个话题',s:0}]},
+  {q:'关于你们的未来，{P} 的态度让你觉得：',d:'pcom',o:[
+      {t:'{P} 是认真在计划的',s:3},{t:'{P} 是愿意的，但没具体说过',s:2},
+      {t:'{P} 不太主动提',s:1},{t:'{P} 好像在回避这个话题',s:0}]},
   /* -- 15 -- */
   {q:'你们的生活节奏：',d:'fut',o:[
       {t:'挺合得来',s:3},{t:'需要协调，但还顺',s:2},
       {t:'经常对不上',s:1},{t:'几乎是反着的',s:0}]},
   /* -- 16 -- */
-  {q:'他有你不参与的爱好和朋友圈，你觉得：',d:'aut',o:[
+  {q:'{P} 有你不参与的爱好和朋友圈，你觉得：',d:'aut',o:[
       {t:'挺好，各有各的',s:3},{t:'没什么感觉',s:2},
-      {t:'偶尔会有点不安',s:1},{t:'希望他都带上我',s:0}]},
+      {t:'偶尔会有点不安',s:1},{t:'希望 {P} 都带上我',s:0}]},
   /* -- 17 -- */
   {q:'理想中的相处频率大概是：',d:'close',ax:1,o:[
       {t:'各过各的，一周见两三次就够了'},{t:'常见面，但各自也有自己的事'},
@@ -617,14 +666,14 @@ var QS = [
   /* -- 18 -- */
   {q:'对方和朋友出去玩一整天、没怎么回消息，你：',d:'close',ax:1,o:[
       {t:'完全没问题，我也在忙'},{t:'还好，晚上聊两句就行'},
-      {t:'会希望他中途说一声'},{t:'会希望他早点回来'}]},
+      {t:'会希望 {P} 中途说一声'},{t:'会希望 {P} 早点回来'}]},
   /* -- 19 -- */
   {q:'看到别人的恋爱（社交平台、朋友），你心里：',d:'ralt',o:[
       {t:'没什么感觉，我这样挺好',s:0},{t:'偶尔会想"要是…"',s:1},
       {t:'会有点羡慕',s:2},{t:'经常觉得别人的更好',s:3}]},
   /* -- 20 -- */
   {q:'如果有个人对你明显示好，你会：',d:'rbound',o:[
-      {t:'立刻划清，还会告诉他',s:0},{t:'保持距离，但不会特意提',s:1},
+      {t:'立刻划清，还会告诉 {P}',s:0},{t:'保持距离，但不会特意提',s:1},
       {t:'会有点受用，先不动',s:2},{t:'大概会继续聊下去',s:3}]},
   /* -- 21 -- */
   {q:'结婚以后，和父母的距离：',d:'fam',ax:1,o:[
@@ -633,14 +682,14 @@ var QS = [
   /* -- 22 -- */
   {q:'父母对你们的事有意见时：',d:'fam',ax:1,o:[
       {t:'我们两个决定就好'},{t:'会听，但最后自己拿主意'},
-      {t:'会认真考虑他们的想法'},{t:'多半会按父母的意思来'}]},
+      {t:'会认真考虑爸妈的想法'},{t:'多半会按父母的意思来'}]},
   /* -- 23 -- */
-  {q:'他心情不好的时候，通常：',d:'pstab',o:[
+  {q:'{P} 心情不好的时候，通常：',d:'pstab',o:[
       {t:'会说，也能自己缓过来',s:3},{t:'会说，但需要一阵',s:2},
       {t:'看得出来，但问也不说',s:1},{t:'会明显影响我们两个',s:0}]},
   /* -- 24 -- */
-  {q:'如果有个问题你必须跟他谈，你会：',d:'popen',o:[
-      {t:'直接说，我知道他会听',s:3},{t:'会说，但要挑时机',s:2},
+  {q:'如果有个问题你必须跟 {P} 谈，你会：',d:'popen',o:[
+      {t:'直接说，我知道 {P} 会听',s:3},{t:'会说，但要挑时机',s:2},
       {t:'犹豫很久才开得了口',s:1},{t:'想想还是算了',s:0}]},
   /* -- 25 -- */
   {q:'如果有个很好的工作机会，但要异地两年：',d:'work',ax:1,o:[
@@ -649,7 +698,7 @@ var QS = [
   /* -- 26 -- */
   {q:'你更希望对方是什么样的事业状态：',d:'work',ax:1,o:[
       {t:'稳定轻松就好，钱少点没关系'},{t:'稳定，但也别太闲'},
-      {t:'有上进心，忙一点没关系'},{t:'事业心强，我会支持他拼'}]},
+      {t:'有上进心，忙一点没关系'},{t:'事业心强，我会支持 {P} 拼'}]},
   /* -- 27 -- */
   {q:'吵完之后，你通常会：',d:'style',o:[
       {t:'当场就说完了，说完就过去了',s:0},{t:'会不舒服一阵，但不至于记着',s:1},
@@ -683,7 +732,7 @@ var QS = [
       {t:'会说一些过后后悔的话',s:1},{t:'容易翻旧账、说狠话',s:0}]},
   /* -- 35 -- */
   {q:'有件事让你不太舒服，你会怎么处理？',d:'sec',o:[
-      {t:'直接说出来，不怕他不高兴',s:3},{t:'找机会说，措辞会想一下',s:2},
+      {t:'直接说出来，不怕 {P} 不高兴',s:3},{t:'找机会说，措辞会想一下',s:2},
       {t:'憋着，怕说了会吵起来',s:1},{t:'憋着，然后自己越想越难受',s:0}]},
   /* -- 36 -- */
   {q:'对方跟你讲话的时候，你通常在：',d:'rsp',o:[
@@ -708,19 +757,19 @@ var QS = [
       {t:'很自然，各忙各的很舒服',s:3},{t:'能接受，偶尔有点空',s:2},
       {t:'会想找点事一起做',s:1},{t:'安静下来就不太自在',s:0}]},
   /* -- 42 -- */
-  {q:'你说累的时候，他一般会：',d:'pwarm',o:[
+  {q:'你说累的时候，{P} 一般会：',d:'pwarm',o:[
       {t:'马上问怎么了，还会做点什么',s:3},{t:'会安慰几句',s:2},
       {t:'说"那就早点睡"',s:1},{t:'好像没太在意',s:0}]},
   /* -- 43 -- */
-  {q:'关于"我们以后"，他主动提过吗？',d:'pcom',o:[
+  {q:'关于"我们以后"，{P} 主动提过吗？',d:'pcom',o:[
       {t:'提过，还很具体',s:3},{t:'提过，比较笼统',s:2},
       {t:'很少主动提',s:1},{t:'一次都没有',s:0}]},
   /* -- 44 -- */
-  {q:'他情绪上来的时候，你们的沟通：',d:'pstab',o:[
+  {q:'{P} 情绪上来的时候，你们的沟通：',d:'pstab',o:[
       {t:'还是能讲道理',s:3},{t:'会先冷一下，然后能谈',s:2},
       {t:'很难沟通，要等很久',s:1},{t:'会变成互相伤害',s:0}]},
   /* -- 45 -- */
-  {q:'你提出不同意见时，他通常：',d:'popen',o:[
+  {q:'你提出不同意见时，{P} 通常：',d:'popen',o:[
       {t:'会认真听，还会问为什么',s:3},{t:'会听，但不太回应',s:2},
       {t:'容易当成指责',s:1},{t:'会直接结束对话',s:0}]},
   /* -- 46 -- */
@@ -1081,7 +1130,7 @@ var RISK_TXT = {
 /* 每个维度的「具体怎么做」 */
 var FIX = {
   rep:[
-    '下次不舒服的时候，当天开口，只说"我当时的感觉"，不评价他是什么人。',
+    '下次不舒服的时候，当天开口，只说"我当时的感觉"，不评价 {P} 是什么人。',
     '定一个只有你们知道的暂停信号，谁先说出来，就都先停十分钟。',
     '吵完别只等时间冲淡，加一句"我们下次怎么办"，把这次变成经验。'],
   sec:[
@@ -1099,7 +1148,7 @@ var FIX = {
   com:[
     '把"以后再说"的事挑一件，这个月给它一个具体的时间和方案。',
     '各自写三个"明年想一起做的事"，交换看重叠的部分。',
-    '把自己的担心直接说出来，别用试探的方式让他猜。'],
+    '把自己的担心直接说出来，别用试探的方式让 {P} 猜。'],
   mea:[
     '定一个小仪式：每周固定一顿饭、一句只在你们之间说的话、一个专属称呼。',
     '把钱、节日、见家人这三件事里最别扭的一件，找个都不累的时间摊开聊。',
@@ -1115,14 +1164,14 @@ var FIX = {
 };
 var PERC_FIX = {
   pwarm:{
-    hi:'你觉得他是暖的，那就把这份感受说给他听——被看见的付出才会持续。',
-    lo:'你不太感受到他的在意。先别下结论说"他不爱我"，而是告诉他具体的场景："上次我难过，你给建议的时候我其实想要的是陪着。"要的是行为，不是态度。'},
+    hi:'你觉得 {P} 是暖的，就把这份感受说给 {P} 听——被看见的付出才会持续。',
+    lo:'你不太感受到 {P} 的在意。先别下结论说"{P} 不爱我"，而是告诉 {P} 具体的场景："上次我难过，你给建议的时候我其实想要的是陪着。"要的是行为，不是态度。'},
   pcom:{
-    hi:'你相信他认真，这份确定感本身就在保护你们。',
-    lo:'你不确定他有多认真。这件事只能问，不能猜：直接说"我想知道你怎么看我们接下来的走向"，给他一个具体的、不用表态也能回答的问题。'},
+    hi:'你相信 {P} 认真，这份确定感本身就在保护你们。',
+    lo:'你不确定 {P} 有多认真。这件事只能问，不能猜：直接说"我想知道你怎么看我们接下来的走向"，给 {P} 一个具体的、不用表态也能回答的问题。'},
   pstab:{
-    hi:'他的情绪基本可预期，你不需要小心翼翼。',
-    lo:'他的起伏让你常常要揣摩气氛。可以约定一句"我现在不是针对你，我只是需要半小时"，把情绪和关系分开。'},
+    hi:'{P} 的情绪基本可预期，你不需要小心翼翼。',
+    lo:'{P} 的起伏让你常常要揣摩气氛。可以约定一句"我现在不是针对你，我只是需要半小时"，把情绪和关系分开。'},
   popen:{
     hi:'有话能说，这是最值钱的一项。',
     lo:'你有一些话一直没敢讲。挑一件最小的先说，成功一次比想十次有用。'}
@@ -1133,6 +1182,26 @@ var RISK_ADVICE = {
   rhide:'隐瞒变多时，关系会慢慢变成两个平行世界。可以先从一件"小事"开始说，试试说了会发生什么。',
   rbore:'倦怠是最常见也最可修的。换一件你们都没做过的小事，比努力"找回感觉"更实际。'
 };
+/* ============================================================
+   代词自适应
+   选了「男生」→ 对方默认按女生写（她），选了「女生」→ 对方按男生写（他），
+   选了「不填」或没选 → 用中性的 TA。文案里统一写占位符 {P}，渲染时替换。
+   ============================================================ */
+var PRONOUN = { p:'TA', pn:'TA', obj:'TA' };
+var PN_PRESET = {
+  m: { p:'她',  pn:'她',  obj:'她'  },   /* 我是男生 → 对方是她 */
+  f: { p:'他',  pn:'他',  obj:'他'  },   /* 我是女生 → 对方是他 */
+  x: { p:'TA', pn:'TA', obj:'TA' }
+};
+function setPronoun(gender){
+  PRONOUN = PN_PRESET[gender] || PN_PRESET.x;
+}
+/* 把文案里的 {P} 换成当前代词 */
+function P(text){
+  if (typeof text !== 'string') return text;
+  return text.replace(/\{P\}/g, PRONOUN.p);
+}
+
 /* ============================================================
    双方画像
    ============================================================ */
@@ -1150,7 +1219,7 @@ var TYPES = {
 var COUPLE = {
   mirror:{name:'同频型', one:'你们像同一种语言的两个使用者，很多话不用说完整。',
     risk:'风险是过度自洽——两个人都不说，就真的没人说了。'},
-  complement:{name:'互补型', one:'你缺的正好他有，他缺的正好你有，配合起来很省力。',
+  complement:{name:'互补型', one:'你缺的正好 {P} 有，{P} 缺的正好你有，配合起来很省力。',
     risk:'风险是分工固化——久了会变成"这本来就该你做"。'},
   teacher:{name:'某一方带着走', one:'一个人在前面拉，另一个人在后面跟。走的时候很快，但会累。',
     risk:'风险是拉开太久——前面的人回头，发现后面的人已经不想走了。'},
@@ -1251,7 +1320,7 @@ var PATTERNS = {
     tag:'最常见的循环',
     desc:'一方越想马上说清楚，一方越想先躲开。追的人觉得"你根本不在乎"，退的人觉得"说什么都是错"。',
     why:'一个人需要立刻确认关系还在（情绪安全感偏低 + 亲密需求高），另一个需要先冷静才能思考（冲突修复偏低 + 空间需求高）。两边都不是故意的，但刚好互相触发。',
-    loop:'你追得越紧，他退得越快；他退得越快，你越要追。',
+    loop:'你追得越紧，{P} 退得越快；{P} 退得越快，你越要追。',
     fix:'先破坏这个循环，不要先解决那件事。约定一个"暂停词"（比如"我们十分钟后再聊"），说的人保证会回来，听的人保证不追。循环断了，问题才有机会谈。'
   },
   cold: {
@@ -1292,7 +1361,7 @@ var PATTERNS = {
     desc:'你们会吵，但吵完能回来。有人递台阶，也有人接。',
     why:'冲突修复和情绪安全感都在中等以上，说明你们已经发展出了自己的收尾方式。',
     loop:'有摩擦 → 表达 → 修复 → 关系反而更近一点。',
-    fix:'这套机制现在靠的是本能，试着把它说出来一次：问他"上次我们是怎么和好的"，让有效的方式变成有意识的选择，而不是运气。'
+    fix:'这套机制现在靠的是本能，试着把它说出来一次：问 {P}"上次我们是怎么和好的"，让有效的方式变成有意识的选择，而不是运气。'
   }
 };
 
@@ -1323,7 +1392,7 @@ var S = {role:null, partnerAns:null, ans:[], idx:0, result:null, code:'', busy:f
          gender:'', age:null, ageLabel:''};
 var AGE_LABELS = ['18 以下','18–24','25–30','30 以上'];
 function $(id){return document.getElementById(id);}
-var SECTIONS = ['s-home','s-profile','s-quiz','s-code','s-enter','s-both','s-result'];
+var SECTIONS = ['s-home','s-profile','s-quiz','s-self','s-code','s-enter','s-both','s-result'];
 function show(id){
   SECTIONS.forEach(function(s){ var e=$(s); if(e) e.classList.add('hide'); });
   var el = $(id); if(!el) return;
@@ -1408,7 +1477,7 @@ function renderQ(){
   $('pFill').style.width = Math.round((S.idx+1)/NQ*100)+'%';
 
   /* 文字只替换内容，不重建节点 —— 不会有闪动 */
-  $('qText').textContent = q.q;
+  $('qText').textContent = P(q.q);
   var hint = '';
   if (q.d && SELF[q.d]) hint = '关于你自己在这段关系里';
   else if (q.d && PERC[q.d]) hint = '关于你怎么看 TA';
@@ -1424,7 +1493,7 @@ function renderQ(){
     var b = OPT_POOL[i];
     if (i < q.o.length){
       b.style.display = '';
-      b.querySelector('.t').textContent = q.o[i].t;
+      b.querySelector('.t').textContent = P(q.o[i].t);
       if (cur === i) b.classList.add('sel');
       else b.classList.remove('sel');
     } else {
@@ -1550,17 +1619,13 @@ function finishQuiz(){
       var mine = scorePerson(S.ans);
       S.code = makeCode(S.ans);
       $('codeVal').textContent = S.code;
-      var selfAvg = wavg(mine, ORDER, SELF);
-      var best = ORDER.slice().sort(function(x,y){return mine[y]-mine[x];})[0];
-      $('selfPreview').innerHTML =
-        '按你一个人的答案，这段关系在你这里大概是 <b>'+Math.round(selfAvg)+' / 100</b>，'+
-        '最踏实的一项是「'+SELF[best].name+'」。<br>'+
-        '完整分数、TA 眼中的你、以及风险提示，要等 TA 也做完。两个视角放一起才有意义。';
       clearProgress();
-      show('s-code');
+      renderSelfAnalysis(mine);
+      show('s-self');
     } else {
       var r = evaluate(S.partnerAns, S.ans);
       S.result = r;
+      if (S.gender) setPronoun(S.gender); else setPronoun('x');
       renderResult(r);
       clearProgress();
       show('s-result');
@@ -1574,6 +1639,122 @@ function finishQuiz(){
 /* ============================================================
    结果渲染
    ============================================================ */
+/* ============================================================
+   个人分析（只答完自己那一方时展示）
+   ============================================================ */
+function renderSelfAnalysis(p){
+  var selfAvg = Math.round(wavg(p, ORDER, SELF));
+  var sorted = ORDER.slice().sort(function(x,y){ return p[y]-p[x]; });
+  var hi = sorted.slice(0,2);
+  var lo = sorted.slice(-2).reverse();
+
+  $('selfNum').textContent = selfAvg;
+
+  /* 一句话总评：按自评高低给出 */
+  var lv = selfAvg >= 78 ? {n:'你自己这边挺顺的', s:'从你的角度看，这段关系给到的支持是够的——大部分时候你是有底的、被接住的。'}
+         : selfAvg >= 62 ? {n:'大体还行，有些地方在耗', s:'好的部分是主要的，但有几件事一直在悄悄扣分。它们通常不是大问题，是重复发生的小事。'}
+         : selfAvg >= 45 ? {n:'有点累了', s:'从你的答案看，这段关系眼下让你消耗的比给到的多。这不一定是关系的问题，也可能是你最近太累。'}
+         : {n:'你自己这边很吃力', s:'几乎所有维度都偏低。比起判断这段关系，更值得先看看：你最近过得怎么样。'};
+  $('selfBand').textContent = lv.n;
+  $('selfSay').textContent = lv.s;
+
+  /* 环形 */
+  var arc = $('selfArc');
+  if (arc){
+    arc.style.strokeDashoffset = 452.4;
+    setTimeout(function(){ arc.style.strokeDashoffset = 452.4 * (1 - selfAvg/100); }, 120);
+  }
+
+  /* 类型画像 */
+  var pf = profileOf(p);
+  var tb = $('selfType');
+  tb.innerHTML = '';
+  var pc = document.createElement('div');
+  pc.className = 'portrait';
+  pc.innerHTML =
+    '<div class="ph"><span class="pe">'+pf.type.emoji+'</span><div><b>'+pf.type.name+'</b>'+
+      '<em>'+(S.gender==='f'?'女生':(S.gender==='m'?'男生':'未填'))+' · '+(S.ageLabel||'年龄未填')+'</em></div></div>'+
+    '<p class="pd">'+P(pf.type.one)+'</p>'+
+    '<div class="kws">'+pf.key3.map(function(k){ return '<span>'+k+'</span>'; }).join('')+'</div>';
+  tb.appendChild(pc);
+
+  /* 八维（只有自己） */
+  var db = $('selfDims');
+  db.innerHTML = '';
+  ORDER.forEach(function(k, i){
+    var v = p[k];
+    var d = document.createElement('div');
+    d.className = 'dim';
+    var lvl = v >= 70 ? '<span class="tag g">稳</span>'
+            : (v >= 45 ? '<span class="tag">一般</span>' : '<span class="tag w">偏低</span>');
+    d.innerHTML = '<div class="hd"><b>'+SELF[k].name+'</b>'+lvl+'</div>'+
+      '<div class="bars"><div class="bl v1"><u>你</u><div class="tr"><i></i></div><n>'+v+'</n></div></div>'+
+      '<div class="cmt">'+(v>=70 ? P(SELF[k].hi) : (v<45 ? P(SELF[k].lo) : '中等水平，不拖后腿，也还有空间。'))+'</div>';
+    db.appendChild(d);
+    setTimeout(function(){ d.querySelector('.tr i').style.width = v+'%'; }, 80+i*55);
+  });
+
+  /* 冲突风格（用 style 轴 + rep） */
+  var sb = $('selfStyle');
+  sb.innerHTML = '';
+  var styleV = p.style;   /* 0=外放 100=内收 */
+  var repV = p.rep;
+  var styleName = styleV >= 62 ? '压着记着' : (styleV <= 38 ? '当场说开' : '看情况，两边都有');
+  var styleDesc =
+    styleV >= 62
+      ? '你不太会当场发作，更多是忍一下、记一下。好处是不容易伤人，代价是情绪会攒着——攒到某天一起算。'
+      : (styleV <= 38
+        ? '你有话会当场讲，说完就过去了。好处是不留隔夜账，代价是讲的时候容易戳到人。'
+        : '你会看场合决定说还是不说。这种灵活是好东西，但要小心变成"该说的也没说"。');
+  var sc2 = document.createElement('div');
+  sc2.className = 'card-in';
+  sc2.innerHTML = '<div class="h"><span>你的风格：'+styleName+'</span><em>'+
+      (styleV<=38?'外放':(styleV>=62?'内收':'居中'))+'</em></div>'+
+    '<div class="meter '+(styleV>=62?'hi':(styleV<=38?'ok':'mid'))+'"><i style="width:'+styleV+'%"></i></div>'+
+    '<div class="mlbl"><span>当场说开</span><span>压着记着</span></div>'+
+    '<p style="margin-top:10px">'+styleDesc+'</p>'+
+    '<p style="margin-top:8px;padding-top:8px;border-top:1px dashed #f0e4d8">'+
+      '另外，你的「'+(hi[0]?'摩擦之后':'—')+'」是 '+repV+' 分——'+
+      (repV>=70 ? '不开心的事你收得住，这是很省力的能力。' : (repV<45 ? '不太容易收场，小事容易积着。' : '收场能力中等。'))+
+    '</p>';
+  sb.appendChild(sc2);
+
+  /* 三件事 */
+  var td = $('selfTodo');
+  td.innerHTML = '';
+  var picks = [P(FIX[lo[0]][0]), P(FIX[lo[1]][0])];
+  if (styleV >= 62) picks.push('试着把一件"其实有点在意"的小事当场说出来，看看会怎样。');
+  else if (styleV <= 38) picks.push('说的时候加一句"我不是在怪你，我只是想让你知道"，杀伤力会小很多。');
+  else picks.push('挑一件一直没讲的，这次别等时机。');
+  picks.slice(0,3).forEach(function(txt, i){
+    var d = document.createElement('div');
+    d.className = 'ti';
+    d.innerHTML = '<i>'+(i+1)+'</i><div>'+txt+'</div>';
+    td.appendChild(d);
+  });
+
+  /* 下一步提示 */
+  $('selfNextHint').innerHTML =
+    '这是你一个人的视角，已经能看到不少东西了。<br>'+
+    '但一个人看不到的是：同一件事在'+PRONOUN.p+'那里是什么样子。'+
+    '把配对码给'+PRONOUN.p+'，等'+PRONOUN.p+'也答完，就能看到两边合起来的完整分析——'+
+    '包括'+PRONOUN.p+'眼中的你、你们的三观差距，以及最可能的吵架方式。';
+
+  /* 按钮 */
+  $('selfToCode').onclick = function(){ show('s-code'); };
+  $('selfCopy').onclick = function(){
+    var lines = ['【我的相处方式分析】', '我的关系体感：'+selfAvg+'/100 · '+lv.n, ''];
+    lines.push('我是：'+pf.type.emoji+' '+pf.type.name);
+    lines.push(P(pf.type.one));
+    lines.push('');
+    lines.push('最踏实：'+SELF[hi[0]].name+'（'+p[hi[0]]+'）');
+    lines.push('最需要补：'+SELF[lo[0]].name+'（'+p[lo[0]]+'）');
+    lines.push('');
+    lines.push('先做的第一件事：'+P(FIX[lo[0]][0]));
+    copy(lines.join('\n'), '分析已复制');
+  };
+}
+
 function renderResult(r){
   $('rNum').textContent = r.total;
   var b = band(r.total);
@@ -1602,7 +1783,7 @@ function renderResult(r){
     d.innerHTML =
       '<div class="ph"><span class="pe">'+p.type.emoji+'</span>'+
         '<div><b>'+label+'：'+p.type.name+'</b><em>'+meta+'</em></div></div>'+
-      '<p class="pd">'+p.type.one+'</p>'+
+      '<p class="pd">'+P(p.type.one)+'</p>'+
       '<div class="kws">'+p.key3.map(function(k){ return '<span>'+k+'</span>'; }).join('')+'</div>';
     return d;
   }
@@ -1613,10 +1794,10 @@ function renderResult(r){
   cbox.className = 'couple';
   cbox.innerHTML =
     '<div class="ch"><b>你们这一对：'+cp.type.name+'</b><em>契合 '+cp.fit+'</em></div>'+
-    '<p>'+cp.type.one+'</p>'+
-    '<p class="cr"><b>要注意：</b>'+cp.type.risk+'</p>'+
+    '<p>'+P(cp.type.one)+'</p>'+
+    '<p class="cr"><b>要注意：</b>'+P(cp.type.risk)+'</p>'+
     '<p class="cr" style="border-top:0;padding-top:4px;color:var(--ink3);font-size:12px">'+
-    '如果读起来不太像，另一种可能：'+cp.second.name+'——'+cp.second.one+'</p>';
+    '如果读起来不太像，另一种可能：'+cp.second.name+'——'+P(cp.second.one)+'</p>';
   pb2.appendChild(cbox);
 
   /* ---- 冲突模式 ---- */
@@ -1628,9 +1809,9 @@ function renderResult(r){
     '<div class="pt"><b>'+pp.pattern.name+'</b><span>'+
       pp.pattern.tag+' · 匹配度 '+pp.confidence+'%</span></div>'+
     '<div class="row"><em>什么样</em><div>'+pp.pattern.desc+'</div></div>'+
-    '<div class="row"><em>为什么</em><div>'+pp.pattern.why+'</div></div>'+
-    '<div class="row"><em>循环</em><div style="color:var(--rose-d);font-weight:600">'+pp.pattern.loop+'</div></div>'+
-    '<div class="step"><b>怎么破：</b>'+pp.pattern.fix+'</div>';
+    '<div class="row"><em>为什么</em><div>'+P(pp.pattern.why)+'</div></div>'+
+    '<div class="row"><em>循环</em><div style="color:var(--rose-d);font-weight:600">'+P(pp.pattern.loop)+'</div></div>'+
+    '<div class="step"><b>怎么破：</b>'+P(pp.pattern.fix)+'</div>';
   pat.appendChild(pbox);
 
   var alt = document.createElement('p');
@@ -1642,6 +1823,8 @@ function renderResult(r){
   pat.appendChild(alt);
 
   /* ---- TA 眼中的你 ---- */
+  var seeT = $('seeYouTitle'); if (seeT) seeT.textContent = PRONOUN.p + ' 眼中的你';
+  var dimL = $('dimLegend'); if (dimL) dimL.textContent = PRONOUN.p;
   var sy = $('rSeeYou'); sy.innerHTML='';
   var intro = document.createElement('div');
   intro.className='note';
@@ -1657,8 +1840,8 @@ function renderResult(r){
     var d = document.createElement('div');
     d.className='card-in';
     var diff = heRatesMe - iRateHim;
-    var diffTxt = diff >= 12 ? 'TA 对你的评价，比你对他更高'
-                : (diff <= -12 ? '你对 TA 的评价，比他对你更高' : '两边看法接近');
+    var diffTxt = diff >= 12 ? 'TA 对你的评价，比你给 {P} 的更高'
+                : (diff <= -12 ? '你给 TA 的评价，比 {P} 给你的更高' : '两边看法接近');
     d.innerHTML = '<div class="h"><span>'+info[1]+'</span><em>'+diffTxt+'</em></div>'+
       '<div class="meter '+(heRatesMe>=70?'ok':(heRatesMe>=45?'mid':'hi'))+'"><i></i></div>'+
       '<div class="mlbl"><span>TA 眼里的你：'+heRatesMe+'</span><span>你眼里的 TA：'+iRateHim+'</span></div>';
@@ -1714,7 +1897,7 @@ function renderResult(r){
     d.innerHTML = '<div class="hd"><b>'+info.name+'</b>'+tag+'</div>'+
       '<div class="bars">'+
         '<div class="bl v1"><u>你</u><div class="tr"><i></i></div><n>'+a1+'</n></div>'+
-        '<div class="bl v2"><u>TA</u><div class="tr"><i></i></div><n>'+a2+'</n></div>'+
+        '<div class="bl v2"><u>'+PRONOUN.p+'</u><div class="tr"><i></i></div><n>'+a2+'</n></div>'+
       '</div>'+
       '<div class="cmt"><span style="color:#a8988e">'+info.l+' ←→ '+info.r+'</span><br>'+
       (g>=50 ? '你们基本站在两端。这件事需要一次坦白：谁能退、退到哪，说清楚比互相将就好。'
@@ -1736,7 +1919,7 @@ function renderResult(r){
     axAdv.className='item warn';
     axAdv.innerHTML='<div class="ic">!</div><div class="tx"><b>「'+AX[wa].name+
       '」是你们差得最远的一条（相差 '+r.axGap[wa]+' 分）。</b>'+
-      AX_FIX[wa]+'</div>';
+      P(AX_FIX[wa])+'</div>';
     vbox.appendChild(axAdv);
   }
 
@@ -1763,11 +1946,11 @@ function renderResult(r){
     d.innerHTML = '<div class="hd"><b>'+SELF[key].name+'</b>'+tag+'</div>'+
       '<div class="bars">'+
         '<div class="bl v1"><u>你</u><div class="tr"><i></i></div><n>'+v1+'</n></div>'+
-        '<div class="bl v2"><u>TA</u><div class="tr"><i></i></div><n>'+v2+'</n></div>'+
+        '<div class="bl v2"><u>'+PRONOUN.p+'</u><div class="tr"><i></i></div><n>'+v2+'</n></div>'+
       '</div>'+
       '<div class="cmt">'+(g>=30
         ? '你们在这件事上的感受差得比较多，容易各说各话。值得单独聊一次：同一件事，你们各自记成了什么样。'
-        : (r.combo[key]>=70 ? SELF[key].hi : (r.combo[key]<45 ? SELF[key].lo : '中等水平，不拖后腿，也还有空间。')))+'</div>';
+        : (r.combo[key]>=70 ? P(SELF[key].hi) : (r.combo[key]<45 ? P(SELF[key].lo) : '中等水平，不拖后腿，也还有空间。')))+'</div>';
     box.appendChild(d);
     setTimeout(function(){
       var is=d.querySelectorAll('.tr i');
@@ -1803,7 +1986,7 @@ function renderResult(r){
   var adv = document.createElement('div');
   adv.className='item warn';
   adv.innerHTML='<div class="ic">!</div><div class="tx"><b>'+RISK[topRisk].name+
-    '是四项里最需要留意的一项。</b>'+RISK_ADVICE[topRisk]+'</div>';
+    '是四项里最需要留意的一项。</b>'+P(RISK_ADVICE[topRisk])+'</div>';
   rk.appendChild(adv);
   var wb = document.createElement('div');
   wb.className='warnbox';
@@ -1851,17 +2034,17 @@ function renderResult(r){
         '这种差异本身不是问题，不说才是问题。</div>';
     } else if (p.kind==='mis'){
       it.className='item bad';
-      it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>你眼里的他，和他自己说的，差得比较多。</b>'+
-        '期望和实际的落差，往往比"他不够好"更让人失望。把你看到的告诉他，也听听他的版本。</div>';
+      it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>你眼里的 {P}，和 {P} 自己说的，差得比较多。</b>'+
+        '期望和实际的落差，往往比"{P} 不够好"更让人失望。把你看到的讲给 {P} 听，也听听 {P} 的版本。</div>';
     } else if (p.kind==='axis'){
       it.className='item warn';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>三观上「'+AX[p.key].name+
         '」差得比较远（相差 '+r.axGap[p.key]+' 分）。</b>'+
-        '这不是对错问题，是默认设定不同。'+AX_FIX[p.key]+'</div>';
+        '这不是对错问题，是默认设定不同。'+P(AX_FIX[p.key])+'</div>';
     } else {
       it.className='item warn';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>'+RISK[p.key].name+
-        '偏高（'+Math.max(r.p1[p.key],r.p2[p.key])+'）。</b>'+RISK_ADVICE[p.key]+'</div>';
+        '偏高（'+Math.max(r.p1[p.key],r.p2[p.key])+'）。</b>'+P(RISK_ADVICE[p.key])+'</div>';
     }
     pb.appendChild(it);
   });
@@ -1879,7 +2062,7 @@ function renderResult(r){
     var it=document.createElement('div');
     it.className='item good';
     it.innerHTML='<div class="ic">✓</div><div class="tx"><b>'+SELF[key].name+
-      '（'+r.combo[key]+'）</b>：'+GOOD_TXT[key]+'</div>';
+      '（'+r.combo[key]+'）</b>：'+P(GOOD_TXT[key])+'</div>';
     gd.appendChild(it);
   });
   if (r.agreement >= 78){
@@ -1899,13 +2082,13 @@ function renderResult(r){
   /* ---- 七天清单 ---- */
   var td = $('rTodo'); td.innerHTML='';
   var picks = [];
-  picks.push(FIX[r.low[0]][0]);
-  if (r.low[1]) picks.push(FIX[r.low[1]][0]);
+  picks.push(P(FIX[r.low[0]][0]));
+  if (r.low[1]) picks.push(P(FIX[r.low[1]][0]));
   if (r.gap[r.worstGap] >= 25){
     picks.push('找个都不累的晚上，问对方一句：关于「'+SELF[r.worstGap].name+'」，你是怎么想的？先听完，不反驳。');
   } else {
     var pr = r.high[0];
-    picks.push(FIX[pr][1] || FIX[pr][0]);
+    picks.push(P(FIX[pr][1] || FIX[pr][0]));
   }
   picks.slice(0,3).forEach(function(txt,i){
     var d=document.createElement('div');
@@ -1985,6 +2168,7 @@ function bindSeg(id, key){
     btn.classList.add('on');
     if (key === 'gender'){
       S.gender = btn.getAttribute('data-v');
+      setPronoun(S.gender);
     } else {
       var v = parseInt(btn.getAttribute('data-v'), 10);
       S.age = v;
@@ -2007,6 +2191,8 @@ $('goStart').addEventListener('click', function(){
 $('goJoin').addEventListener('click', function(){ $('codeErr').textContent=''; show('s-enter'); });
 $('goBoth').addEventListener('click', function(){
   $('bothErr').textContent='';
+  /* 从这里进入不知道填写者性别，用中性 TA */
+  if (!S.gender) setPronoun('x');
   show('s-both');
 });
 $('bothBack').addEventListener('click', function(){ show('s-home'); });
@@ -2041,6 +2227,7 @@ $('doBoth').addEventListener('click', function(){
     var r = evaluate(pa.ans, pb.ans);
     S.result = r;
     S.role = 'both';
+    if (S.gender) setPronoun(S.gender); else setPronoun('x');
     S.partnerAns = pb.ans;
     renderResult(r);
     clearProgress();
@@ -2067,7 +2254,16 @@ $('codeIn').addEventListener('input', function(e){
   $('codeErr').textContent='';
 });
 $('codeIn').addEventListener('keydown', function(e){ if(e.key==='Enter') $('doJoin').click(); });
-$('copyCode').addEventListener('click', function(){ copy($('codeVal').textContent,'号码已复制'); });
+$('copyCode').addEventListener('click', function(){ copy($('codeVal').textContent,'配对码已复制'); });
+$('codeBackSelf').addEventListener('click', function(){ show('s-self'); });
+$('codeToBoth').addEventListener('click', function(){
+  $('bothErr').textContent='';
+  /* 自动把刚拿到的码填到第一个框 */
+  if (!S.gender) setPronoun('x');
+  var a = $('codeA');
+  if (a && !a.value && $('codeVal').textContent !== '——') a.value = $('codeVal').textContent;
+  show('s-both');
+});
 $('copyInvite').addEventListener('click', function(){
   var txt = '我做了个相处方式小调查，想看看我们俩的答案放一起是什么样。\n'
     + '网址：'+location.origin+location.pathname+'\n'
