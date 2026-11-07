@@ -6,138 +6,282 @@
 <title>相处方式小调查 · 双人版</title>
 <style>
 :root{
-  --cream:#fdf9f4;--ink:#3a302b;--ink2:#7e6e65;--ink3:#a8988e;--line:#eae0d6;
-  --rose:#c4706a;--rose2:#dd9189;--deep:#8b4640;--gold:#c39a4a;
-  --green:#6da57f;--amber:#c08a45;--red:#bf6157;--card:#fffdfa;
-  --sh:0 12px 30px rgba(120,88,64,.09);
+  --bg:#fbf7f2; --bg2:#f6efe7;
+  --ink:#2e2723; --ink2:#6f625a; --ink3:#9d8f86; --ink4:#c2b5ab;
+  --line:#e8ddd2; --line2:#f2e9e0;
+  --card:#ffffff; --card2:#fdfaf6;
+  --rose:#b96a63; --rose-l:#d99a93; --rose-d:#8e4a44; --rose-bg:#fdf0ed;
+  --sage:#5f9576; --sage-l:#8fbfa5; --sage-bg:#eef6f1;
+  --amber:#bb8a42; --amber-bg:#fdf5e8;
+  --clay:#a8654f;
+  --r-lg:22px; --r-md:16px; --r-sm:11px;
+  --sh-1:0 1px 2px rgba(90,64,48,.04), 0 4px 14px rgba(90,64,48,.05);
+  --sh-2:0 2px 6px rgba(90,64,48,.05), 0 12px 32px rgba(90,64,48,.07);
+  --sh-3:0 4px 12px rgba(90,64,48,.06), 0 20px 48px rgba(90,64,48,.09);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
-  color:var(--ink);background:var(--cream);line-height:1.65;font-size:16px;min-height:100dvh;
-  -webkit-font-smoothing:antialiased;
-  background-image:radial-gradient(circle at 10% 4%,#fdf1e6 0%,transparent 42%),
-                   radial-gradient(circle at 92% 2%,#fdeef0 0%,transparent 38%);
-  background-attachment:fixed}
-.wrap{max-width:540px;margin:0 auto;padding:20px 16px calc(40px + env(safe-area-inset-bottom))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;box-shadow:var(--sh)}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  color:var(--ink);background:var(--bg);line-height:1.68;font-size:16px;min-height:100dvh;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  font-feature-settings:"kern" 1,"liga" 1;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 8% -8%, #fdf1e8 0%, transparent 60%),
+    radial-gradient(ellipse 60% 45% at 100% 0%, #faeeef 0%, transparent 55%),
+    radial-gradient(ellipse 90% 60% at 50% 105%, #f7f1ea 0%, transparent 65%);
+  background-attachment:fixed;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4;
+  background-image:radial-gradient(circle at 1px 1px, rgba(150,120,100,.09) 1px, transparent 0);
+  background-size:22px 22px;
+  -webkit-mask-image:linear-gradient(180deg,#000,transparent 55%);
+  mask-image:linear-gradient(180deg,#000,transparent 55%);
+}
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;
+  padding:22px 17px calc(48px + env(safe-area-inset-bottom))}
 .hide{display:none!important}
-.in{animation:in .4s ease both}
-@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.brand{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.mark{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;
-  background:linear-gradient(140deg,var(--rose),var(--rose2));color:#fff;font-size:18px;
-  box-shadow:0 6px 14px rgba(196,112,106,.25)}
-.brand b{font-size:15px}.brand span{display:block;font-size:11px;color:var(--ink3);letter-spacing:.12em;margin-top:2px}
-h1{font-size:26px;line-height:1.35;letter-spacing:-.4px;margin-bottom:12px;font-weight:800}
-h1 em{font-style:normal;color:var(--rose)}
-.lead{color:var(--ink2);font-size:14.5px;line-height:1.85}
-.facts{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 4px}
-.facts div{font-size:12px;color:var(--ink3)}
-.facts b{display:block;font-size:18px;color:var(--ink);font-weight:800;letter-spacing:-.3px;line-height:1.3}
-hr{border:0;border-top:1px solid var(--line);margin:20px 0}
-.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font-size:16.5px;font-weight:700;
-  font-family:inherit;color:#fff;cursor:pointer;background:linear-gradient(135deg,var(--rose),var(--rose2));
-  box-shadow:0 10px 22px rgba(196,112,106,.25);transition:transform .12s}
-.btn:active{transform:scale(.985)}
-.btn:disabled{opacity:.45;box-shadow:none}
-.btn.ghost{background:#fff;color:var(--deep);border:1.5px solid #f0ddd7;box-shadow:none}
-.btn.sm{padding:13px;font-size:14.5px;border-radius:12px}
+.in{animation:in .42s cubic-bezier(.2,.8,.3,1) both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- 品牌 ---------- */
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:22px}
+.mark{position:relative;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(145deg,var(--rose),var(--rose-l));color:#fff;font-size:19px;
+  box-shadow:0 6px 16px rgba(185,106,99,.28), inset 0 1px 0 rgba(255,255,255,.3)}
+.mark::after{content:'';position:absolute;inset:0;border-radius:13px;
+  background:linear-gradient(180deg,rgba(255,255,255,.22),transparent 55%)}
+.brand b{display:block;font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.3}
+.brand span{display:block;font-size:10px;color:var(--ink4);letter-spacing:.16em;margin-top:3px;font-weight:600}
+
+/* ---------- 卡片 ---------- */
+.card{background:var(--card);border:1px solid var(--line2);border-radius:var(--r-lg);
+  padding:24px 21px;box-shadow:var(--sh-2);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent)}
+
+/* ---------- 排版 ---------- */
+h1{font-size:27px;line-height:1.38;letter-spacing:-.5px;margin-bottom:12px;font-weight:800}
+h1 em{font-style:normal;position:relative;color:var(--rose);
+  background:linear-gradient(135deg,var(--rose),var(--clay));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--ink2);font-size:14.5px;line-height:1.88;letter-spacing:.005em}
+.lead b{color:var(--ink);font-weight:700}
+
+/* ---------- 数据条 ---------- */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:20px 0 2px;
+  background:var(--line2);border:1px solid var(--line2);border-radius:var(--r-md);overflow:hidden}
+.facts div{background:var(--card);padding:12px 6px;text-align:center}
+.facts b{display:block;font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-.5px;line-height:1.25}
+.facts span{display:block;font-size:10.5px;color:var(--ink3);margin-top:2px;letter-spacing:.02em}
+hr{border:0;border-top:1px solid var(--line2);margin:22px 0}
+
+/* ---------- 按钮 ---------- */
+.btn{display:block;width:100%;border:0;border-radius:var(--r-md);padding:16px;font-size:16px;
+  font-weight:700;font-family:inherit;color:#fff;cursor:pointer;letter-spacing:.01em;
+  background:linear-gradient(135deg,var(--rose),var(--rose-l));
+  box-shadow:0 8px 20px rgba(185,106,99,.26), inset 0 1px 0 rgba(255,255,255,.2);
+  transition:transform .12s ease, box-shadow .2s ease;position:relative;overflow:hidden}
+.btn:active{transform:scale(.982);box-shadow:0 4px 12px rgba(185,106,99,.22)}
+.btn:disabled{opacity:.38;box-shadow:none;cursor:default}
+.btn.ghost{background:var(--card);color:var(--rose-d);border:1.5px solid var(--line);
+  box-shadow:var(--sh-1);font-weight:600}
+.btn.ghost:active{background:var(--card2)}
+.btn.sm{padding:13px;font-size:14px;border-radius:var(--r-sm)}
 .btns{display:flex;gap:10px}.btns .btn{flex:1}
-.pnum{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:7px;font-variant-numeric:tabular-nums}
-.pbar{height:6px;border-radius:99px;background:#f1e7dc;overflow:hidden;margin-bottom:18px}
-.pbar i{display:block;height:100%;border-radius:99px;width:0;background:linear-gradient(90deg,var(--rose2),var(--gold));transition:width .35s ease}
-.q{font-size:20px;line-height:1.55;font-weight:750;letter-spacing:-.2px;margin:2px 0 6px}
-.qhint{font-size:12.5px;color:var(--ink3);margin-bottom:16px}
+
+/* ---------- 进度 ---------- */
+.pnum{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;
+  color:var(--ink3);margin-bottom:9px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.pnum b{color:var(--rose);font-weight:800;font-size:12.5px}
+.pbar{height:5px;border-radius:99px;background:var(--line2);overflow:hidden;margin-bottom:20px}
+.pbar i{display:block;height:100%;border-radius:99px;width:0;
+  background:linear-gradient(90deg,var(--rose-l),var(--rose));
+  box-shadow:0 0 8px rgba(185,106,99,.4);transition:width .38s cubic-bezier(.3,.9,.3,1)}
+
+/* ---------- 题目 ---------- */
+.q{font-size:20.5px;line-height:1.58;font-weight:750;letter-spacing:-.25px;margin:0 0 7px}
+.qhint{display:inline-block;font-size:11px;color:var(--ink3);margin-bottom:17px;
+  padding:3px 9px;border-radius:99px;background:var(--card2);border:1px solid var(--line2);letter-spacing:.02em}
+.qhint:empty{display:none}
 .opt{width:100%;text-align:left;font-family:inherit;font-size:15.5px;line-height:1.6;color:var(--ink);
-  background:#fff;border:1.5px solid #efe3d9;border-radius:14px;padding:14px 15px;margin-bottom:9px;
-  cursor:pointer;display:flex;gap:11px;align-items:flex-start;transition:border-color .15s,background .15s}
-.opt:active{background:#fffaf7}
-.opt .k{flex:0 0 21px;height:21px;border-radius:6px;background:#f7efe7;color:var(--ink3);font-size:11px;font-weight:800;display:grid;place-items:center;margin-top:2px}
-.opt.sel{border-color:var(--rose2);background:#fff7f4}
-.opt.sel .k{background:var(--rose);color:#fff}
-.navrow{display:flex;gap:10px;align-items:center;margin-top:16px}
+  background:var(--card);border:1.5px solid var(--line2);border-radius:var(--r-md);
+  padding:15px 15px;margin-bottom:9px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;
+  transition:border-color .18s ease, background .18s ease, transform .1s ease, box-shadow .18s ease;
+  box-shadow:0 1px 2px rgba(90,64,48,.03)}
+.opt:active{transform:scale(.994)}
+.opt .k{flex:0 0 22px;height:22px;border-radius:7px;background:var(--card2);color:var(--ink3);
+  font-size:10.5px;font-weight:800;display:grid;place-items:center;margin-top:2px;
+  border:1px solid var(--line2);transition:all .18s ease}
+.opt.sel{border-color:var(--rose-l);background:var(--rose-bg);box-shadow:0 3px 10px rgba(185,106,99,.1)}
+.opt.sel .k{background:var(--rose);color:#fff;border-color:var(--rose)}
+.navrow{display:flex;gap:10px;align-items:center;margin-top:18px}
 .navrow .btn{flex:1}
-.tlink{background:none;border:0;color:var(--ink3);font-size:13.5px;font-family:inherit;padding:10px 4px;cursor:pointer;white-space:nowrap}
-label.fl{display:block;font-size:13px;color:var(--ink2);margin:2px 0 8px}
-input.code{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;letter-spacing:.1em;
-  text-align:center;padding:15px 8px;border-radius:13px;border:1.5px solid #efe3d9;background:#fff;
-  color:var(--ink);outline:none;text-transform:uppercase}
-input.code:focus{border-color:var(--rose2);box-shadow:0 0 0 4px #fff1ee}
-.err{color:#b0453f;font-size:13px;margin-top:9px;min-height:19px}
-.score{text-align:center;padding:4px 0 6px}
-.score .num{font-size:64px;font-weight:800;letter-spacing:-4px;line-height:1;
-  background:linear-gradient(135deg,var(--rose),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
-.score .num small{font-size:18px;font-weight:700;letter-spacing:0;margin-left:3px}
-.score .band{font-size:20px;font-weight:800;margin-top:10px}
-.score .say{color:var(--ink2);font-size:14px;line-height:1.8;margin-top:8px;text-align:left}
-.kpis{display:flex;gap:7px;margin-top:16px}
-.kpi{flex:1;background:#fdf7f2;border:1px solid #f2e6da;border-radius:12px;padding:10px 6px;text-align:center}
-.kpi b{display:block;font-size:17px;font-weight:800;letter-spacing:-.3px}
-.kpi span{font-size:10.5px;color:var(--ink3)}
-.kpi.good b{color:var(--green)}.kpi.warn b{color:var(--amber)}.kpi.bad b{color:var(--red)}
-h3.sec{font-size:12.5px;letter-spacing:.12em;color:var(--ink3);font-weight:700;margin:26px 0 13px;
-  display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-h3.sec i{font-style:normal;font-size:11px;letter-spacing:0;color:#bbaaa0;font-weight:400;text-align:right}
-.dim{margin-bottom:15px;padding-bottom:12px;border-bottom:1px dashed #f2e8dd}
-.dim:last-child{border-bottom:0;padding-bottom:0}
-.dim .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:6px}
-.dim .hd b{font-size:14.5px;font-weight:750}
-.dim .bars{display:flex;flex-direction:column;gap:4px}
-.dim .bl{display:flex;align-items:center;gap:7px}
-.dim .bl u{flex:0 0 26px;font-size:10.5px;color:var(--ink3);text-decoration:none;text-align:right}
-.dim .bl .tr{flex:1;height:7px;border-radius:99px;background:#f4ebe2;overflow:hidden}
-.dim .bl .tr i{display:block;height:100%;width:0;border-radius:99px;transition:width .8s cubic-bezier(.25,.9,.3,1)}
-.dim .bl.v1 .tr i{background:linear-gradient(90deg,#dd9189,#c4706a)}
-.dim .bl.v2 .tr i{background:linear-gradient(90deg,#9cc0a8,#6da57f)}
-.dim .bl n{flex:0 0 26px;font-size:11px;color:var(--ink2);font-variant-numeric:tabular-nums}
-.dim .cmt{font-size:12.5px;color:#8b7a70;line-height:1.65;margin-top:7px}
-.tag{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:99px;background:#f6eee6;color:var(--ink3)}
-.tag.g{background:#eaf5ee;color:#4f8a68}
-.tag.w{background:#fbeee4;color:#b87339}
-.tag.r{background:#fbe9e7;color:#b04a3f}
-.item{display:flex;gap:11px;margin-bottom:14px}
-.item .ic{flex:0 0 24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:12px;
-  font-weight:800;margin-top:2px;background:#f7efe7;color:var(--deep)}
-.item.good .ic{background:#eaf5ee;color:#4f8a68}
-.item.warn .ic{background:#fbeee4;color:#b87339}
-.item.bad .ic{background:#fbe9e7;color:#b04a3f}
-.item .tx{font-size:14.5px;line-height:1.75;color:#4a3c35}
-.item .tx b{font-weight:750}
-.card-in{background:#fdf7f2;border:1px solid #f2e6da;border-radius:14px;padding:15px 16px;margin-bottom:14px}
-.card-in .h{font-size:13px;font-weight:750;margin-bottom:7px;display:flex;justify-content:space-between;align-items:baseline}
-.card-in .h em{font-style:normal;font-size:11.5px;color:var(--ink3);font-weight:400}
-.card-in p{font-size:13.5px;line-height:1.8;color:#5c4a41}
-.meter{height:9px;border-radius:99px;background:#f0e4d8;overflow:hidden;margin:9px 0 4px}
-.meter i{display:block;height:100%;border-radius:99px;width:0;transition:width .9s cubic-bezier(.25,.9,.3,1)}
-.meter.ok i{background:linear-gradient(90deg,#9cc0a8,#6da57f)}
-.meter.mid i{background:linear-gradient(90deg,#e8c07a,#c39a4a)}
-.meter.hi i{background:linear-gradient(90deg,#dd9189,#bf6157)}
-.mlbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink3)}
-.todo .ti{display:flex;gap:10px;padding:12px 0;border-bottom:1px dashed #f0e4d8;font-size:14px;line-height:1.7}
-.todo{background:#fdf7f2;border:1px solid #f2e6da;border-radius:14px;padding:4px 15px}
+.tlink{background:none;border:0;color:var(--ink3);font-size:13.5px;font-family:inherit;
+  padding:10px 4px;cursor:pointer;white-space:nowrap;transition:color .15s}
+.tlink:active{color:var(--ink2)}
+
+/* ---------- 输入 ---------- */
+label.fl{display:block;font-size:12.5px;color:var(--ink2);margin:0 0 8px;font-weight:600;letter-spacing:.02em}
+input.code{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;
+  letter-spacing:.11em;text-align:center;padding:16px 8px;border-radius:var(--r-md);
+  border:1.5px solid var(--line);background:var(--card);color:var(--ink);outline:none;
+  text-transform:uppercase;transition:border-color .18s,box-shadow .18s;box-shadow:var(--sh-1)}
+input.code:focus{border-color:var(--rose-l);box-shadow:0 0 0 4px var(--rose-bg)}
+.err{color:#a94a42;font-size:12.5px;margin-top:9px;min-height:19px;line-height:1.5}
+
+/* ---------- 分数 ---------- */
+.score-head{text-align:center;padding:6px 0 4px;position:relative}
+.ring{position:relative;width:172px;height:172px;margin:0 auto 14px}
+.ring svg{transform:rotate(-90deg);display:block}
+.ring .val{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .val b{font-size:52px;font-weight:800;letter-spacing:-3px;line-height:1;
+  background:linear-gradient(135deg,var(--rose),var(--clay));-webkit-background-clip:text;
+  background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.ring .val span{display:block;font-size:11px;color:var(--ink4);letter-spacing:.14em;margin-top:5px;font-weight:600}
+.band{font-size:21px;font-weight:800;letter-spacing:-.2px;margin-bottom:8px}
+.say{color:var(--ink2);font-size:14px;line-height:1.85;text-align:left;margin-top:2px}
+
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+.kpi{background:var(--card2);border:1px solid var(--line2);border-radius:var(--r-sm);
+  padding:12px 7px;text-align:center;transition:transform .2s}
+.kpi b{display:block;font-size:18px;font-weight:800;letter-spacing:-.4px;line-height:1.2;
+  font-variant-numeric:tabular-nums}
+.kpi span{display:block;font-size:10px;color:var(--ink3);margin-top:3px;letter-spacing:.02em;line-height:1.4}
+.kpi.good b{color:var(--sage)}
+.kpi.warn b{color:var(--amber)}
+.kpi.bad b{color:var(--rose)}
+
+/* ---------- 区块标题 ---------- */
+h3.sec{font-size:12px;letter-spacing:.13em;color:var(--ink2);font-weight:700;margin:30px 0 14px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  padding-bottom:9px;border-bottom:1px solid var(--line2)}
+h3.sec i{font-style:normal;font-size:10.5px;letter-spacing:.01em;color:var(--ink4);font-weight:500;text-align:right}
+
+/* ---------- 维度条 ---------- */
+.dim{margin-bottom:16px;padding-bottom:14px;border-bottom:1px dashed var(--line2)}
+.dim:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+.dim .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:8px}
+.dim .hd b{font-size:14.5px;font-weight:700;letter-spacing:-.1px}
+.dim .bars{display:flex;flex-direction:column;gap:5px}
+.dim .bl{display:flex;align-items:center;gap:8px}
+.dim .bl u{flex:0 0 27px;font-size:10px;color:var(--ink4);text-decoration:none;text-align:right;
+  font-weight:600;letter-spacing:.02em}
+.dim .bl .tr{flex:1;height:7px;border-radius:99px;background:var(--line2);overflow:hidden}
+.dim .bl .tr i{display:block;height:100%;width:0;border-radius:99px;
+  transition:width .85s cubic-bezier(.22,.9,.3,1)}
+.dim .bl.v1 .tr i{background:linear-gradient(90deg,var(--rose-l),var(--rose))}
+.dim .bl.v2 .tr i{background:linear-gradient(90deg,var(--sage-l),var(--sage))}
+.dim .bl n{flex:0 0 27px;font-size:11px;color:var(--ink2);font-variant-numeric:tabular-nums;
+  font-weight:600;text-align:right}
+.dim .cmt{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:8px}
+
+/* ---------- 标签 ---------- */
+.tag{display:inline-block;font-size:10px;padding:2.5px 8px;border-radius:99px;
+  background:var(--card2);color:var(--ink3);border:1px solid var(--line2);
+  font-weight:600;letter-spacing:.02em;white-space:nowrap}
+.tag.g{background:var(--sage-bg);color:var(--sage);border-color:#dcece2}
+.tag.w{background:var(--amber-bg);color:var(--amber);border-color:#f3e4cb}
+.tag.r{background:var(--rose-bg);color:var(--rose);border-color:#f5ddd8}
+
+/* ---------- 条目 ---------- */
+.item{display:flex;gap:11px;margin-bottom:15px}
+.item:last-child{margin-bottom:0}
+.item .ic{flex:0 0 25px;height:25px;border-radius:8px;display:grid;place-items:center;
+  font-size:11.5px;font-weight:800;margin-top:1px;background:var(--card2);color:var(--ink3);
+  border:1px solid var(--line2)}
+.item.good .ic{background:var(--sage-bg);color:var(--sage);border-color:#dcece2}
+.item.warn .ic{background:var(--amber-bg);color:var(--amber);border-color:#f3e4cb}
+.item.bad .ic{background:var(--rose-bg);color:var(--rose);border-color:#f5ddd8}
+.item .tx{font-size:14.5px;line-height:1.78;color:#42352f}
+.item .tx b{font-weight:750;color:var(--ink)}
+
+/* ---------- 内嵌卡 ---------- */
+.card-in{background:var(--card2);border:1px solid var(--line2);border-radius:var(--r-md);
+  padding:15px 16px;margin-bottom:11px}
+.card-in .h{font-size:12.5px;font-weight:750;margin-bottom:9px;display:flex;
+  justify-content:space-between;align-items:baseline;gap:8px}
+.card-in .h em{font-style:normal;font-size:10.5px;color:var(--ink3);font-weight:500;text-align:right}
+.card-in p{font-size:13px;line-height:1.8;color:var(--ink2)}
+.meter{height:8px;border-radius:99px;background:#efe7de;overflow:hidden;margin:10px 0 5px}
+.meter i{display:block;height:100%;border-radius:99px;width:0;
+  transition:width .9s cubic-bezier(.22,.9,.3,1)}
+.meter.ok i{background:linear-gradient(90deg,var(--sage-l),var(--sage))}
+.meter.mid i{background:linear-gradient(90deg,#e5c07f,var(--amber))}
+.meter.hi i{background:linear-gradient(90deg,var(--rose-l),var(--rose))}
+.mlbl{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink3);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em}
+
+/* ---------- 冲突模式 ---------- */
+.pattern{background:linear-gradient(150deg,#fdf7f3,#fdfaf7);border:1px solid var(--line2);
+  border-radius:var(--r-md);padding:18px 17px;position:relative;overflow:hidden}
+.pattern::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--rose),var(--clay))}
+.pattern .pt{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.pattern .pt b{font-size:17px;font-weight:800;letter-spacing:-.2px}
+.pattern .pt span{font-size:10.5px;color:var(--ink3);letter-spacing:.04em}
+.pattern .row{display:flex;gap:9px;font-size:13.5px;line-height:1.78;color:#42352f;margin-bottom:9px}
+.pattern .row:last-child{margin-bottom:0}
+.pattern .row em{font-style:normal;flex:0 0 52px;color:var(--ink3);font-size:11.5px;
+  font-weight:650;letter-spacing:.03em;padding-top:2px}
+.pattern .row b{font-weight:750}
+.pattern .step{background:#fff;border:1px solid var(--line2);border-radius:var(--r-sm);
+  padding:11px 13px;margin-top:11px;font-size:13px;line-height:1.75;color:#42352f}
+.pattern .step b{color:var(--rose-d)}
+
+/* ---------- 清单 ---------- */
+.todo{background:var(--card2);border:1px solid var(--line2);border-radius:var(--r-md);padding:2px 16px}
+.todo .ti{display:flex;gap:11px;padding:14px 0;border-bottom:1px dashed var(--line2);
+  font-size:14px;line-height:1.75;color:#42352f}
 .todo .ti:last-child{border-bottom:0}
-.todo .ti i{flex:0 0 20px;height:20px;border-radius:7px;background:#fff;border:1.5px solid #e6d5c6;margin-top:2px;
-  font-style:normal;display:grid;place-items:center;font-size:10px;color:#c39a4a}
-details.ref{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}
-details.ref summary{font-size:13px;color:var(--ink2);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.todo .ti i{flex:0 0 21px;height:21px;border-radius:7px;background:var(--card);
+  border:1.5px solid var(--line);margin-top:1px;font-style:normal;display:grid;place-items:center;
+  font-size:10px;font-weight:800;color:var(--rose)}
+
+/* ---------- 折叠 ---------- */
+details.ref{margin-top:24px;border-top:1px solid var(--line2);padding-top:17px}
+details.ref summary{font-size:12.5px;color:var(--ink2);cursor:pointer;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;font-weight:600;
+  padding:2px 0;letter-spacing:.02em}
 details.ref summary::-webkit-details-marker{display:none}
-details.ref summary:after{content:'+';font-size:17px;color:var(--rose)}
-details.ref[open] summary:after{content:'−'}
-details.ref p{font-size:12.5px;line-height:1.9;color:#8b7a70;margin-top:11px}
-details.ref p b{color:#6b5b52}
-.codebox{background:#fdf7f2;border:1.5px dashed #e9d2c3;border-radius:15px;padding:18px 12px;text-align:center;margin:16px 0}
-.codebox .l{font-size:11.5px;color:var(--ink3);letter-spacing:.1em}
-.codebox .v{font-family:ui-monospace,Menlo,monospace;font-size:20px;font-weight:800;letter-spacing:.04em;
-  color:var(--deep);margin:10px 0 6px;word-break:break-all;line-height:1.4}
-.codebox .h{font-size:11.5px;color:var(--ink3)}
-.note{font-size:12.5px;color:var(--ink3);line-height:1.8;margin-top:14px}
-.warnbox{background:#fdf3ea;border:1px solid #f2ddc8;border-radius:12px;padding:13px 14px;margin-top:14px;
-  font-size:12.5px;line-height:1.8;color:#8a6a48}
-.foot{text-align:center;font-size:11.5px;color:#b8a89f;margin-top:24px;line-height:1.9}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(14px);
-  background:rgba(58,48,43,.96);color:#fff;font-size:13.5px;padding:11px 18px;border-radius:99px;
-  opacity:0;transition:.24s;z-index:99;pointer-events:none;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis}
-.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+details.ref summary::after{content:'+';font-size:17px;color:var(--rose);font-weight:400;
+  width:20px;height:20px;display:grid;place-items:center;border-radius:6px;background:var(--rose-bg)}
+details.ref[open] summary::after{content:'−'}
+details.ref p{font-size:12px;line-height:1.95;color:var(--ink3);margin-top:12px}
+details.ref p b{color:var(--ink2);font-weight:700}
+
+/* ---------- 号码 ---------- */
+.codebox{position:relative;background:linear-gradient(150deg,#fdf7f3,#fdfaf7);
+  border:1.5px dashed #e3cec2;border-radius:var(--r-md);padding:20px 14px;
+  text-align:center;margin:17px 0}
+.codebox .l{font-size:10.5px;color:var(--ink3);letter-spacing:.16em;font-weight:600}
+.codebox .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:19px;font-weight:700;
+  letter-spacing:.03em;color:var(--rose-d);margin:11px 0 7px;word-break:break-all;line-height:1.5;
+  font-variant-numeric:tabular-nums}
+.codebox .h{font-size:11px;color:var(--ink4)}
+.note{font-size:12px;color:var(--ink3);line-height:1.85;margin-top:15px}
+.warnbox{background:var(--amber-bg);border:1px solid #f0e0c6;border-radius:var(--r-sm);
+  padding:14px 15px;margin-top:15px;font-size:12px;line-height:1.85;color:#8a6a3e}
+.warnbox b{color:#7a5a2e}
+.foot{text-align:center;font-size:11px;color:var(--ink4);margin-top:26px;line-height:1.95;letter-spacing:.02em}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(16px) scale(.96);
+  background:rgba(46,39,35,.97);color:#fff;font-size:13px;padding:12px 20px;border-radius:99px;
+  opacity:0;transition:all .26s cubic-bezier(.2,.9,.3,1);z-index:99;pointer-events:none;
+  white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;
+  box-shadow:0 12px 32px rgba(46,39,35,.3);letter-spacing:.02em}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+
+@media (max-width:380px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:24px}
+  .q{font-size:19px}
+  .ring{width:158px;height:158px}
+  .ring .val b{font-size:47px}
+  .card{padding:21px 17px}
+  h3.sec{font-size:11.5px}
+}
 </style>
 </head>
 <body>
@@ -148,11 +292,13 @@ details.ref p b{color:#6b5b52}
       <div><b>相处方式小调查</b><span>HOW WE WORK TOGETHER</span></div></div>
     <div class="card">
       <h1>我们<span style="color:var(--rose)">相处</span>得怎么样？</h1>
-      <p class="lead">49 个日常场景，两个人各答一次。<br>
+      <p class="lead">51 个日常场景，两个人各答一次。<br>
       做完拿到一个号码，交给对方输入，两边合起来才有完整分析。</p>
       <div class="facts">
-        <div><b>49</b>个场景</div><div><b>7</b>分钟</div>
-        <div><b>21</b>个方面</div><div><b>不</b>上传</div>
+        <div><b>51</b><span>个场景</span></div>
+        <div><b>8</b><span>分钟</span></div>
+        <div><b>22</b><span>个方面</span></div>
+        <div><b>0</b><span>上传</span></div>
       </div>
       <hr>
       <button class="btn" id="goStart">我先做</button>
@@ -163,7 +309,7 @@ details.ref p b{color:#6b5b52}
   </section>
 
   <section id="s-quiz" class="hide">
-    <div class="pnum"><span id="pStep">1 / 49</span><span id="pRole"></span></div>
+    <div class="pnum"><span id="pStep">1 / 51</span><span id="pRole"></span></div>
     <div class="pbar"><i id="pFill"></i></div>
     <div class="card in">
       <div class="q" id="qText"></div>
@@ -197,10 +343,10 @@ details.ref p b{color:#6b5b52}
   <section id="s-enter" class="hide">
     <div class="card">
       <h1 style="font-size:22px">输入 TA 的号码</h1>
-      <p class="lead">输完继续答 49 个场景，最后直接看到你们两人的完整分析。</p>
+      <p class="lead">输完继续答 51 个场景，最后直接看到你们两人的完整分析。</p>
       <div style="margin-top:18px">
         <label class="fl" for="codeIn">号码</label>
-        <input class="code" id="codeIn" maxlength="32" inputmode="text" autocomplete="off"
+        <input class="code" id="codeIn" maxlength="34" inputmode="text" autocomplete="off"
                autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XX">
         <div class="err" id="codeErr"></div>
         <button class="btn" id="doJoin">核对并开始</button>
@@ -211,8 +357,23 @@ details.ref p b{color:#6b5b52}
 
   <section id="s-result" class="hide">
     <div class="card">
-      <div class="score">
-        <div class="num" id="rNum">—<small>/100</small></div>
+      <div class="score-head">
+        <div class="ring">
+          <svg width="172" height="172" viewBox="0 0 172 172" aria-hidden="true">
+            <circle cx="86" cy="86" r="72" fill="none" stroke="#f0e8df" stroke-width="11"/>
+            <circle id="ringArc" cx="86" cy="86" r="72" fill="none" stroke="url(#ringGrad)"
+              stroke-width="11" stroke-linecap="round"
+              stroke-dasharray="452.4" stroke-dashoffset="452.4"
+              style="transition:stroke-dashoffset 1.1s cubic-bezier(.22,.9,.3,1)"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#b96a63"/>
+                <stop offset="100%" stop-color="#c98a5e"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="val"><b id="rNum">—</b><span>综合指数</span></div>
+        </div>
         <div class="band" id="rBand"></div>
         <div class="say" id="rSay"></div>
         <div class="kpis" id="rKpis"></div>
@@ -229,6 +390,9 @@ details.ref p b{color:#6b5b52}
 
       <h3 class="sec">关系风险 <i>脆弱性，不是证据</i></h3>
       <div id="rRisk"></div>
+
+      <h3 class="sec">你们最可能的吵架方式 <i>按双方的性格推演</i></h3>
+      <div id="rPattern"></div>
 
       <h3 class="sec">问题出在哪 <i>按影响排序</i></h3>
       <div id="rProb"></div>
@@ -290,6 +454,8 @@ var AX = {
   life: {name:'生活节奏', w:.17, l:'稳定规律', r:'随时会变'}
 };
 var VORDER = ['money','close','fam','work','life'];
+/* 冲突风格轴：0 = 当场外放，100 = 压着内收。不分好坏 */
+var STYLE = {name:'冲突风格', left:'当场说开', right:'压着记着'};
 var ORDER = ['rep','sec','rsp','pos','com','mea','fut','aut'];
 var PORDER = ['pwarm','pcom','pstab','popen'];
 var RORDER = ['ralt','rbound','rhide','rbore'];
@@ -432,6 +598,14 @@ var QS = [
     {t:'每天都会聊，很想对方',s:0},{t:'会聊，但不多',s:1},
     {t:'各过各的，也挺好',s:2},{t:'反而觉得轻松',s:3}]},
 
+  /* 区分"当场爆发"与"压着记账" —— 冲突风格 */
+  {q:'吵完之后，你通常会：',d:'style',o:[
+    {t:'当场就说完了，说完就过去了',s:0},{t:'会不舒服一阵，但不至于记着',s:1},
+    {t:'表面没事，心里会记上一笔',s:2},{t:'会越想越气，下次一起算',s:3}]},
+  {q:'对方让你不满意的时候，你的第一反应：',d:'style',o:[
+    {t:'马上说出来',s:0},{t:'先忍一下，找机会提',s:1},
+    {t:'算了，不想吵',s:2},{t:'心里记下，但不说',s:3}]},
+
   /* ============ 你们在一起多久（影响判读标准）============ */
   {q:'你们在一起多久了？',d:'dur',o:[
     {t:'不到三个月'},{t:'三个月到一年'},
@@ -495,7 +669,7 @@ var RATING = QS.filter(isRating);
 var MAXDUR = 3;
 
 var DMAX = {};
-ORDER.concat(PORDER).concat(RORDER).forEach(function(k){ DMAX[k] = 0; });
+ORDER.concat(PORDER).concat(RORDER).concat(['style']).forEach(function(k){ DMAX[k] = 0; });
 RATING.forEach(function(q){ DMAX[q.d] += 3; });
 
 /* 三观轴题目的满分（每题 3） */
@@ -580,7 +754,7 @@ function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 
 function scorePerson(ans){
   var raw = {};
-  ORDER.concat(PORDER).concat(RORDER).forEach(function(k){ raw[k]=0; });
+  ORDER.concat(PORDER).concat(RORDER).concat(['style']).forEach(function(k){ raw[k]=0; });
   var vraw = {};
   VORDER.forEach(function(k){ vraw[k]=0; });
 
@@ -598,7 +772,7 @@ function scorePerson(ans){
   }
 
   var out = {};
-  ORDER.concat(PORDER).concat(RORDER).forEach(function(k){
+  ORDER.concat(PORDER).concat(RORDER).concat(['style']).forEach(function(k){
     out[k] = DMAX[k] ? Math.round(raw[k]/DMAX[k]*100) : 0;
   });
   /* 三观坐标归一到 0-100（0 = 最左，100 = 最右） */
@@ -708,6 +882,75 @@ function evaluate(a1, a2){
   };
 }
 
+/* 根据双方的维度组合推演最可能的冲突模式 */
+function predictPattern(r){
+  var A = r.p1, B = r.p2;
+
+  /* 焦虑倾向：安全感低 + 想贴近 */
+  function anx(p){ return (100-p.sec)*0.58 + p.axis.close*0.42; }
+  /* 回避倾向：冲突修复差 + 需要空间 */
+  function avo(p){ return (100-p.rep)*0.58 + (100-p.axis.close)*0.42; }
+
+  var anxA = anx(A), anxB = anx(B);
+  var avoA = avo(A), avoB = avo(B);
+
+  /* 追-退：必须是真的"一追一退"——两人差异大，且各自倾向方向相反 */
+  var anxDiff = Math.abs(anxA - anxB);
+  var avoDiff = Math.abs(avoA - avoB);
+  var spread = Math.max(anxDiff, avoDiff);          /* 差异越大越像追退 */
+  var converged = 100 - spread;                      /* 两人越像，越不像追退 */
+  var pursue = Math.max(0, spread - 12) * 0.62
+    + Math.max(0, (anxA + avoB)/2 - 25) * 0.20
+    + Math.max(0, (anxB + avoA)/2 - 25) * 0.20
+    - Math.max(0, converged - 40) * 0.30;
+
+  /* 一起变冷：双方回避都高，且日常回应已经很弱（不再交流，不只是不碰敏感话题） */
+  var rspAvg = (A.rsp + B.rsp) / 2;
+  var cold = Math.min(avoA, avoB) * 0.50
+    + Math.max(0, 65 - rspAvg) * 0.42
+    + Math.max(0, 45 - Math.max(anxA, anxB)) * 0.18;
+
+  /* 冲突风格：0 = 当场外放，100 = 压着内收（必须先声明，explode 要用） */
+  var inbound = Math.max(A.style, B.style);     /* 两人里更内收的那个 */
+  var outbound = Math.min(A.style, B.style);    /* 两人里更外放的那个 */
+
+  /* 越吵越大声：双方修复都差 + 两人都偏外放（会当场正面冲） */
+  var explode = Math.min(100-A.rep, 100-B.rep) * 0.28
+    + Math.min(anxA, anxB) * 0.20
+    + Math.max(0, 58 - outbound) * 0.54;
+
+  /* 记账式冷战：修复差 + 双方都压着不说 */
+  var score = Math.min(100-A.rep, 100-B.rep) * 0.34
+    + Math.max(0, Math.min(anxA, anxB) - 25) * 0.22
+    + inbound * 0.44;
+
+  /* 默契回避：双方回避高，但日常还在好好说话（只是不碰硬话题） */
+  var avoid = Math.min(avoA, avoB) * 0.48
+    + Math.max(0, 55 - Math.max(anxA, anxB)) * 0.28
+    + Math.max(0, rspAvg - 40) * 0.42;
+
+  /* 良性：双方修复和安全感都不错 */
+  var repair = Math.min(A.rep, B.rep) * 0.62 + Math.min(A.sec, B.sec) * 0.38;
+
+  var cand = [
+    {k:'pursue', v:pursue}, {k:'cold', v:cold}, {k:'explode', v:explode},
+    {k:'score', v:score}, {k:'avoidboth', v:avoid}, {k:'repair', v:repair}
+  ].sort(function(x,y){ return y.v - x.v; });
+
+  var top = cand[0];
+  /* 良性模式足够高时优先显示 */
+  if (repair >= 58 && repair >= top.v*0.9) top = {k:'repair', v:repair};
+
+  return {
+    key: top.k,
+    pattern: PATTERNS[top.k],
+    confidence: clamp(Math.round((top.v - cand[1].v) + 50), 48, 90),
+    runner: PATTERNS[cand[1].k],
+    anxiousAvg: Math.round((anxA+anxB)/2),
+    avoidAvg: Math.round((avoA+avoB)/2)
+  };
+}
+
 function band(t){
   if (t >= 86) return {n:'很扎实',s:'你们已经把日子过成一套能自己运转的东西：有摩擦，收得住；有空间，还在一起。剩下的事不是"还能不能"，而是想不想再往前一点。'};
   if (t >= 73) return {n:'基础不错',s:'大方向一致，只有少数地方在反复消耗。把最卡的那一两件事聊透，分数会明显上扬。'};
@@ -794,6 +1037,62 @@ var RISK_ADVICE = {
   rhide:'隐瞒变多时，关系会慢慢变成两个平行世界。可以先从一件"小事"开始说，试试说了会发生什么。',
   rbore:'倦怠是最常见也最可修的。换一件你们都没做过的小事，比努力"找回感觉"更实际。'
 };
+/* ============================================================
+   冲突模式推演库
+   依据：Gottman 的"四骑士"与修复尝试、依恋取向（焦虑/回避）、
+   Rusbult 的破坏性反应（退出/忽视）与建设性反应（表达/忠诚）
+   ============================================================ */
+var PATTERNS = {
+  pursue: {
+    name:'追与退',
+    tag:'最常见的循环',
+    desc:'一方越想马上说清楚，一方越想先躲开。追的人觉得"你根本不在乎"，退的人觉得"说什么都是错"。',
+    why:'一个人需要立刻确认关系还在（情绪安全感偏低 + 亲密需求高），另一个需要先冷静才能思考（冲突修复偏低 + 空间需求高）。两边都不是故意的，但刚好互相触发。',
+    loop:'你追得越紧，他退得越快；他退得越快，你越要追。',
+    fix:'先破坏这个循环，不要先解决那件事。约定一个"暂停词"（比如"我们十分钟后再聊"），说的人保证会回来，听的人保证不追。循环断了，问题才有机会谈。'
+  },
+  cold: {
+    name:'一起变冷',
+    tag:'安静的那种消耗',
+    desc:'不是吵，是慢慢不说了。两个人都在忍，也都在记。',
+    why:'双方的冲突修复和表达意愿都偏低，习惯自己消化。短期很平静，长期会把小事攒成"积怨"。',
+    loop:'一件事没讲开，下一件就更懒得讲。',
+    fix:'每周固定留二十分钟，专门讲"这周有什么没说完的"。规则只有一条：讲的人不指责，听的人不辩解。有固定出口，才不会一直堵着。'
+  },
+  explode: {
+    name:'越吵越大声',
+    tag:'情绪跑在前面',
+    desc:'一开口就上火，话越说越重，最后吵的已经不是原来那件事。',
+    why:'至少一方在被触动时很难调节情绪，容易把"我不舒服"升级成"你这个人有问题"。事后的后悔又变成下一轮的内疚。',
+    loop:'小事点燃 → 说重话 → 冷战 → 和好 → 下次更容易点燃。',
+    fix:'不是压住不吵，而是把"停下来"提前。感到心跳加快、声音变大时，任何一方都可以喊停，十分钟后回来。研究里这个动作叫修复尝试，是稳定伴侣最常用的技巧。'
+  },
+  score: {
+    name:'冷战式记账',
+    tag:'谁都不肯先低头',
+    desc:'吵完不吵了，但都记着。下一次就会翻出来，一件变五件。',
+    why:'双方都比较好胜或怕示弱，冲突后没有真正的收尾动作，情绪被压进"账本"。',
+    loop:'这次忍了 → 下次一起算 → 越算越委屈。',
+    fix:'把"翻旧账"当成信号而不是罪状：说明那件事从来没被真正解决过。挑最旧的一件，这次只谈它，谈到双方都有一个具体做法为止。'
+  },
+  avoidboth: {
+    name:'默契回避',
+    tag:'表面很太平',
+    desc:'你们几乎不吵架。听起来很好，但有些事一直没人碰。',
+    why:'双方都不喜欢冲突，选择绕开。冲突少不代表问题少，只代表问题被延后了。',
+    loop:'不谈 → 各自猜测 → 各自失望 → 更不谈。',
+    fix:'挑一件"一直没聊但也不至于爆炸"的小事开始，试试看谈完会怎样。目的是证明"谈了也不会天塌"。'
+  },
+  repair: {
+    name:'吵得起来也收得住',
+    tag:'这是好模式',
+    desc:'你们会吵，但吵完能回来。有人递台阶，也有人接。',
+    why:'冲突修复和情绪安全感都在中等以上，说明你们已经发展出了自己的收尾方式。',
+    loop:'有摩擦 → 表达 → 修复 → 关系反而更近一点。',
+    fix:'这套机制现在靠的是本能，试着把它说出来一次：问他"上次我们是怎么和好的"，让有效的方式变成有意识的选择，而不是运气。'
+  }
+};
+
 var AX_FIX = {
   money:'钱的默认设定不同，最容易在"该不该花"上反复起火。建议做一件很实际的事：约定一个金额线（比如 500 元），线以下各自决定不问，线以上一起商量。规则比默契可靠。',
   close:'一个需要更多空间，一个需要更多贴近，这不是谁不爱谁。可以约定"最低陪伴量"（比如每天一条消息、每周一次完整相处），把需求变成可满足的条款。',
@@ -932,7 +1231,7 @@ function finishQuiz(){
    结果渲染
    ============================================================ */
 function renderResult(r){
-  $('rNum').innerHTML = r.total+'<small>/100</small>';
+  $('rNum').textContent = r.total;
   var b = band(r.total);
   $('rBand').textContent = b.n;
   $('rSay').textContent = b.s;
@@ -947,6 +1246,28 @@ function renderResult(r){
   kpi('答案一致度', r.agreement+'%', r.agreement>=75?'good':(r.agreement<=55?'warn':''));
   kpi('关系风险', Math.round(r.riskAvg), r.riskAvg>=55?'bad':(r.riskAvg>=35?'warn':'good'));
   kpi('三观匹配', r.valuesFit, r.valuesFit>=75?'good':(r.valuesFit<50?'warn':''));
+
+  /* ---- 冲突模式 ---- */
+  var pp = predictPattern(r);
+  var pat = $('rPattern'); pat.innerHTML='';
+  var pbox = document.createElement('div');
+  pbox.className='pattern';
+  pbox.innerHTML =
+    '<div class="pt"><b>'+pp.pattern.name+'</b><span>'+
+      pp.pattern.tag+' · 匹配度 '+pp.confidence+'%</span></div>'+
+    '<div class="row"><em>什么样</em><div>'+pp.pattern.desc+'</div></div>'+
+    '<div class="row"><em>为什么</em><div>'+pp.pattern.why+'</div></div>'+
+    '<div class="row"><em>循环</em><div style="color:var(--rose-d);font-weight:600">'+pp.pattern.loop+'</div></div>'+
+    '<div class="step"><b>怎么破：</b>'+pp.pattern.fix+'</div>';
+  pat.appendChild(pbox);
+
+  var alt = document.createElement('p');
+  alt.className='note';
+  alt.style.margin='11px 0 0';
+  alt.innerHTML = '这是按你们在「摩擦之后 / 心里有底 / 亲密距离」这几项上的组合推演出来的，'+
+    '不是标签。如果它读起来不太像，那说明你们的情况比六种模式更细——'+
+    '另一种可能是<b>'+pp.runner.name+'</b>（'+pp.runner.tag+'）。';
+  pat.appendChild(alt);
 
   /* ---- TA 眼中的你 ---- */
   var sy = $('rSeeYou'); sy.innerHTML='';
@@ -1249,6 +1570,16 @@ function renderResult(r){
     '<b>它绝不会告诉你</b>一个人有没有出轨、会不会出轨。那类判断需要事实，而不是分数。</p>';
 
   bindCopy(r);
+
+  /* 环形进度 */
+  var arc = $('ringArc');
+  if (arc){
+    var C = 452.4;
+    arc.style.strokeDashoffset = C;
+    setTimeout(function(){
+      arc.style.strokeDashoffset = C * (1 - r.total/100);
+    }, 120);
+  }
 }
 
 function bindCopy(r){
@@ -1295,7 +1626,7 @@ $('copyInvite').addEventListener('click', function(){
   var txt = '我做了个相处方式小调查，想看看我们俩的答案放一起是什么样。\n'
     + '网址：'+location.origin+location.pathname+'\n'
     + '点「我拿到号码了」，输入：'+$('codeVal').textContent+'\n'
-    + '49 个日常场景，七分钟，答完直接出完整分析。';
+    + '51 个日常场景，八分钟，答完直接出完整分析。';
   copy(txt,'邀请已复制');
 });
 document.addEventListener('keydown', function(e){
