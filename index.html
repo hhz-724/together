@@ -5,544 +5,882 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>相处方式小调查 · 双人版</title>
 <style>
+/* ============================================================
+   设计系统 — 暖纸感 / 克制 / 呼吸感
+   ============================================================ */
 :root{
-  --bg:#fbf7f2; --bg2:#f6efe7;
-  --ink:#2e2723; --ink2:#6f625a; --ink3:#9d8f86; --ink4:#c2b5ab;
-  --line:#e8ddd2; --line2:#f2e9e0;
-  --card:#ffffff; --card2:#fdfaf6;
-  --rose:#b96a63; --rose-l:#d99a93; --rose-d:#8e4a44; --rose-bg:#fdf0ed;
-  --sage:#5f9576; --sage-l:#8fbfa5; --sage-bg:#eef6f1;
-  --amber:#bb8a42; --amber-bg:#fdf5e8;
-  --clay:#a8654f;
-  --r-lg:22px; --r-md:16px; --r-sm:11px;
-  --sh-1:0 1px 2px rgba(90,64,48,.04), 0 4px 14px rgba(90,64,48,.05);
-  --sh-2:0 2px 6px rgba(90,64,48,.05), 0 12px 32px rgba(90,64,48,.07);
-  --sh-3:0 4px 12px rgba(90,64,48,.06), 0 20px 48px rgba(90,64,48,.09);
+  /* 底色：米白偏暖，像一张好纸 */
+  --paper:#faf7f2;
+  --paper-2:#f4efe7;
+  --surface:#ffffff;
+  --surface-soft:#fcfaf7;
+
+  /* 墨色层级 */
+  --ink:#241f1c;
+  --ink-2:#5c534c;
+  --ink-3:#8f847a;
+  --ink-4:#b8aea3;
+  --ink-5:#d9d1c7;
+
+  /* 线条 */
+  --hair:#e9e2d8;
+  --hair-soft:#f2ece3;
+
+  /* 主色：陶土玫瑰 */
+  --clay:#b4655e;
+  --clay-soft:#d1938d;
+  --clay-wash:#fbf0ee;
+  --clay-deep:#8a4741;
+
+  /* 辅色 */
+  --sage:#5d8f74;
+  --sage-wash:#eef5f0;
+  --amber:#b0873f;
+  --amber-wash:#fbf4e6;
+  --indigo:#6b7492;
+  --indigo-wash:#f0f2f7;
+
+  /* 圆角 */
+  --r-xl:26px;
+  --r-lg:19px;
+  --r-md:14px;
+  --r-sm:10px;
+
+  /* 阴影：尽量轻，靠线条和留白撑结构 */
+  --sh-xs:0 1px 2px rgba(60,44,34,.04);
+  --sh-sm:0 1px 3px rgba(60,44,34,.045), 0 4px 14px rgba(60,44,34,.04);
+  --sh-md:0 2px 6px rgba(60,44,34,.05), 0 12px 30px rgba(60,44,34,.055);
+  --sh-lg:0 4px 12px rgba(60,44,34,.06), 0 22px 50px rgba(60,44,34,.075);
+
+  /* 动效曲线 */
+  --ease:cubic-bezier(.22,.86,.34,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
 }
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
-  color:var(--ink);background:var(--bg);line-height:1.68;font-size:16px;min-height:100dvh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  background:var(--paper);color:var(--ink);
+  font-size:16px;line-height:1.7;
+  min-height:100dvh;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  font-feature-settings:"kern" 1,"liga" 1;
-  background-image:
-    radial-gradient(ellipse 70% 50% at 8% -8%, #fdf1e8 0%, transparent 60%),
-    radial-gradient(ellipse 60% 45% at 100% 0%, #faeeef 0%, transparent 55%),
-    radial-gradient(ellipse 90% 60% at 50% 105%, #f7f1ea 0%, transparent 65%);
-  background-attachment:fixed;
+  text-rendering:optimizeLegibility;
+  font-feature-settings:"kern" 1,"liga" 1,"palt" 1;
+  overflow-x:hidden;
 }
+/* 背景：极淡的双色晕，只在顶部 */
 body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4;
-  background-image:radial-gradient(circle at 1px 1px, rgba(150,120,100,.09) 1px, transparent 0);
-  background-size:22px 22px;
-  -webkit-mask-image:linear-gradient(180deg,#000,transparent 55%);
-  mask-image:linear-gradient(180deg,#000,transparent 55%);
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -18%, rgba(212,168,150,.20), transparent 62%),
+    radial-gradient(ellipse 60% 40% at 100% 8%, rgba(170,190,205,.13), transparent 58%);
 }
-.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;
-  padding:22px 17px calc(48px + env(safe-area-inset-bottom))}
+/* 纸纹 */
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(circle at 1px 1px, rgba(120,95,75,.055) 1px, transparent 0);
+  background-size:20px 20px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 72%);
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 72%);
+}
+
+.wrap{position:relative;z-index:1;max-width:580px;margin:0 auto;
+  padding:20px 18px calc(56px + env(safe-area-inset-bottom))}
 .hide{display:none!important}
-.in{animation:in .42s cubic-bezier(.2,.8,.3,1) both}
-@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-/* ---------- 品牌 ---------- */
-.brand{display:flex;align-items:center;gap:11px;margin-bottom:22px}
-.mark{position:relative;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;
-  background:linear-gradient(145deg,var(--rose),var(--rose-l));color:#fff;font-size:19px;
-  box-shadow:0 6px 16px rgba(185,106,99,.28), inset 0 1px 0 rgba(255,255,255,.3)}
-.mark::after{content:'';position:absolute;inset:0;border-radius:13px;
-  background:linear-gradient(180deg,rgba(255,255,255,.22),transparent 55%)}
-.brand b{display:block;font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.3}
-.brand span{display:block;font-size:10px;color:var(--ink4);letter-spacing:.16em;margin-top:3px;font-weight:600}
+/* 页面进场 */
+.screen{animation:screenIn .5s var(--ease-out) both}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:none}
+}
 
-/* ---------- 卡片 ---------- */
-.card{background:var(--card);border:1px solid var(--line2);border-radius:var(--r-lg);
-  padding:24px 21px;box-shadow:var(--sh-2);position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent)}
+/* ============================================================
+   品牌头
+   ============================================================ */
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+.brand .mk{
+  width:42px;height:42px;border-radius:14px;flex:0 0 auto;position:relative;
+  display:grid;place-items:center;color:#fff;font-size:19px;font-weight:700;
+  background:linear-gradient(145deg,#c1766d,#a95b54);
+  box-shadow:0 4px 14px rgba(140,80,70,.28), inset 0 1px 0 rgba(255,255,255,.32), inset 0 -1px 0 rgba(0,0,0,.08);
+}
+.brand .mk::after{
+  content:'';position:absolute;inset:3px;border-radius:11px;
+  border:1px solid rgba(255,255,255,.18);pointer-events:none;
+}
+.brand .tx b{display:block;font-size:15.5px;font-weight:750;letter-spacing:-.1px;line-height:1.3}
+.brand .tx span{display:block;font-size:9.5px;color:var(--ink-4);letter-spacing:.2em;margin-top:3px;font-weight:650}
 
-/* ---------- 排版 ---------- */
-h1{font-size:27px;line-height:1.38;letter-spacing:-.5px;margin-bottom:12px;font-weight:800}
-h1 em{font-style:normal;position:relative;color:var(--rose);
-  background:linear-gradient(135deg,var(--rose),var(--clay));-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{color:var(--ink2);font-size:14.5px;line-height:1.88;letter-spacing:.005em}
+/* ============================================================
+   卡片
+   ============================================================ */
+.card{
+  background:var(--surface);
+  border:1px solid var(--hair);
+  border-radius:var(--r-xl);
+  padding:28px 24px;
+  box-shadow:var(--sh-md);
+  position:relative;
+}
+@media (max-width:400px){
+  .card{padding:24px 19px;border-radius:22px}
+  .wrap{padding:16px 14px calc(48px + env(safe-area-inset-bottom))}
+}
+
+/* ============================================================
+   排版
+   ============================================================ */
+h1{
+  font-size:28px;line-height:1.34;letter-spacing:-.7px;font-weight:800;
+  margin-bottom:14px;color:var(--ink);
+}
+h1 em{
+  font-style:normal;color:var(--clay);
+  background:linear-gradient(135deg,var(--clay) 20%,#c98f6a 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.lead{color:var(--ink-2);font-size:14.5px;line-height:1.85;letter-spacing:.005em}
 .lead b{color:var(--ink);font-weight:700}
 
-/* ---------- 数据条 ---------- */
-.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:20px 0 2px;
-  background:var(--line2);border:1px solid var(--line2);border-radius:var(--r-md);overflow:hidden}
-.facts div{background:var(--card);padding:12px 6px;text-align:center}
-.facts b{display:block;font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-.5px;line-height:1.25}
-.facts span{display:block;font-size:10.5px;color:var(--ink3);margin-top:2px;letter-spacing:.02em}
-hr{border:0;border-top:1px solid var(--line2);margin:22px 0}
+/* 数据条 */
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  margin:24px 0 4px;border-radius:var(--r-md);overflow:hidden;
+  background:var(--surface-soft);border:1px solid var(--hair-soft);
+}
+.stats>div{padding:14px 4px;text-align:center;position:relative}
+.stats>div+div::before{
+  content:'';position:absolute;left:0;top:22%;bottom:22%;width:1px;background:var(--hair);
+}
+.stats b{display:block;font-size:21px;font-weight:800;letter-spacing:-.6px;line-height:1.15;color:var(--ink)}
+.stats span{display:block;font-size:10px;color:var(--ink-4);margin-top:3px;letter-spacing:.04em}
 
-/* ---------- 按钮 ---------- */
-.btn{display:block;width:100%;border:0;border-radius:var(--r-md);padding:16px;font-size:16px;
-  font-weight:700;font-family:inherit;color:#fff;cursor:pointer;letter-spacing:.01em;
-  background:linear-gradient(135deg,var(--rose),var(--rose-l));
-  box-shadow:0 8px 20px rgba(185,106,99,.26), inset 0 1px 0 rgba(255,255,255,.2);
-  transition:transform .12s ease, box-shadow .2s ease;position:relative;overflow:hidden}
-.btn:active{transform:scale(.982);box-shadow:0 4px 12px rgba(185,106,99,.22)}
-.btn:disabled{opacity:.38;box-shadow:none;cursor:default}
-.btn.ghost{background:var(--card);color:var(--rose-d);border:1.5px solid var(--line);
-  box-shadow:var(--sh-1);font-weight:600}
-.btn.ghost:active{background:var(--card2)}
-.btn.sm{padding:13px;font-size:14px;border-radius:var(--r-sm)}
-.btns{display:flex;gap:10px}.btns .btn{flex:1}
+hr{border:0;border-top:1px solid var(--hair-soft);margin:24px 0}
 
-/* ---------- 进度 ---------- */
-.pnum{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;
-  color:var(--ink3);margin-bottom:9px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
-.pnum b{color:var(--rose);font-weight:800;font-size:12.5px}
-.pbar{height:5px;border-radius:99px;background:var(--line2);overflow:hidden;margin-bottom:20px}
-.pbar i{display:block;height:100%;border-radius:99px;width:0;
-  background:linear-gradient(90deg,var(--rose-l),var(--rose));
-  box-shadow:0 0 8px rgba(185,106,99,.4);transition:width .38s cubic-bezier(.3,.9,.3,1)}
+/* ============================================================
+   按钮
+   ============================================================ */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  width:100%;border:0;border-radius:var(--r-md);
+  padding:17px 20px;font-size:16px;font-weight:700;letter-spacing:.01em;
+  font-family:inherit;color:#fff;cursor:pointer;
+  background:linear-gradient(150deg,#c0766d,#a95a53);
+  box-shadow:0 4px 16px rgba(150,85,75,.26), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.1);
+  transition:transform .16s var(--ease),box-shadow .2s ease,opacity .2s;
+  position:relative;overflow:hidden;-webkit-user-select:none;user-select:none;
+}
+.btn::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),transparent 46%);
+}
+.btn:active{transform:scale(.978);box-shadow:0 2px 8px rgba(150,85,75,.2)}
+.btn:disabled{opacity:.34;box-shadow:none;cursor:not-allowed;transform:none}
 
-/* ---------- 题目 ---------- */
-.q{font-size:20.5px;line-height:1.58;font-weight:750;letter-spacing:-.25px;margin:0 0 7px}
-.qhint{display:inline-block;font-size:11px;color:var(--ink3);margin-bottom:17px;
-  padding:3px 9px;border-radius:99px;background:var(--card2);border:1px solid var(--line2);letter-spacing:.02em}
-.qhint:empty{display:none}
-.opt{width:100%;text-align:left;font-family:inherit;font-size:15.5px;line-height:1.6;color:var(--ink);
-  background:var(--card);border:1.5px solid var(--line2);border-radius:var(--r-md);
-  padding:15px 15px;margin-bottom:9px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;
-  transition:border-color .18s ease, background .18s ease, transform .1s ease, box-shadow .18s ease;
-  box-shadow:0 1px 2px rgba(90,64,48,.03)}
-.opt:active{transform:scale(.994)}
-.opt .k{flex:0 0 22px;height:22px;border-radius:7px;background:var(--card2);color:var(--ink3);
-  font-size:10.5px;font-weight:800;display:grid;place-items:center;margin-top:2px;
-  border:1px solid var(--line2);transition:all .18s ease}
-.opt.sel{border-color:var(--rose-l);background:var(--rose-bg);box-shadow:0 3px 10px rgba(185,106,99,.1)}
-.opt.sel .k{background:var(--rose);color:#fff;border-color:var(--rose)}
-.navrow{display:flex;gap:10px;align-items:center;margin-top:18px}
-.navrow .btn{flex:1}
-.tlink{background:none;border:0;color:var(--ink3);font-size:13.5px;font-family:inherit;
-  padding:10px 4px;cursor:pointer;white-space:nowrap;transition:color .15s}
-.tlink:active{color:var(--ink2)}
+.btn.ghost{
+  background:var(--surface);color:var(--clay-deep);
+  border:1.5px solid var(--hair);box-shadow:var(--sh-xs);font-weight:650;
+}
+.btn.ghost::after{display:none}
+.btn.ghost:active{background:var(--surface-soft);transform:scale(.985)}
 
-/* ---------- 输入 ---------- */
-label.fl{display:block;font-size:12.5px;color:var(--ink2);margin:0 0 8px;font-weight:600;letter-spacing:.02em}
-input.code{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;
-  letter-spacing:.11em;text-align:center;padding:16px 8px;border-radius:var(--r-md);
-  border:1.5px solid var(--line);background:var(--card);color:var(--ink);outline:none;
-  text-transform:uppercase;transition:border-color .18s,box-shadow .18s;box-shadow:var(--sh-1)}
-input.code:focus{border-color:var(--rose-l);box-shadow:0 0 0 4px var(--rose-bg)}
-.err{color:#a94a42;font-size:12.5px;margin-top:9px;min-height:19px;line-height:1.5}
+.btn.quiet{
+  background:transparent;color:var(--ink-3);box-shadow:none;font-weight:600;font-size:14px;
+  padding:12px;
+}
+.btn.quiet::after{display:none}
+.btn.quiet:active{color:var(--ink-2);transform:none}
 
-/* ---------- 分数 ---------- */
-.score-head{text-align:center;padding:6px 0 4px;position:relative}
-.ring{position:relative;width:172px;height:172px;margin:0 auto 14px}
-.ring svg{transform:rotate(-90deg);display:block}
-.ring .val{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
-.ring .val b{font-size:52px;font-weight:800;letter-spacing:-3px;line-height:1;
-  background:linear-gradient(135deg,var(--rose),var(--clay));-webkit-background-clip:text;
-  background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
-.ring .val span{display:block;font-size:11px;color:var(--ink4);letter-spacing:.14em;margin-top:5px;font-weight:600}
-.band{font-size:21px;font-weight:800;letter-spacing:-.2px;margin-bottom:8px}
-.say{color:var(--ink2);font-size:14px;line-height:1.85;text-align:left;margin-top:2px}
+.btn.sm{padding:13px 16px;font-size:14.5px;border-radius:var(--r-sm)}
+.btns{display:flex;gap:10px}
+.btns .btn{flex:1}
 
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
-.kpi{background:var(--card2);border:1px solid var(--line2);border-radius:var(--r-sm);
-  padding:12px 7px;text-align:center;transition:transform .2s}
-.kpi b{display:block;font-size:18px;font-weight:800;letter-spacing:-.4px;line-height:1.2;
-  font-variant-numeric:tabular-nums}
-.kpi span{display:block;font-size:10px;color:var(--ink3);margin-top:3px;letter-spacing:.02em;line-height:1.4}
-.kpi.good b{color:var(--sage)}
-.kpi.warn b{color:var(--amber)}
-.kpi.bad b{color:var(--rose)}
+/* ============================================================
+   进度
+   ============================================================ */
+.prog{margin-bottom:20px}
+.prog .row{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:11.5px;color:var(--ink-4);margin-bottom:10px;
+  font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.prog .row b{color:var(--clay);font-weight:800;font-size:13px}
+.prog .track{height:4px;border-radius:99px;background:var(--hair-soft);overflow:hidden}
+.prog .track i{
+  display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--clay-soft),var(--clay));
+  transition:width .42s var(--ease);
+}
 
-/* ---------- 区块标题 ---------- */
-h3.sec{font-size:12px;letter-spacing:.13em;color:var(--ink2);font-weight:700;margin:30px 0 14px;
-  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-  padding-bottom:9px;border-bottom:1px solid var(--line2)}
-h3.sec i{font-style:normal;font-size:10.5px;letter-spacing:.01em;color:var(--ink4);font-weight:500;text-align:right}
+/* ============================================================
+   题目
+   ============================================================ */
+.qwrap{padding:4px 0 0}
+.qtag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10.5px;font-weight:650;color:var(--ink-3);
+  background:var(--surface-soft);border:1px solid var(--hair-soft);
+  padding:4px 10px;border-radius:99px;margin-bottom:13px;letter-spacing:.02em;
+}
+.qtag:empty{display:none}
+.qtext{
+  font-size:21px;line-height:1.56;font-weight:750;
+  letter-spacing:-.35px;color:var(--ink);margin-bottom:22px;
+}
+@media (max-width:400px){.qtext{font-size:19.5px}}
 
-/* ---------- 维度条 ---------- */
-.dim{margin-bottom:16px;padding-bottom:14px;border-bottom:1px dashed var(--line2)}
-.dim:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
-.dim .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:8px}
+.opts{display:flex;flex-direction:column;gap:9px}
+
+.opt{
+  width:100%;text-align:left;font-family:inherit;
+  font-size:15.5px;line-height:1.6;color:var(--ink);
+  background:var(--surface);border:1.5px solid var(--hair);
+  border-radius:var(--r-md);padding:16px 16px;
+  cursor:pointer;display:flex;gap:13px;align-items:flex-start;
+  transition:border-color .18s var(--ease),background .18s var(--ease),
+             box-shadow .18s var(--ease),transform .1s var(--ease);
+  box-shadow:var(--sh-xs);
+  -webkit-user-select:none;user-select:none;
+}
+.opt .kk{
+  flex:0 0 23px;height:23px;border-radius:7px;
+  background:var(--surface-soft);border:1px solid var(--hair);
+  color:var(--ink-4);font-size:11px;font-weight:800;
+  display:grid;place-items:center;margin-top:2px;
+  transition:all .18s var(--ease);
+}
+.opt .tt{flex:1;padding-top:1px}
+.opt:active{transform:scale(.992)}
+.opt.sel{
+  border-color:var(--clay-soft);background:var(--clay-wash);
+  box-shadow:0 2px 10px rgba(180,101,94,.12);
+}
+.opt.sel .kk{
+  background:var(--clay);border-color:var(--clay);color:#fff;
+}
+.opt.sel .tt{color:var(--clay-deep);font-weight:600}
+
+.qnav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:8px}
+.qnav button{
+  background:none;border:0;font-family:inherit;font-size:13.5px;
+  color:var(--ink-4);padding:10px 6px;cursor:pointer;
+  transition:color .16s;
+}
+.qnav button:active{color:var(--ink-2)}
+.qnav button[ghosted]{opacity:.32;pointer-events:none}
+.autohint{
+  text-align:center;font-size:11px;color:var(--ink-5);
+  margin-top:16px;letter-spacing:.04em;
+}
+
+/* ============================================================
+   分段选择（性别 / 年龄）
+   ============================================================ */
+.field{margin-bottom:22px}
+.field:last-of-type{margin-bottom:0}
+.field>label{
+  display:block;font-size:12px;font-weight:650;color:var(--ink-3);
+  margin-bottom:10px;letter-spacing:.06em;
+}
+.seg{display:grid;gap:8px}
+.seg.g2{grid-template-columns:repeat(2,1fr)}
+.seg.g3{grid-template-columns:repeat(3,1fr)}
+.seg.g4{grid-template-columns:repeat(4,1fr)}
+.seg button{
+  font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);
+  background:var(--surface);border:1.5px solid var(--hair);
+  border-radius:var(--r-sm);padding:14px 6px;cursor:pointer;
+  transition:all .18s var(--ease);
+}
+.seg button:active{transform:scale(.97)}
+.seg button.on{
+  background:var(--clay-wash);border-color:var(--clay-soft);
+  color:var(--clay-deep);font-weight:750;
+  box-shadow:0 2px 8px rgba(180,101,94,.1);
+}
+
+/* ============================================================
+   环形分数
+   ============================================================ */
+.scorehero{display:flex;flex-direction:column;align-items:center;padding:6px 0 2px}
+.ring{position:relative;width:176px;height:176px;margin-bottom:16px}
+.ring svg{display:block;transform:rotate(-90deg)}
+.ring .in{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.ring .in b{
+  font-size:56px;font-weight:800;letter-spacing:-4px;line-height:.95;
+  font-variant-numeric:tabular-nums;
+  background:linear-gradient(150deg,var(--clay) 10%,#c99268 90%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.ring .in span{
+  font-size:10px;color:var(--ink-4);letter-spacing:.14em;
+  margin-top:7px;font-weight:650;
+}
+.verdict{font-size:21px;font-weight:800;letter-spacing:-.3px;margin-bottom:10px;text-align:center}
+.verdict-say{
+  font-size:14px;line-height:1.85;color:var(--ink-2);
+  text-align:left;width:100%;
+}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:20px;width:100%}
+.kpi{
+  background:var(--surface-soft);border:1px solid var(--hair-soft);
+  border-radius:var(--r-sm);padding:13px 6px;text-align:center;
+}
+.kpi b{display:block;font-size:18px;font-weight:800;letter-spacing:-.5px;
+  line-height:1.2;font-variant-numeric:tabular-nums;color:var(--ink)}
+.kpi span{display:block;font-size:9.5px;color:var(--ink-4);margin-top:4px;letter-spacing:.03em}
+.kpi.g b{color:var(--sage)}
+.kpi.w b{color:var(--amber)}
+.kpi.r b{color:var(--clay)}
+
+/* ============================================================
+   区块标题
+   ============================================================ */
+.sec{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  margin:32px 0 15px;padding-bottom:11px;
+  border-bottom:1px solid var(--hair-soft);
+}
+.sec:first-child{margin-top:0}
+.sec h3{
+  font-size:13px;font-weight:750;color:var(--ink);letter-spacing:-.05em;
+}
+.sec i{
+  font-style:normal;font-size:10.5px;color:var(--ink-4);
+  letter-spacing:.02em;text-align:right;font-weight:500;flex:0 1 auto;
+}
+
+/* ============================================================
+   维度条
+   ============================================================ */
+.dim{margin-bottom:18px}
+.dim:last-child{margin-bottom:0}
+.dim .hd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}
 .dim .hd b{font-size:14.5px;font-weight:700;letter-spacing:-.1px}
-.dim .bars{display:flex;flex-direction:column;gap:5px}
-.dim .bl{display:flex;align-items:center;gap:8px}
-.dim .bl u{flex:0 0 27px;font-size:10px;color:var(--ink4);text-decoration:none;text-align:right;
-  font-weight:600;letter-spacing:.02em}
-.dim .bl .tr{flex:1;height:7px;border-radius:99px;background:var(--line2);overflow:hidden}
-.dim .bl .tr i{display:block;height:100%;width:0;border-radius:99px;
-  transition:width .85s cubic-bezier(.22,.9,.3,1)}
-.dim .bl.v1 .tr i{background:linear-gradient(90deg,var(--rose-l),var(--rose))}
-.dim .bl.v2 .tr i{background:linear-gradient(90deg,var(--sage-l),var(--sage))}
-.dim .bl n{flex:0 0 27px;font-size:11px;color:var(--ink2);font-variant-numeric:tabular-nums;
-  font-weight:600;text-align:right}
-.dim .cmt{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:8px}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{display:flex;align-items:center;gap:9px}
+.bar u{
+  flex:0 0 30px;font-size:10px;color:var(--ink-4);
+  text-decoration:none;text-align:right;font-weight:650;letter-spacing:.02em;
+}
+.bar .tr{flex:1;height:6px;border-radius:99px;background:var(--hair-soft);overflow:hidden}
+.bar .tr i{
+  display:block;height:100%;width:0;border-radius:99px;
+  transition:width .9s var(--ease-out);
+}
+.bar.you .tr i{background:linear-gradient(90deg,var(--clay-soft),var(--clay))}
+.bar.them .tr i{background:linear-gradient(90deg,#8fb9a1,var(--sage))}
+.bar n{
+  flex:0 0 28px;font-size:11px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;font-weight:700;text-align:right;
+}
+.dim .note{font-size:12.5px;line-height:1.72;color:var(--ink-3);margin-top:8px}
 
-/* ---------- 标签 ---------- */
-.tag{display:inline-block;font-size:10px;padding:2.5px 8px;border-radius:99px;
-  background:var(--card2);color:var(--ink3);border:1px solid var(--line2);
-  font-weight:600;letter-spacing:.02em;white-space:nowrap}
-.tag.g{background:var(--sage-bg);color:var(--sage);border-color:#dcece2}
-.tag.w{background:var(--amber-bg);color:var(--amber);border-color:#f3e4cb}
-.tag.r{background:var(--rose-bg);color:var(--rose);border-color:#f5ddd8}
+/* ============================================================
+   标签
+   ============================================================ */
+.pill{
+  display:inline-flex;align-items:center;
+  font-size:10px;font-weight:700;padding:2.5px 8px;border-radius:99px;
+  letter-spacing:.02em;white-space:nowrap;
+  background:var(--surface-soft);color:var(--ink-3);border:1px solid var(--hair-soft);
+}
+.pill.g{background:var(--sage-wash);color:var(--sage);border-color:#dcebe2}
+.pill.w{background:var(--amber-wash);color:var(--amber);border-color:#f0e2c6}
+.pill.r{background:var(--clay-wash);color:var(--clay);border-color:#f2dcd8}
+.pill.n{background:var(--indigo-wash);color:var(--indigo);border-color:#e0e4ee}
 
-/* ---------- 条目 ---------- */
-.item{display:flex;gap:11px;margin-bottom:15px}
-.item:last-child{margin-bottom:0}
-.item .ic{flex:0 0 25px;height:25px;border-radius:8px;display:grid;place-items:center;
-  font-size:11.5px;font-weight:800;margin-top:1px;background:var(--card2);color:var(--ink3);
-  border:1px solid var(--line2)}
-.item.good .ic{background:var(--sage-bg);color:var(--sage);border-color:#dcece2}
-.item.warn .ic{background:var(--amber-bg);color:var(--amber);border-color:#f3e4cb}
-.item.bad .ic{background:var(--rose-bg);color:var(--rose);border-color:#f5ddd8}
-.item .tx{font-size:14.5px;line-height:1.78;color:#42352f}
-.item .tx b{font-weight:750;color:var(--ink)}
+/* ============================================================
+   列表条目
+   ============================================================ */
+.li{display:flex;gap:12px;margin-bottom:16px}
+.li:last-child{margin-bottom:0}
+.li .ic{
+  flex:0 0 25px;height:25px;border-radius:8px;display:grid;place-items:center;
+  font-size:11px;font-weight:800;margin-top:1px;
+  background:var(--surface-soft);color:var(--ink-3);border:1px solid var(--hair-soft);
+}
+.li.g .ic{background:var(--sage-wash);color:var(--sage);border-color:#dcebe2}
+.li.w .ic{background:var(--amber-wash);color:var(--amber);border-color:#f0e2c6}
+.li.r .ic{background:var(--clay-wash);color:var(--clay);border-color:#f2dcd8}
+.li .tx{font-size:14.5px;line-height:1.78;color:var(--ink-2)}
+.li .tx b{font-weight:750;color:var(--ink)}
 
-/* ---------- 内嵌卡 ---------- */
-.card-in{background:var(--card2);border:1px solid var(--line2);border-radius:var(--r-md);
-  padding:15px 16px;margin-bottom:11px}
-.card-in .h{font-size:12.5px;font-weight:750;margin-bottom:9px;display:flex;
-  justify-content:space-between;align-items:baseline;gap:8px}
-.card-in .h em{font-style:normal;font-size:10.5px;color:var(--ink3);font-weight:500;text-align:right}
-.card-in p{font-size:13px;line-height:1.8;color:var(--ink2)}
-.meter{height:8px;border-radius:99px;background:#efe7de;overflow:hidden;margin:10px 0 5px}
+/* ============================================================
+   内嵌面板
+   ============================================================ */
+.panel{
+  background:var(--surface-soft);border:1px solid var(--hair-soft);
+  border-radius:var(--r-md);padding:16px 17px;margin-bottom:12px;
+}
+.panel:last-child{margin-bottom:0}
+.panel .ph{display:flex;justify-content:space-between;align-items:baseline;
+  gap:10px;margin-bottom:10px}
+.panel .ph b{font-size:13px;font-weight:750;color:var(--ink)}
+.panel .ph em{font-style:normal;font-size:10.5px;color:var(--ink-4);text-align:right}
+.panel p{font-size:13px;line-height:1.8;color:var(--ink-2)}
+
+/* 进度计 */
+.meter{height:8px;border-radius:99px;background:var(--hair-soft);overflow:hidden;margin:11px 0 6px}
 .meter i{display:block;height:100%;border-radius:99px;width:0;
-  transition:width .9s cubic-bezier(.22,.9,.3,1)}
-.meter.ok i{background:linear-gradient(90deg,var(--sage-l),var(--sage))}
-.meter.mid i{background:linear-gradient(90deg,#e5c07f,var(--amber))}
-.meter.hi i{background:linear-gradient(90deg,var(--rose-l),var(--rose))}
-.mlbl{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink3);
+  transition:width .95s var(--ease-out)}
+.meter.g i{background:linear-gradient(90deg,#8fb9a1,var(--sage))}
+.meter.w i{background:linear-gradient(90deg,#ddb877,var(--amber))}
+.meter.r i{background:linear-gradient(90deg,var(--clay-soft),var(--clay))}
+.mlbl{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-4);
   font-variant-numeric:tabular-nums;letter-spacing:.02em}
 
-/* ---------- 冲突模式 ---------- */
-.pattern{background:linear-gradient(150deg,#fdf7f3,#fdfaf7);border:1px solid var(--line2);
-  border-radius:var(--r-md);padding:18px 17px;position:relative;overflow:hidden}
-.pattern::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(180deg,var(--rose),var(--clay))}
-.pattern .pt{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.pattern .pt b{font-size:17px;font-weight:800;letter-spacing:-.2px}
-.pattern .pt span{font-size:10.5px;color:var(--ink3);letter-spacing:.04em}
-.pattern .row{display:flex;gap:9px;font-size:13.5px;line-height:1.78;color:#42352f;margin-bottom:9px}
-.pattern .row:last-child{margin-bottom:0}
-.pattern .row em{font-style:normal;flex:0 0 52px;color:var(--ink3);font-size:11.5px;
-  font-weight:650;letter-spacing:.03em;padding-top:2px}
-.pattern .row b{font-weight:750}
-.pattern .step{background:#fff;border:1px solid var(--line2);border-radius:var(--r-sm);
-  padding:11px 13px;margin-top:11px;font-size:13px;line-height:1.75;color:#42352f}
-.pattern .step b{color:var(--rose-d)}
+/* ============================================================
+   画像
+   ============================================================ */
+.avatar-card{
+  background:var(--surface-soft);border:1px solid var(--hair-soft);
+  border-radius:var(--r-md);padding:17px;margin-bottom:11px;
+}
+.avatar-card .top{display:flex;align-items:center;gap:13px;margin-bottom:10px}
+.avatar-card .em{
+  flex:0 0 46px;width:46px;height:46px;border-radius:14px;
+  display:grid;place-items:center;font-size:23px;line-height:1;
+  background:linear-gradient(150deg,#fff,#f4eee6);
+  border:1px solid var(--hair);box-shadow:var(--sh-xs);
+}
+.avatar-card .who b{display:block;font-size:15.5px;font-weight:750;letter-spacing:-.2px;line-height:1.35}
+.avatar-card .who em{display:block;font-style:normal;font-size:10.5px;color:var(--ink-4);margin-top:4px;letter-spacing:.02em}
+.avatar-card .desc{font-size:13px;line-height:1.78;color:var(--ink-2);margin-bottom:11px}
+.kws{display:flex;gap:6px;flex-wrap:wrap}
+.kws span{
+  font-size:10px;font-weight:650;padding:3.5px 9px;border-radius:99px;
+  background:var(--clay-wash);color:var(--clay-deep);
+}
 
-/* ---------- 清单 ---------- */
-.todo{background:var(--card2);border:1px solid var(--line2);border-radius:var(--r-md);padding:2px 16px}
-.todo .ti{display:flex;gap:11px;padding:14px 0;border-bottom:1px dashed var(--line2);
-  font-size:14px;line-height:1.75;color:#42352f}
+.pair-card{
+  background:linear-gradient(150deg,#fdf6f3,#fcfaf7);
+  border:1px solid #f0e0d8;border-radius:var(--r-md);padding:17px;margin-top:6px;
+}
+.pair-card .hd{display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:10px;gap:8px}
+.pair-card .hd b{font-size:16px;font-weight:800;letter-spacing:-.2px}
+.pair-card .hd em{font-style:normal;font-size:10.5px;color:var(--ink-4)}
+.pair-card p{font-size:13px;line-height:1.8;color:var(--ink-2)}
+.pair-card .warn{margin-top:10px;padding-top:11px;border-top:1px dashed #ecd9cd}
+.pair-card .warn b{color:var(--clay-deep);font-weight:750}
+.pair-card .alt{margin-top:8px;font-size:12px;color:var(--ink-4);line-height:1.7}
+
+/* ============================================================
+   冲突模式
+   ============================================================ */
+.mode{
+  position:relative;border-radius:var(--r-md);overflow:hidden;
+  background:var(--surface-soft);border:1px solid var(--hair-soft);
+  padding:18px 18px 18px 21px;
+}
+.mode::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--clay),#c98f6a);
+}
+.mode .ttl{display:flex;align-items:baseline;gap:9px;margin-bottom:13px;flex-wrap:wrap}
+.mode .ttl b{font-size:17.5px;font-weight:800;letter-spacing:-.3px}
+.mode .ttl span{font-size:10px;font-weight:650;color:var(--ink-4);
+  background:var(--surface);border:1px solid var(--hair-soft);
+  padding:2.5px 8px;border-radius:99px}
+.mode .line{display:flex;gap:10px;font-size:13.5px;line-height:1.78;
+  color:var(--ink-2);margin-bottom:10px}
+.mode .line:last-of-type{margin-bottom:0}
+.mode .line em{
+  font-style:normal;flex:0 0 46px;font-size:11px;font-weight:700;
+  color:var(--ink-4);letter-spacing:.06em;padding-top:2px;
+}
+.mode .line strong{font-weight:750;color:var(--ink)}
+.mode .loop{color:var(--clay-deep);font-weight:650}
+.mode .fix{
+  margin-top:13px;background:var(--surface);border:1px solid var(--hair-soft);
+  border-radius:var(--r-sm);padding:13px 14px;font-size:13px;line-height:1.78;color:var(--ink-2);
+}
+.mode .fix b{color:var(--clay-deep);font-weight:750}
+
+/* ============================================================
+   行动清单
+   ============================================================ */
+.todo{
+  background:var(--surface-soft);border:1px solid var(--hair-soft);
+  border-radius:var(--r-md);padding:4px 17px;
+}
+.todo .ti{
+  display:flex;gap:13px;padding:15px 0;
+  border-bottom:1px dashed var(--hair-soft);
+  font-size:14px;line-height:1.75;color:var(--ink-2);
+}
 .todo .ti:last-child{border-bottom:0}
-.todo .ti i{flex:0 0 21px;height:21px;border-radius:7px;background:var(--card);
-  border:1.5px solid var(--line);margin-top:1px;font-style:normal;display:grid;place-items:center;
-  font-size:10px;font-weight:800;color:var(--rose)}
+.todo .ti i{
+  flex:0 0 22px;height:22px;border-radius:7px;
+  background:var(--surface);border:1.5px solid var(--hair);
+  font-style:normal;display:grid;place-items:center;
+  font-size:10px;font-weight:800;color:var(--clay);margin-top:1px;
+}
 
-/* ---------- 折叠 ---------- */
-details.ref{margin-top:24px;border-top:1px solid var(--line2);padding-top:17px}
-details.ref summary{font-size:12.5px;color:var(--ink2);cursor:pointer;list-style:none;
-  display:flex;justify-content:space-between;align-items:center;font-weight:600;
-  padding:2px 0;letter-spacing:.02em}
-details.ref summary::-webkit-details-marker{display:none}
-details.ref summary::after{content:'+';font-size:17px;color:var(--rose);font-weight:400;
-  width:20px;height:20px;display:grid;place-items:center;border-radius:6px;background:var(--rose-bg)}
-details.ref[open] summary::after{content:'−'}
-details.ref p{font-size:12px;line-height:1.95;color:var(--ink3);margin-top:12px}
-details.ref p b{color:var(--ink2);font-weight:700}
+/* ============================================================
+   折叠
+   ============================================================ */
+.fold{margin-top:26px;border-top:1px solid var(--hair-soft);padding-top:18px}
+.fold summary{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12.5px;font-weight:650;color:var(--ink-2);
+  cursor:pointer;list-style:none;padding:2px 0;letter-spacing:.02em;
+}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary::after{
+  content:'+';font-size:16px;font-weight:400;color:var(--clay);
+  width:22px;height:22px;display:grid;place-items:center;
+  border-radius:7px;background:var(--clay-wash);
+  transition:transform .2s var(--ease);
+}
+.fold[open] summary::after{content:'−'}
+.fold p{font-size:12px;line-height:1.95;color:var(--ink-3);margin-top:13px}
+.fold p b{color:var(--ink-2);font-weight:700}
 
-/* ---------- 号码 ---------- */
-.codebox{position:relative;background:linear-gradient(150deg,#fdf7f3,#fdfaf7);
-  border:1.5px dashed #e3cec2;border-radius:var(--r-md);padding:20px 14px;
-  text-align:center;margin:17px 0}
-.codebox .l{font-size:10.5px;color:var(--ink3);letter-spacing:.16em;font-weight:600}
-.codebox .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:19px;font-weight:700;
-  letter-spacing:.03em;color:var(--rose-d);margin:11px 0 7px;word-break:break-all;line-height:1.5;
-  font-variant-numeric:tabular-nums}
-.codebox .h{font-size:11px;color:var(--ink4)}
-.note{font-size:12px;color:var(--ink3);line-height:1.85;margin-top:15px}
-.warnbox{background:var(--amber-bg);border:1px solid #f0e0c6;border-radius:var(--r-sm);
-  padding:14px 15px;margin-top:15px;font-size:12px;line-height:1.85;color:#8a6a3e}
-.warnbox b{color:#7a5a2e}
-.foot{text-align:center;font-size:11px;color:var(--ink4);margin-top:26px;line-height:1.95;letter-spacing:.02em}
+/* ============================================================
+   配对码
+   ============================================================ */
+.codecard{
+  background:linear-gradient(155deg,#fdf7f4,#fcfaf7);
+  border:1.5px dashed #e5cdc2;border-radius:var(--r-md);
+  padding:22px 16px;text-align:center;margin:20px 0;
+}
+.codecard .lb{font-size:10px;font-weight:650;color:var(--ink-4);letter-spacing:.18em}
+.codecard .cd{
+  font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+  font-size:19px;font-weight:700;letter-spacing:.04em;
+  color:var(--clay-deep);margin:12px 0 8px;
+  word-break:break-all;line-height:1.5;font-variant-numeric:tabular-nums;
+}
+.codecard .tip{font-size:10.5px;color:var(--ink-4)}
 
-/* ---------- toast ---------- */
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(16px) scale(.96);
-  background:rgba(46,39,35,.97);color:#fff;font-size:13px;padding:12px 20px;border-radius:99px;
-  opacity:0;transition:all .26s cubic-bezier(.2,.9,.3,1);z-index:99;pointer-events:none;
-  white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;
-  box-shadow:0 12px 32px rgba(46,39,35,.3);letter-spacing:.02em}
+/* 输入框 */
+input.code{
+  width:100%;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+  font-size:17px;letter-spacing:.1em;text-align:center;
+  padding:17px 12px;border-radius:var(--r-md);
+  border:1.5px solid var(--hair);background:var(--surface);
+  color:var(--ink);outline:none;text-transform:uppercase;
+  transition:border-color .18s var(--ease),box-shadow .18s var(--ease);
+  box-shadow:var(--sh-xs);
+}
+input.code:focus{
+  border-color:var(--clay-soft);
+  box-shadow:0 0 0 4px var(--clay-wash),var(--sh-xs);
+}
+input.code::placeholder{color:var(--ink-5);letter-spacing:.08em}
+.err{color:#a8493f;font-size:12.5px;line-height:1.5;margin-top:10px;min-height:19px}
+
+/* ============================================================
+   说明文字
+   ============================================================ */
+.note{font-size:12px;line-height:1.85;color:var(--ink-3);margin-top:16px}
+.warnpanel{
+  background:var(--amber-wash);border:1px solid #f0e2c6;
+  border-radius:var(--r-sm);padding:15px 16px;margin-top:16px;
+  font-size:12px;line-height:1.88;color:#7d6335;
+}
+.warnpanel b{color:#6b5228;font-weight:750}
+.foot{
+  text-align:center;font-size:11px;color:var(--ink-5);
+  margin-top:30px;line-height:1.95;letter-spacing:.02em;
+}
+
+/* ============================================================
+   Toast
+   ============================================================ */
+.toast{
+  position:fixed;left:50%;bottom:30px;z-index:99;
+  transform:translateX(-50%) translateY(18px) scale(.94);
+  background:rgba(36,31,28,.96);color:#fff;
+  font-size:13px;font-weight:600;letter-spacing:.01em;
+  padding:13px 21px;border-radius:99px;
+  opacity:0;pointer-events:none;white-space:nowrap;
+  max-width:86vw;overflow:hidden;text-overflow:ellipsis;
+  box-shadow:0 14px 38px rgba(36,31,28,.32);
+  transition:opacity .28s var(--ease),transform .28s var(--ease);
+}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
 
-@keyframes qfade{from{opacity:.35}to{opacity:1}}
-@keyframes optIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.autotip{text-align:center;font-size:11px;color:var(--ink4);margin-top:14px;letter-spacing:.03em}
-.navrow{justify-content:space-between}
-.navrow .tlink{flex:0 0 auto}
+/* ============================================================
+   滚动条（桌面端）
+   ============================================================ */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--ink-5);border-radius:99px;border:3px solid var(--paper)}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-4)}
 
-.seg{display:flex;gap:8px;flex-wrap:wrap}
-.seg button{flex:1 1 0;min-width:72px;font-family:inherit;font-size:14px;font-weight:600;
-  color:var(--ink2);background:var(--card);border:1.5px solid var(--line2);border-radius:12px;
-  padding:13px 8px;cursor:pointer;transition:all .16s ease}
-.seg button:active{transform:scale(.98)}
-.seg button.on{background:var(--rose-bg);border-color:var(--rose-l);color:var(--rose-d);font-weight:700}
-
-/* ---------- 画像 ---------- */
-.portrait{background:var(--card2);border:1px solid var(--line2);border-radius:var(--r-md);
-  padding:15px 16px;margin-bottom:10px}
-.portrait .ph{display:flex;align-items:center;gap:11px;margin-bottom:9px}
-.portrait .pe{font-size:26px;line-height:1;flex:0 0 auto}
-.portrait .ph b{display:block;font-size:15px;font-weight:750;letter-spacing:-.1px}
-.portrait .ph em{display:block;font-style:normal;font-size:10.5px;color:var(--ink3);margin-top:2px}
-.portrait .pd{font-size:13px;line-height:1.75;color:var(--ink2);margin-bottom:10px}
-.portrait .kws{display:flex;gap:6px;flex-wrap:wrap}
-.portrait .kws span{font-size:10.5px;padding:3px 9px;border-radius:99px;
-  background:var(--rose-bg);color:var(--rose-d);font-weight:600}
-.couple{background:linear-gradient(150deg,#fdf7f3,#fdfaf7);border:1px solid #f0e0d4;
-  border-radius:var(--r-md);padding:16px;margin-top:4px}
-.couple .ch{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;gap:8px}
-.couple .ch b{font-size:15.5px;font-weight:800}
-.couple .ch em{font-style:normal;font-size:10.5px;color:var(--ink3)}
-.couple p{font-size:13px;line-height:1.78;color:var(--ink2)}
-.couple p.cr{margin-top:8px;padding-top:9px;border-top:1px dashed #eddbcd}
-.couple p.cr b{color:var(--rose-d)}
-
-@media (max-width:380px){
-  .wrap{padding:18px 14px 40px}
-  h1{font-size:24px}
-  .q{font-size:19px}
-  .ring{width:158px;height:158px}
-  .ring .val b{font-size:47px}
-  .card{padding:21px 17px}
-  h3.sec{font-size:11.5px}
+/* 减少动效偏好 */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
 }
 </style>
-</head>
-<body>
-<div class="wrap">
 
-  <section id="s-home">
-    <div class="brand"><div class="mark">◍</div>
-      <div><b>相处方式小调查</b><span>HOW WE WORK TOGETHER</span></div></div>
+<body>
+<div class="wrap" id="wrap">
+
+  <!-- ==================== 首页 ==================== -->
+  <section id="s-home" class="screen">
+    <div class="brand">
+      <div class="mk">◍</div>
+      <div class="tx"><b>相处方式小调查</b><span>HOW WE WORK TOGETHER</span></div>
+    </div>
     <div class="card">
-      <h1>我们<span style="color:var(--rose)">相处</span>得怎么样？</h1>
+      <h1>我们<em>相处</em>得怎么样？</h1>
       <p class="lead">51 个日常场景，两个人各答一次。<br>
-      做完拿到一个号码，交给对方输入，两边合起来才有完整分析。</p>
-      <div class="facts">
-        <div><b>51</b><span>个场景</span></div>
+      答完先看到你自己的分析，把配对码给对方，两人答完才有完整的关系解读。</p>
+
+      <div class="stats">
+        <div><b>51</b><span>场景</span></div>
         <div><b>8</b><span>分钟</span></div>
-        <div><b>22</b><span>个方面</span></div>
+        <div><b>22</b><span>维度</span></div>
         <div><b>0</b><span>上传</span></div>
       </div>
+
       <hr>
-      <button class="btn" id="goStart">我开始答题</button>
-      <button class="btn ghost" id="goJoin" style="margin-top:10px">我有 TA 的号码，接着答</button>
-      <button class="btn ghost" id="goBoth" style="margin-top:10px">我们俩都答完了，直接看结果</button>
-      <p class="note">不用注册，答案不离开手机——它们只被编进你手里那串号码。</p>
+      <button class="btn" id="goStart">开始答题</button>
+      <button class="btn ghost" id="goJoin" style="margin-top:10px">我有配对码，接着答</button>
+      <button class="btn quiet" id="goBoth" style="margin-top:4px">两人都答完了，直接看结果</button>
+
+      <p class="note">不用注册，答案不离开你的手机——它们只被编进那串配对码里。</p>
     </div>
-    <div class="foot">题目按公开的关系研究设计 · 结果只是参考</div>
+    <div class="foot">题目按公开的关系研究设计 · 结果仅供参考</div>
   </section>
 
+  <!-- ==================== 性别 / 年龄 ==================== -->
   <section id="s-profile" class="hide">
     <div class="card">
-      <h1 style="font-size:22px">先了解一下你</h1>
-      <p class="lead">这两项只用来做常模参考，让画像更贴合你，不会上传。</p>
+      <h1 style="font-size:23px">先了解一下你</h1>
+      <p class="lead" style="margin-bottom:26px">这两项只用来让措辞和画像更贴合你，不会上传。</p>
 
-      <label class="fl" style="margin-top:20px">你是</label>
-      <div class="seg" id="segGender">
-        <button data-v="m">男生</button>
-        <button data-v="f">女生</button>
-        <button data-v="x">不填</button>
+      <div class="field">
+        <label>你是</label>
+        <div class="seg g3" id="segGender">
+          <button data-v="m">男生</button>
+          <button data-v="f">女生</button>
+          <button data-v="x">不填</button>
+        </div>
       </div>
 
-      <label class="fl" style="margin-top:18px">年龄</label>
-      <div class="seg" id="segAge">
-        <button data-v="0">18 以下</button>
-        <button data-v="1">18–24</button>
-        <button data-v="2">25–30</button>
-        <button data-v="3">30 以上</button>
+      <div class="field">
+        <label>年龄</label>
+        <div class="seg g4" id="segAge">
+          <button data-v="0">18 以下</button>
+          <button data-v="1">18–24</button>
+          <button data-v="2">25–30</button>
+          <button data-v="3">30 以上</button>
+        </div>
       </div>
 
-      <button class="btn" id="profileGo" style="margin-top:24px" disabled>继续答题</button>
-      <button class="tlink" id="profileBack" style="display:block;margin:10px auto 0">返回</button>
+      <button class="btn" id="profileGo" style="margin-top:28px" disabled>继续</button>
+      <button class="btn quiet" id="profileBack" style="margin-top:4px">返回</button>
     </div>
   </section>
 
+  <!-- ==================== 答题 ==================== -->
   <section id="s-quiz" class="hide">
-    <div class="pnum"><span id="pStep">1 / 51</span><span id="pRole"></span></div>
-    <div class="pbar"><i id="pFill"></i></div>
-    <div class="card" id="qCard">
-      <div class="q" id="qText"></div>
-      <div class="qhint" id="qHint"></div>
-      <div id="opts"></div>
-      <div class="navrow">
-        <button class="tlink" id="qBack">← 上一题</button>
-        <button class="tlink" id="qSkip">跳过 →</button>
+    <div class="prog">
+      <div class="row"><span id="pStep">1 / 51</span><span id="pRole"></span></div>
+      <div class="track"><i id="pFill"></i></div>
+    </div>
+    <div class="card qwrap" id="qCard">
+      <div class="qtag" id="qHint"></div>
+      <div class="qtext" id="qText"></div>
+      <div class="opts" id="opts"></div>
+      <div class="qnav">
+        <button id="qBack">← 上一题</button>
+        <button id="qSkip">跳过 →</button>
       </div>
     </div>
-    <p class="autotip">选中就自动进入下一题</p>
+    <p class="autohint">选中就自动进入下一题</p>
   </section>
 
+  <!-- ==================== 个人分析 ==================== -->
   <section id="s-self" class="hide">
     <div class="card">
-      <div class="score-head">
+      <div class="scorehero">
         <div class="ring">
-          <svg width="172" height="172" viewBox="0 0 172 172" aria-hidden="true">
-            <circle cx="86" cy="86" r="72" fill="none" stroke="#f0e8df" stroke-width="11"/>
-            <circle id="selfArc" cx="86" cy="86" r="72" fill="none" stroke="url(#ringGrad2)"
-              stroke-width="11" stroke-linecap="round"
-              stroke-dasharray="452.4" stroke-dashoffset="452.4"
-              style="transition:stroke-dashoffset 1.1s cubic-bezier(.22,.9,.3,1)"/>
+          <svg width="176" height="176" viewBox="0 0 176 176" aria-hidden="true">
+            <circle cx="88" cy="88" r="74" fill="none" stroke="#f2ece3" stroke-width="10"/>
+            <circle id="selfArc" cx="88" cy="88" r="74" fill="none" stroke="url(#g1)"
+              stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="465" stroke-dashoffset="465"
+              style="transition:stroke-dashoffset 1.15s cubic-bezier(.16,1,.3,1)"/>
             <defs>
-              <linearGradient id="ringGrad2" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#b96a63"/>
-                <stop offset="100%" stop-color="#c98a5e"/>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#b4655e"/>
+                <stop offset="100%" stop-color="#c99268"/>
               </linearGradient>
             </defs>
           </svg>
-          <div class="val"><b id="selfNum">—</b><span>你的关系体感</span></div>
+          <div class="in"><b id="selfNum">—</b><span>关系体感</span></div>
         </div>
-        <div class="band" id="selfBand"></div>
-        <div class="say" id="selfSay"></div>
+        <div class="verdict" id="selfBand"></div>
+        <div class="verdict-say" id="selfSay"></div>
       </div>
 
-      <h3 class="sec">你是哪一种 <i>从你的答案读出来</i></h3>
+      <div class="sec"><h3>你是哪一种</h3><i>从你的答案读出来</i></div>
       <div id="selfType"></div>
 
-      <h3 class="sec">你的八个方面 <i>你自己的视角</i></h3>
+      <div class="sec"><h3>你的八个方面</h3><i>你自己的视角</i></div>
       <div id="selfDims"></div>
 
-      <h3 class="sec">你的相处风格 <i>吵架时你是什么样</i></h3>
+      <div class="sec"><h3>你的相处风格</h3><i>起冲突时你是什么样</i></div>
       <div id="selfStyle"></div>
 
-      <h3 class="sec">你可以先做的三件事</h3>
+      <div class="sec"><h3>可以先做的三件事</h3><i>不用等对方</i></div>
       <div class="todo" id="selfTodo"></div>
 
       <hr>
       <p class="note" id="selfNextHint"></p>
-      <div class="btns" style="margin-top:14px">
-        <button class="btn sm" id="selfCopy">复制我的分析</button>
-        <button class="btn ghost sm" id="selfToCode">去拿配对码</button>
+      <div class="btns" style="margin-top:16px">
+        <button class="btn ghost sm" id="selfCopy">复制我的分析</button>
+        <button class="btn sm" id="selfToCode">去拿配对码</button>
       </div>
     </div>
   </section>
 
+  <!-- ==================== 配对码 ==================== -->
   <section id="s-code" class="hide">
     <div class="card">
-      <h1 style="font-size:22px">把这串配对码给 TA</h1>
-      <p class="lead">TA 打开同一个网址，点「我有 TA 的号码」，输进这串码、答完，就能看到你们两人的完整分析。</p>
-      <div class="codebox">
-        <div class="l">你的配对码</div>
-        <div class="v" id="codeVal">——</div>
-        <div class="h">不区分大小写，横线可以不打</div>
+      <h1 style="font-size:23px">把这串配对码给 TA</h1>
+      <p class="lead">TA 打开同一个网址，点「我有配对码」，输进这串码、答完，就能看到你们两人的完整解读。</p>
+
+      <div class="codecard">
+        <div class="lb">你的配对码</div>
+        <div class="cd" id="codeVal">——</div>
+        <div class="tip">不区分大小写，横线可以不打</div>
       </div>
+
       <div class="btns">
         <button class="btn sm" id="copyCode">复制配对码</button>
         <button class="btn ghost sm" id="copyInvite">复制邀请</button>
       </div>
-      <p class="note">这串码里只有你那 51 道题的选择，没有别的东西。TA 答完后，你们两人的分析会一起显示。</p>
+
+      <p class="note">这串码里只有你那 51 道题的选择，没有别的东西。</p>
       <hr>
-      <p class="note" style="margin-top:0">如果 TA 已经答完了，也可以直接用两串码看结果：</p>
-      <div class="btns" style="margin-top:10px">
+      <div class="btns">
         <button class="btn ghost sm" id="codeBackSelf">← 我的分析</button>
         <button class="btn ghost sm" id="codeToBoth">双方码看结果</button>
       </div>
     </div>
   </section>
 
+  <!-- ==================== 输入配对码 ==================== -->
   <section id="s-enter" class="hide">
     <div class="card">
-      <h1 style="font-size:22px">输入 TA 的号码</h1>
-      <p class="lead">输完继续答 51 个场景，最后直接看到你们两人的完整分析。</p>
-      <div style="margin-top:18px">
-        <label class="fl" for="codeIn">号码</label>
+      <h1 style="font-size:23px">输入 TA 的配对码</h1>
+      <p class="lead">输完继续答 51 个场景，答完直接看到你们两人的完整解读。</p>
+
+      <div style="margin-top:24px">
+        <label style="display:block;font-size:12px;font-weight:650;color:var(--ink-3);margin-bottom:10px;letter-spacing:.06em" for="codeIn">配对码</label>
         <input class="code" id="codeIn" maxlength="34" inputmode="text" autocomplete="off"
                autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XX">
         <div class="err" id="codeErr"></div>
-        <button class="btn" id="doJoin">核对并开始</button>
-        <button class="tlink" id="enterBack" style="display:block;margin:10px auto 0">返回</button>
+        <button class="btn" id="doJoin" style="margin-top:10px">核对并开始</button>
+        <button class="btn quiet" id="enterBack" style="margin-top:4px">返回</button>
       </div>
     </div>
   </section>
 
+  <!-- ==================== 双方配对码 ==================== -->
   <section id="s-both" class="hide">
     <div class="card">
-      <h1 style="font-size:22px">输入两个人的号码</h1>
-      <p class="lead">各自做完拿到的号码，按顺序填进来，直接出完整分析。</p>
-      <div style="margin-top:18px">
-        <label class="fl" for="codeA">第一个号码</label>
+      <h1 style="font-size:23px">输入两个人的配对码</h1>
+      <p class="lead">各自答完拿到的两串码，填进来直接出完整解读。</p>
+
+      <div style="margin-top:24px">
+        <label style="display:block;font-size:12px;font-weight:650;color:var(--ink-3);margin-bottom:10px;letter-spacing:.06em" for="codeA">第一个</label>
         <input class="code" id="codeA" maxlength="34" inputmode="text" autocomplete="off"
                autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XX">
-        <label class="fl" for="codeB" style="margin-top:14px">第二个号码</label>
+
+        <label style="display:block;font-size:12px;font-weight:650;color:var(--ink-3);margin:18px 0 10px;letter-spacing:.06em" for="codeB">第二个</label>
         <input class="code" id="codeB" maxlength="34" inputmode="text" autocomplete="off"
                autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XX">
+
         <div class="err" id="bothErr"></div>
-        <button class="btn" id="doBoth">查看结果</button>
-        <button class="tlink" id="bothBack" style="display:block;margin:10px auto 0">返回</button>
+        <button class="btn" id="doBoth" style="margin-top:10px">查看结果</button>
+        <button class="btn quiet" id="bothBack" style="margin-top:4px">返回</button>
       </div>
-      <p class="note">分不清哪个是哪个也没关系——顺序只影响"你 / TA"的标注，不影响匹配计算。</p>
+
+      <p class="note">顺序只影响「你 / TA」的标注，不影响匹配计算。填好两串码，点下面按钮直接出结果。</p>
     </div>
   </section>
 
+  <!-- ==================== 双方结果 ==================== -->
   <section id="s-result" class="hide">
     <div class="card">
-      <div class="score-head">
+      <div class="scorehero">
         <div class="ring">
-          <svg width="172" height="172" viewBox="0 0 172 172" aria-hidden="true">
-            <circle cx="86" cy="86" r="72" fill="none" stroke="#f0e8df" stroke-width="11"/>
-            <circle id="ringArc" cx="86" cy="86" r="72" fill="none" stroke="url(#ringGrad)"
-              stroke-width="11" stroke-linecap="round"
-              stroke-dasharray="452.4" stroke-dashoffset="452.4"
-              style="transition:stroke-dashoffset 1.1s cubic-bezier(.22,.9,.3,1)"/>
+          <svg width="176" height="176" viewBox="0 0 176 176" aria-hidden="true">
+            <circle cx="88" cy="88" r="74" fill="none" stroke="#f2ece3" stroke-width="10"/>
+            <circle id="ringArc" cx="88" cy="88" r="74" fill="none" stroke="url(#g2)"
+              stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="465" stroke-dashoffset="465"
+              style="transition:stroke-dashoffset 1.15s cubic-bezier(.16,1,.3,1)"/>
             <defs>
-              <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#b96a63"/>
-                <stop offset="100%" stop-color="#c98a5e"/>
+              <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#b4655e"/>
+                <stop offset="100%" stop-color="#c99268"/>
               </linearGradient>
             </defs>
           </svg>
-          <div class="val"><b id="rNum">—</b><span>综合指数</span></div>
+          <div class="in"><b id="rNum">—</b><span>综合指数</span></div>
         </div>
-        <div class="band" id="rBand"></div>
-        <div class="say" id="rSay"></div>
+        <div class="verdict" id="rBand"></div>
+        <div class="verdict-say" id="rSay"></div>
         <div class="kpis" id="rKpis"></div>
       </div>
 
-      <h3 class="sec">你们是什么样的两个人 <i>各自的类型画像</i></h3>
+      <div class="sec"><h3>你们是什么样的两个人</h3><i>各自的类型画像</i></div>
       <div id="rPortrait"></div>
 
-      <h3 class="sec"><span id="seeYouTitle">TA 眼中的你</span> <i>TA 怎么描述你 vs 你怎么说自己</i></h3>
+      <div class="sec"><h3><span id="seeYouTitle">TA 眼中的你</span></h3><i>对方怎么描述你 vs 你怎么说自己</i></div>
       <div id="rSeeYou"></div>
 
-      <h3 class="sec">三观合不合 <i>不是好坏，是站得近不近</i></h3>
+      <div class="sec"><h3>三观合不合</h3><i>不是好坏，是站得近不近</i></div>
       <div id="rValues"></div>
 
-      <h3 class="sec">八个方面 <i>红 = 你 · <span id="dimLegend">TA</span></i></h3>
+      <div class="sec"><h3>八个方面</h3><i>红 = 你 · <span id="dimLegend">TA</span></i></div>
       <div id="rDims"></div>
 
-      <h3 class="sec">关系风险 <i>脆弱性，不是证据</i></h3>
-      <div id="rRisk"></div>
-
-      <h3 class="sec">你们最可能的吵架方式 <i>按双方的性格推演</i></h3>
+      <div class="sec"><h3>你们最可能的吵架方式</h3><i>按双方的性格推演</i></div>
       <div id="rPattern"></div>
 
-      <h3 class="sec">问题出在哪 <i>按影响排序</i></h3>
+      <div class="sec"><h3>关系风险</h3><i>脆弱性，不是证据</i></div>
+      <div id="rRisk"></div>
+
+      <div class="sec"><h3>问题出在哪</h3><i>按影响排序</i></div>
       <div id="rProb"></div>
 
-      <h3 class="sec">最踏实的地方</h3>
+      <div class="sec"><h3>最踏实的地方</h3><i>值得保留的</i></div>
       <div id="rGood"></div>
 
-      <h3 class="sec">接下来七天可以做的</h3>
+      <div class="sec"><h3>接下来七天</h3><i>具体可做</i></div>
       <div class="todo" id="rTodo"></div>
 
-      <details class="ref"><summary>分数怎么来的 · 依据</summary><div id="rRef"></div></details>
+      <details class="fold">
+        <summary>分数怎么来的 · 依据</summary>
+        <div id="rRef"></div>
+      </details>
 
-      <div class="btns" style="margin-top:20px">
-        <button class="btn sm" id="copyResult">复制结果</button>
-        <button class="btn ghost sm" id="again">重新开始</button>
+      <div class="btns" style="margin-top:24px">
+        <button class="btn ghost sm" id="copyResult">复制结果</button>
+        <button class="btn sm" id="again">重新开始</button>
       </div>
       <p class="note">这是自我报告，不是对关系的判决。它只说这个月你们在哪些地方顺、哪些地方在耗。</p>
     </div>
   </section>
+
 </div>
 <div class="toast" id="toast"></div>
 
@@ -1051,9 +1389,9 @@ function predictPattern(r){
 
   /* 一起变冷：双方回避都高，且日常回应已经很弱（不再交流，不只是不碰敏感话题） */
   var rspAvg = (A.rsp + B.rsp) / 2;
-  var cold = Math.min(avoA, avoB) * 0.50
-    + Math.max(0, 65 - rspAvg) * 0.42
-    + Math.max(0, 45 - Math.max(anxA, anxB)) * 0.18;
+  var cold = Math.min(avoA, avoB) * 0.44
+    + Math.max(0, 65 - rspAvg) * 0.50
+    + Math.max(0, 42 - Math.max(anxA, anxB)) * 0.36;
 
   /* 冲突风格：0 = 当场外放，100 = 压着内收（必须先声明，explode 要用） */
   var inbound = Math.max(A.style, B.style);     /* 两人里更内收的那个 */
@@ -1066,8 +1404,8 @@ function predictPattern(r){
 
   /* 记账式冷战：修复差 + 双方都压着不说 */
   var score = Math.min(100-A.rep, 100-B.rep) * 0.34
-    + Math.max(0, Math.min(anxA, anxB) - 25) * 0.22
-    + inbound * 0.44;
+    + Math.max(0, Math.min(anxA, anxB) - 20) * 0.30
+    + inbound * 0.30;
 
   /* 默契回避：双方回避高，但日常还在好好说话（只是不碰硬话题） */
   var avoid = Math.min(avoA, avoB) * 0.48
@@ -1373,16 +1711,10 @@ var AX_FIX = {
   life:'一个要规律、一个要变化，长期相处会互相消耗。有效的办法是分区：一部分生活固定下来给对方安全感，一部分留给变化给对方新鲜感。'
 };
 var SEE_TXT = {
-  pwarm:['温度','TA 眼里你有多暖'],
-  pcom:['投入','TA 眼里你有多认真'],
-  pstab:['稳定','TA 眼里你的情绪是否可预期'],
-  popen:['好沟通','TA 眼里你是不是能谈事的人']
-};
-var PERC_MEANING = {
-  pwarm:'暖不暖，指的是难过时对方会不会靠近你、接住你。',
-  pcom:'投入，指的是对方对"你们的以后"是什么态度。',
-  pstab:'稳定，指的是对方情绪是否可预期，你会不会需要揣摩气氛。',
-  popen:'好沟通，指的是有话能不能说出口、说了有没有人接。'
+  pwarm:['温度 · TA 眼里你有多暖','TA 眼里你有多暖'],
+  pcom:['投入 · TA 眼里你有多认真','TA 眼里你有多认真'],
+  pstab:['稳定 · TA 眼里你的情绪是否可预期','TA 眼里你的情绪是否可预期'],
+  popen:['好沟通 · TA 眼里你是不是能谈事的人','TA 眼里你是不是能谈事的人']
 };
 
 /* ============================================================
@@ -1398,7 +1730,7 @@ function show(id){
   var el = $(id); if(!el) return;
   el.classList.remove('hide'); el.classList.remove('in');
   void el.offsetWidth; el.classList.add('in');
-  try{ window.scrollTo(0,0); }catch(_){}
+  try{ window.scrollTo({top:0,behavior:'instant'}); }catch(_){ try{window.scrollTo(0,0);}catch(__){} }
 }
 var toastT;
 function toast(m){
@@ -1458,8 +1790,8 @@ function buildOptPool(){
       b.type = 'button';
       b.className = 'opt';
       b.style.display = 'none';
-      var k = document.createElement('span'); k.className='k'; k.textContent=KEYS[i];
-      var t = document.createElement('span'); t.className='t';
+      var k = document.createElement('span'); k.className='kk'; k.textContent=KEYS[i];
+      var t = document.createElement('span'); t.className='tt';
       b.appendChild(k); b.appendChild(t);
       b.addEventListener('click', function(){ choose(i); });
       box.appendChild(b);
@@ -1493,7 +1825,7 @@ function renderQ(){
     var b = OPT_POOL[i];
     if (i < q.o.length){
       b.style.display = '';
-      b.querySelector('.t').textContent = P(q.o[i].t);
+      b.querySelector('.tt').textContent = P(q.o[i].t);
       if (cur === i) b.classList.add('sel');
       else b.classList.remove('sel');
     } else {
@@ -1502,12 +1834,12 @@ function renderQ(){
     }
   }
 
-  /* 题目区域做一次极轻的透明度过渡（不位移、不重排） */
+  /* 题目区域：极轻的透明度过渡，不动布局 */
   var card = $('qCard');
   if (card){
     card.style.animation = 'none';
     void card.offsetWidth;
-    card.style.animation = 'qfade .18s ease both';
+    card.style.animation = 'qfade .2s ease both';
   }
 
   updateNav();
@@ -1517,11 +1849,15 @@ function updateNav(){
   var back = $('qBack');
   if (back){
     var canBack = S.idx > 0 || S.ans[S.idx] !== null;
-    back.style.visibility = canBack ? 'visible' : 'hidden';
+    if (canBack) back.removeAttribute('ghosted');
+    else back.setAttribute('ghosted','');
     back.textContent = (S.idx > 0) ? '← 上一题' : '← 改一下';
   }
   var skip = $('qSkip');
-  if (skip) skip.style.visibility = (S.idx < NQ-1) ? 'visible' : 'hidden';
+  if (skip){
+    if (S.idx < NQ-1) skip.removeAttribute('ghosted');
+    else skip.setAttribute('ghosted','');
+  }
 }
 
 function saveProgress(){
@@ -1555,6 +1891,9 @@ function restoreProgress(){
 function choose(i){
   if (S.busy) return;
   if (!QS[S.idx] || !QS[S.idx].o[i]) return;
+  if (S.advLock) return;
+  S.advLock = true;
+  setTimeout(function(){ S.advLock = false; }, 60);
 
   S.ans[S.idx] = i;
   saveProgress();
@@ -1670,11 +2009,11 @@ function renderSelfAnalysis(p){
   var tb = $('selfType');
   tb.innerHTML = '';
   var pc = document.createElement('div');
-  pc.className = 'portrait';
+  pc.className = 'avatar-card';
   pc.innerHTML =
-    '<div class="ph"><span class="pe">'+pf.type.emoji+'</span><div><b>'+pf.type.name+'</b>'+
+    '<div class="top"><span class="em">'+pf.type.emoji+'</span><div class="who"><b>'+pf.type.name+'</b>'+
       '<em>'+(S.gender==='f'?'女生':(S.gender==='m'?'男生':'未填'))+' · '+(S.ageLabel||'年龄未填')+'</em></div></div>'+
-    '<p class="pd">'+P(pf.type.one)+'</p>'+
+    '<p class="desc">'+P(pf.type.one)+'</p>'+
     '<div class="kws">'+pf.key3.map(function(k){ return '<span>'+k+'</span>'; }).join('')+'</div>';
   tb.appendChild(pc);
 
@@ -1685,10 +2024,10 @@ function renderSelfAnalysis(p){
     var v = p[k];
     var d = document.createElement('div');
     d.className = 'dim';
-    var lvl = v >= 70 ? '<span class="tag g">稳</span>'
-            : (v >= 45 ? '<span class="tag">一般</span>' : '<span class="tag w">偏低</span>');
+    var lvl = v >= 70 ? '<span class="pill g">稳</span>'
+            : (v >= 45 ? '<span class="pill">一般</span>' : '<span class="pill w">偏低</span>');
     d.innerHTML = '<div class="hd"><b>'+SELF[k].name+'</b>'+lvl+'</div>'+
-      '<div class="bars"><div class="bl v1"><u>你</u><div class="tr"><i></i></div><n>'+v+'</n></div></div>'+
+      '<div class="bars"><div class="bar you"><u>你</u><div class="tr"><i></i></div><n>'+v+'</n></div></div>'+
       '<div class="cmt">'+(v>=70 ? P(SELF[k].hi) : (v<45 ? P(SELF[k].lo) : '中等水平，不拖后腿，也还有空间。'))+'</div>';
     db.appendChild(d);
     setTimeout(function(){ d.querySelector('.tr i').style.width = v+'%'; }, 80+i*55);
@@ -1707,10 +2046,10 @@ function renderSelfAnalysis(p){
         ? '你有话会当场讲，说完就过去了。好处是不留隔夜账，代价是讲的时候容易戳到人。'
         : '你会看场合决定说还是不说。这种灵活是好东西，但要小心变成"该说的也没说"。');
   var sc2 = document.createElement('div');
-  sc2.className = 'card-in';
+  sc2.className = 'panel';
   sc2.innerHTML = '<div class="h"><span>你的风格：'+styleName+'</span><em>'+
       (styleV<=38?'外放':(styleV>=62?'内收':'居中'))+'</em></div>'+
-    '<div class="meter '+(styleV>=62?'hi':(styleV<=38?'ok':'mid'))+'"><i style="width:'+styleV+'%"></i></div>'+
+    '<div class="meter '+(styleV>=62?'r':(styleV<=38?'g':'w'))+'"><i style="width:'+styleV+'%"></i></div>'+
     '<div class="mlbl"><span>当场说开</span><span>压着记着</span></div>'+
     '<p style="margin-top:10px">'+styleDesc+'</p>'+
     '<p style="margin-top:8px;padding-top:8px;border-top:1px dashed #f0e4d8">'+
@@ -1779,11 +2118,11 @@ function renderResult(r){
 
   function portraitCard(label, p, meta){
     var d = document.createElement('div');
-    d.className = 'portrait';
+    d.className = 'avatar-card';
     d.innerHTML =
-      '<div class="ph"><span class="pe">'+p.type.emoji+'</span>'+
-        '<div><b>'+label+'：'+p.type.name+'</b><em>'+meta+'</em></div></div>'+
-      '<p class="pd">'+P(p.type.one)+'</p>'+
+      '<div class="top"><span class="em">'+p.type.emoji+'</span>'+
+        '<div class="who"><b>'+label+'：'+p.type.name+'</b><em>'+meta+'</em></div></div>'+
+      '<p class="desc">'+P(p.type.one)+'</p>'+
       '<div class="kws">'+p.key3.map(function(k){ return '<span>'+k+'</span>'; }).join('')+'</div>';
     return d;
   }
@@ -1791,12 +2130,12 @@ function renderResult(r){
   pb2.appendChild(portraitCard('另一位', pbb, '从 TA 的答案读出来'));
 
   var cbox = document.createElement('div');
-  cbox.className = 'couple';
+  cbox.className = 'pair-card';
   cbox.innerHTML =
-    '<div class="ch"><b>你们这一对：'+cp.type.name+'</b><em>契合 '+cp.fit+'</em></div>'+
+    '<div class="hd"><b>你们这一对：'+cp.type.name+'</b><em>契合 '+cp.fit+'</em></div>'+
     '<p>'+P(cp.type.one)+'</p>'+
-    '<p class="cr"><b>要注意：</b>'+P(cp.type.risk)+'</p>'+
-    '<p class="cr" style="border-top:0;padding-top:4px;color:var(--ink3);font-size:12px">'+
+    '<p class="warn"><b>要注意：</b>'+P(cp.type.risk)+'</p>'+
+    '<p class="alt">'+
     '如果读起来不太像，另一种可能：'+cp.second.name+'——'+P(cp.second.one)+'</p>';
   pb2.appendChild(cbox);
 
@@ -1804,19 +2143,19 @@ function renderResult(r){
   var pp = predictPattern(r);
   var pat = $('rPattern'); pat.innerHTML='';
   var pbox = document.createElement('div');
-  pbox.className='pattern';
+  pbox.className='mode';
   pbox.innerHTML =
-    '<div class="pt"><b>'+pp.pattern.name+'</b><span>'+
+    '<div class="ttl"><b>'+pp.pattern.name+'</b><span>'+
       pp.pattern.tag+' · 匹配度 '+pp.confidence+'%</span></div>'+
-    '<div class="row"><em>什么样</em><div>'+pp.pattern.desc+'</div></div>'+
-    '<div class="row"><em>为什么</em><div>'+P(pp.pattern.why)+'</div></div>'+
-    '<div class="row"><em>循环</em><div style="color:var(--rose-d);font-weight:600">'+P(pp.pattern.loop)+'</div></div>'+
-    '<div class="step"><b>怎么破：</b>'+P(pp.pattern.fix)+'</div>';
+    '<div class="line"><em>什么样</em><div>'+pp.pattern.desc+'</div></div>'+
+    '<div class="line"><em>为什么</em><div>'+P(pp.pattern.why)+'</div></div>'+
+    '<div class="line"><em>循环</em><div class="loop">'+P(pp.pattern.loop)+'</div></div>'+
+    '<div class="fix"><b>怎么破：</b>'+P(pp.pattern.fix)+'</div>';
   pat.appendChild(pbox);
 
   var alt = document.createElement('p');
   alt.className='note';
-  alt.style.margin='11px 0 0';
+  alt.style.margin='12px 0 0';
   alt.innerHTML = '这是按你们在「摩擦之后 / 心里有底 / 亲密距离」这几项上的组合推演出来的，'+
     '不是标签。如果它读起来不太像，那说明你们的情况比六种模式更细——'+
     '另一种可能是<b>'+pp.runner.name+'</b>（'+pp.runner.tag+'）。';
@@ -1829,8 +2168,8 @@ function renderResult(r){
   var intro = document.createElement('div');
   intro.className='note';
   intro.style.margin='0 0 12px';
-  intro.innerHTML = '这四项问的是「你怎么看 TA」。所以这里的分数，是 <b>TA 对你的看法</b>。'+
-    '下面还会标出：你对 TA 的看法，和 TA 对你的看法，哪边更暖。';
+  intro.innerHTML = P('这四项问的是「你怎么看 {P}」。所以这里的分数，是 <b>{P} 对你的看法</b>。'+
+    '下面还会标出：你对 {P} 的看法，和 {P} 对你的看法，哪边更暖。');
   sy.appendChild(intro);
 
   PORDER.forEach(function(key, i){
@@ -1838,13 +2177,13 @@ function renderResult(r){
     var iRateHim  = r.p1[key];     /* 你眼里的 TA */
     var info = SEE_TXT[key];
     var d = document.createElement('div');
-    d.className='card-in';
+    d.className='panel';
     var diff = heRatesMe - iRateHim;
-    var diffTxt = diff >= 12 ? 'TA 对你的评价，比你给 {P} 的更高'
-                : (diff <= -12 ? '你给 TA 的评价，比 {P} 给你的更高' : '两边看法接近');
-    d.innerHTML = '<div class="h"><span>'+info[1]+'</span><em>'+diffTxt+'</em></div>'+
-      '<div class="meter '+(heRatesMe>=70?'ok':(heRatesMe>=45?'mid':'hi'))+'"><i></i></div>'+
-      '<div class="mlbl"><span>TA 眼里的你：'+heRatesMe+'</span><span>你眼里的 TA：'+iRateHim+'</span></div>';
+    var diffTxt = P(diff >= 12 ? '{P} 对你的评价，比你给 {P} 的更高'
+                : (diff <= -12 ? '你给 {P} 的评价，比 {P} 给你的更高' : '两边看法接近'));
+    d.innerHTML = '<div class="h"><span>'+info[0]+'</span><em>'+diffTxt+'</em></div>'+
+      '<div class="meter '+(heRatesMe>=70?'g':(heRatesMe>=45?'w':'r'))+'"><i></i></div>'+
+      '<div class="mlbl"><span>'+PRONOUN.p+' 眼里的你 '+heRatesMe+'</span><span>你眼里的 '+PRONOUN.p+' '+iRateHim+'</span></div>';
     sy.appendChild(d);
     setTimeout(function(){
       var bar=d.querySelector('.meter i'); if(bar) bar.style.width=heRatesMe+'%';
@@ -1853,12 +2192,12 @@ function renderResult(r){
 
   /* 双向整体判断 */
   var mutual = document.createElement('div');
-  mutual.className='card-in';
+  mutual.className='panel';
   var mine2 = Math.round(r.perc1), theirs = Math.round(r.perc2);
   var bal = Math.abs(mine2 - theirs);
   mutual.innerHTML = '<div class="h"><span>互相评价的整体水平</span><em>'+
-    (bal<=10?'相当对称':(mine2>theirs?'你评价更高':'TA 评价更高'))+'</em></div>'+
-    '<p>你对 TA 的整体评价：<b>'+mine2+'</b>；TA 对你的整体评价：<b>'+theirs+'</b>。</p>'+
+    (bal<=10?'相当对称':(mine2>theirs?'你评价更高':PRONOUN.p+' 评价更高'))+'</em></div>'+
+    '<p>你给 '+PRONOUN.p+' 的整体评价：<b>'+mine2+'</b>；'+PRONOUN.p+' 给你的整体评价：<b>'+theirs+'</b>。</p>'+
     '<p style="margin-top:8px">'+
     (bal > 18
       ? '两边落差比较明显。这不一定是坏事，但值得想一想：是其中一方更会表达，还是确实有一方在关系里更用力。'
@@ -1871,8 +2210,8 @@ function renderResult(r){
 
   /* 总览 */
   var vsum = document.createElement('div');
-  vsum.className='card-in';
-  var vlvl = r.valuesFit>=75?'ok':(r.valuesFit>=50?'mid':'hi');
+  vsum.className='panel';
+  var vlvl = r.valuesFit>=75?'g':(r.valuesFit>=50?'w':'r');
   var vtxt = r.valuesFit>=75?'很合':(r.valuesFit>=50?'有差异，能协调':'差得比较多');
   vsum.innerHTML = '<div class="h"><span>三观匹配度</span><em>'+vtxt+'</em></div>'+
     '<div class="meter '+vlvl+'"><i style="width:'+r.valuesFit+'%"></i></div>'+
@@ -1892,12 +2231,12 @@ function renderResult(r){
     var info = AX[key];
     var d = document.createElement('div');
     d.className='dim';
-    var tag = g>=50?'<span class="tag r">差距大</span>'
-            :(g<=15?'<span class="tag g">很接近</span>':'<span class="tag">差 '+g+'</span>');
+    var tag = g>=50?'<span class="pill r">差距大</span>'
+            :(g<=15?'<span class="pill g">很接近</span>':'<span class="pill">差 '+g+'</span>');
     d.innerHTML = '<div class="hd"><b>'+info.name+'</b>'+tag+'</div>'+
       '<div class="bars">'+
-        '<div class="bl v1"><u>你</u><div class="tr"><i></i></div><n>'+a1+'</n></div>'+
-        '<div class="bl v2"><u>'+PRONOUN.p+'</u><div class="tr"><i></i></div><n>'+a2+'</n></div>'+
+        '<div class="bar you"><u>你</u><div class="tr"><i></i></div><n>'+a1+'</n></div>'+
+        '<div class="bar them"><u>'+PRONOUN.p+'</u><div class="tr"><i></i></div><n>'+a2+'</n></div>'+
       '</div>'+
       '<div class="cmt"><span style="color:#a8988e">'+info.l+' ←→ '+info.r+'</span><br>'+
       (g>=50 ? '你们基本站在两端。这件事需要一次坦白：谁能退、退到哪，说清楚比互相将就好。'
@@ -1916,7 +2255,7 @@ function renderResult(r){
   var wa = r.worstAxis;
   if (r.axGap[wa] >= 35){
     var axAdv = document.createElement('div');
-    axAdv.className='item warn';
+    axAdv.className='li w';
     axAdv.innerHTML='<div class="ic">!</div><div class="tx"><b>「'+AX[wa].name+
       '」是你们差得最远的一条（相差 '+r.axGap[wa]+' 分）。</b>'+
       P(AX_FIX[wa])+'</div>';
@@ -1941,12 +2280,12 @@ function renderResult(r){
   ORDER.forEach(function(key, i){
     var v1=r.p1[key], v2=r.p2[key], g=r.gap[key];
     var d=document.createElement('div'); d.className='dim';
-    var tag = g>=30?'<span class="tag r">差 '+g+' 分</span>'
-            :(g<=10?'<span class="tag g">很接近</span>':'<span class="tag">差 '+g+'</span>');
+    var tag = g>=30?'<span class="pill r">差 '+g+' 分</span>'
+            :(g<=10?'<span class="pill g">很接近</span>':'<span class="pill">差 '+g+'</span>');
     d.innerHTML = '<div class="hd"><b>'+SELF[key].name+'</b>'+tag+'</div>'+
       '<div class="bars">'+
-        '<div class="bl v1"><u>你</u><div class="tr"><i></i></div><n>'+v1+'</n></div>'+
-        '<div class="bl v2"><u>'+PRONOUN.p+'</u><div class="tr"><i></i></div><n>'+v2+'</n></div>'+
+        '<div class="bar you"><u>你</u><div class="tr"><i></i></div><n>'+v1+'</n></div>'+
+        '<div class="bar them"><u>'+PRONOUN.p+'</u><div class="tr"><i></i></div><n>'+v2+'</n></div>'+
       '</div>'+
       '<div class="cmt">'+(g>=30
         ? '你们在这件事上的感受差得比较多，容易各说各话。值得单独聊一次：同一件事，你们各自记成了什么样。'
@@ -1962,8 +2301,8 @@ function renderResult(r){
   /* ---- 关系风险 ---- */
   var rk = $('rRisk'); rk.innerHTML='';
   var overallWrap = document.createElement('div');
-  overallWrap.className='card-in';
-  var lvl = r.riskAvg>=55?'hi':(r.riskAvg>=35?'mid':'ok');
+  overallWrap.className='panel';
+  var lvl = r.riskAvg>=55?'r':(r.riskAvg>=35?'w':'g');
   var lvlTxt = r.riskAvg>=55?'偏高':(r.riskAvg>=35?'中等':'偏低');
   overallWrap.innerHTML = '<div class="h"><span>综合脆弱性</span><em>'+lvlTxt+'</em></div>'+
     '<div class="meter '+lvl+'"><i style="width:'+Math.round(r.riskAvg)+'%"></i></div>'+
@@ -1973,9 +2312,9 @@ function renderResult(r){
   RORDER.forEach(function(key, i){
     var v = Math.max(r.p1[key], r.p2[key]);    /* 取较高的一方，风险按更担心的人算 */
     var d=document.createElement('div'); d.className='dim';
-    var lv = v>=60?'hi':(v>=35?'mid':'ok');
+    var lv = v>=60?'r':(v>=35?'w':'g');
     d.innerHTML = '<div class="hd"><b>'+RISK[key].name+'</b>'+
-      '<span class="tag '+(v>=60?'r':(v>=35?'w':'g'))+'">'+(v>=60?'较高':(v>=35?'中等':'较低'))+'</span></div>'+
+      '<span class="pill '+(v>=60?'r':(v>=35?'w':'g'))+'">'+(v>=60?'较高':(v>=35?'中等':'较低'))+'</span></div>'+
       '<div class="meter '+lv+'"><i></i></div>';
     rk.appendChild(d);
     setTimeout(function(){
@@ -1984,12 +2323,12 @@ function renderResult(r){
   });
   var topRisk = r.riskTop[0];
   var adv = document.createElement('div');
-  adv.className='item warn';
+  adv.className='li w';
   adv.innerHTML='<div class="ic">!</div><div class="tx"><b>'+RISK[topRisk].name+
     '是四项里最需要留意的一项。</b>'+P(RISK_ADVICE[topRisk])+'</div>';
   rk.appendChild(adv);
   var wb = document.createElement('div');
-  wb.className='warnbox';
+  wb.className='warnpanel';
   wb.innerHTML = '<b>关于"出轨概率"这件事，必须说清楚：</b>没有任何问卷能算出一个人会不会出轨。'+
     '上面这四项衡量的是<b>关系本身的脆弱程度</b>（外部吸引、边界、隐瞒、倦怠），'+
     '这些是研究里与关系不稳定相关的因素，但它们不是证据，也不能指向任何具体行为。'+
@@ -2024,32 +2363,32 @@ function renderResult(r){
     seen[id] = 1; shown++;
     var it = document.createElement('div');
     if (p.kind==='low'){
-      it.className='item warn';
+      it.className='li w';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>'+SELF[p.key].name+
         '偏低（'+r.combo[p.key]+'）。</b>'+RISK_TXT[p.key]+'</div>';
     } else if (p.kind==='gap'){
-      it.className='item bad';
+      it.className='li r';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>在「'+SELF[p.key].name+
         '」上你们差了 '+r.gap[p.key]+' 分。</b>同一段关系，两个人记的不是同一件事。'+
         '这种差异本身不是问题，不说才是问题。</div>';
     } else if (p.kind==='mis'){
-      it.className='item bad';
+      it.className='li r';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>你眼里的 {P}，和 {P} 自己说的，差得比较多。</b>'+
         '期望和实际的落差，往往比"{P} 不够好"更让人失望。把你看到的讲给 {P} 听，也听听 {P} 的版本。</div>';
     } else if (p.kind==='axis'){
-      it.className='item warn';
+      it.className='li w';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>三观上「'+AX[p.key].name+
         '」差得比较远（相差 '+r.axGap[p.key]+' 分）。</b>'+
         '这不是对错问题，是默认设定不同。'+P(AX_FIX[p.key])+'</div>';
     } else {
-      it.className='item warn';
+      it.className='li w';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>'+RISK[p.key].name+
         '偏高（'+Math.max(r.p1[p.key],r.p2[p.key])+'）。</b>'+P(RISK_ADVICE[p.key])+'</div>';
     }
     pb.appendChild(it);
   });
   if (!shown){
-    pb.innerHTML='<div class="item good"><div class="ic">✓</div><div class="tx">'+
+    pb.innerHTML='<div class="li g"><div class="ic">✓</div><div class="tx">'+
       '没有明显突出的问题项。这很少见——把现在的方式保持住就行。</div></div>';
   }
 
@@ -2060,7 +2399,7 @@ function renderResult(r){
     if (r.combo[key] < 58) return;
     anyGood = true;
     var it=document.createElement('div');
-    it.className='item good';
+    it.className='li g';
     it.innerHTML='<div class="ic">✓</div><div class="tx"><b>'+SELF[key].name+
       '（'+r.combo[key]+'）</b>：'+P(GOOD_TXT[key])+'</div>';
     gd.appendChild(it);
@@ -2068,13 +2407,13 @@ function renderResult(r){
   if (r.agreement >= 78){
     anyGood = true;
     var it2=document.createElement('div');
-    it2.className='item good';
+    it2.className='li g';
     it2.innerHTML='<div class="ic">≈</div><div class="tx"><b>你们对这段关系的描述很接近（一致度 '+
       r.agreement+'%）。</b>能站在同一个视角看问题，分歧本来就更容易收场。</div>';
     gd.appendChild(it2);
   }
   if (!anyGood){
-    gd.innerHTML='<div class="item"><div class="ic">·</div><div class="tx">'+
+    gd.innerHTML='<div class="li"><div class="ic">·</div><div class="tx">'+
       '暂时没有特别突出的一项。这不代表不好，只说明你们的力气分布比较平均——'+
       '先把最弱的那个补上，比找优点更划算。</div></div>';
   }
@@ -2288,6 +2627,7 @@ document.addEventListener('keydown', function(e){
 window.__diag = function(){
   return {NQ:NQ, NS:NS, DMAX:DMAX, code:makeCode(S.ans.map(function(v){return v===null?0:v;}))};
 };
+
 </script>
 </body>
 </html>
