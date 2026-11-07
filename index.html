@@ -3,741 +3,1098 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<title>一起走很久 · 关系长久度双人评估</title>
+<title>相处方式小调查 · 双人版</title>
 <style>
 :root{
-  --cream:#fffaf4; --ink:#3b2f2a; --ink2:#7d6b62; --line:#ecdfd4;
-  --rose:#c96a63; --rose-2:#e39087; --deep:#8f4a44; --gold:#c9a227;
-  --card:#fffdfb; --shadow:0 14px 34px rgba(120,80,60,.10);
+  --cream:#fdf9f4;--ink:#3a302b;--ink2:#7e6e65;--ink3:#a8988e;--line:#eae0d6;
+  --rose:#c4706a;--rose2:#dd9189;--deep:#8b4640;--gold:#c39a4a;
+  --green:#6da57f;--amber:#c08a45;--red:#bf6157;--card:#fffdfa;
+  --sh:0 12px 30px rgba(120,88,64,.09);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{
-  font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
-  color:var(--ink);background:var(--cream);line-height:1.6;
-  min-height:100dvh;font-size:16px;
-  background-image:radial-gradient(circle at 12% 8%,#fff2e6 0%,transparent 45%),
-                   radial-gradient(circle at 88% 4%,#ffeef0 0%,transparent 40%);
-}
-.wrap{max-width:520px;margin:0 auto;padding:22px 18px calc(34px + env(safe-area-inset-bottom))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;
-  padding:22px 20px;box-shadow:var(--shadow)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  color:var(--ink);background:var(--cream);line-height:1.65;font-size:16px;min-height:100dvh;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 10% 4%,#fdf1e6 0%,transparent 42%),
+                   radial-gradient(circle at 92% 2%,#fdeef0 0%,transparent 38%);
+  background-attachment:fixed}
+.wrap{max-width:540px;margin:0 auto;padding:20px 16px calc(40px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;box-shadow:var(--sh)}
 .hide{display:none!important}
-.fade{animation:fade .45s ease both}
-@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-
-/* 顶部 */
-.brand{display:flex;align-items:center;gap:9px;margin-bottom:18px}
-.mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
-  background:linear-gradient(140deg,var(--rose),var(--rose-2));color:#fff;font-size:17px;
-  box-shadow:0 6px 14px rgba(201,106,99,.28)}
-.brand b{font-size:14.5px;letter-spacing:.06em}
-.brand span{font-size:11.5px;color:var(--ink2);letter-spacing:.14em;display:block;margin-top:1px}
-
-h1{font-size:25px;line-height:1.35;letter-spacing:-.3px;margin:2px 0 10px;font-weight:800}
+.in{animation:in .4s ease both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.mark{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--rose),var(--rose2));color:#fff;font-size:18px;
+  box-shadow:0 6px 14px rgba(196,112,106,.25)}
+.brand b{font-size:15px}.brand span{display:block;font-size:11px;color:var(--ink3);letter-spacing:.12em;margin-top:2px}
+h1{font-size:26px;line-height:1.35;letter-spacing:-.4px;margin-bottom:12px;font-weight:800}
 h1 em{font-style:normal;color:var(--rose)}
-.lead{color:var(--ink2);font-size:14.5px;line-height:1.8}
-.meta{display:flex;gap:14px;margin:16px 0 18px;flex-wrap:wrap}
-.meta div{font-size:12.5px;color:var(--ink2)}
-.meta b{display:block;font-size:17px;color:var(--ink);font-weight:800;letter-spacing:-.2px}
-.rule{height:1px;background:var(--line);margin:18px 0}
-
-.btn{display:block;width:100%;border:0;border-radius:15px;padding:16px;font-size:16.5px;
-  font-weight:700;font-family:inherit;color:#fff;cursor:pointer;
-  background:linear-gradient(135deg,var(--rose),var(--rose-2));
-  box-shadow:0 10px 22px rgba(201,106,99,.26);transition:transform .13s,box-shadow .13s}
+.lead{color:var(--ink2);font-size:14.5px;line-height:1.85}
+.facts{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 4px}
+.facts div{font-size:12px;color:var(--ink3)}
+.facts b{display:block;font-size:18px;color:var(--ink);font-weight:800;letter-spacing:-.3px;line-height:1.3}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font-size:16.5px;font-weight:700;
+  font-family:inherit;color:#fff;cursor:pointer;background:linear-gradient(135deg,var(--rose),var(--rose2));
+  box-shadow:0 10px 22px rgba(196,112,106,.25);transition:transform .12s}
 .btn:active{transform:scale(.985)}
-.btn.ghost{background:#fff;color:var(--deep);border:1.5px solid #f0d9d2;box-shadow:none}
-.btn.ghost:active{background:#fff8f5}
-.btn.sm{padding:13px;font-size:14.5px;border-radius:13px}
-.btns{display:flex;gap:10px;margin-top:12px}
-.btns .btn{flex:1}
-
-/* 进度 */
-.pbar{height:6px;border-radius:99px;background:#f2e6dd;overflow:hidden;margin:4px 0 18px}
-.pbar i{display:block;height:100%;width:0;border-radius:99px;
-  background:linear-gradient(90deg,var(--rose-2),var(--gold));
-  transition:width .4s cubic-bezier(.3,.9,.3,1)}
-.pnum{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);
-  font-variant-numeric:tabular-nums;margin-bottom:8px;letter-spacing:.04em}
-.q{font-size:20.5px;line-height:1.5;font-weight:750;margin:4px 0 20px;letter-spacing:-.2px}
-.opt{width:100%;text-align:left;font-family:inherit;font-size:16px;line-height:1.55;color:var(--ink);
-  background:#fff;border:1.5px solid #f0e2d8;border-radius:15px;padding:15px 16px;margin-bottom:10px;
-  cursor:pointer;display:flex;gap:12px;align-items:flex-start;
-  transition:border-color .16s,background .16s,transform .12s}
-.opt:active{transform:scale(.99)}
-.opt .k{flex:0 0 22px;height:22px;border-radius:7px;background:#f8efe8;color:var(--ink2);
-  font-size:11.5px;font-weight:800;display:grid;place-items:center;margin-top:2px}
-.opt.sel{border-color:var(--rose-2);background:#fff7f4}
+.btn:disabled{opacity:.45;box-shadow:none}
+.btn.ghost{background:#fff;color:var(--deep);border:1.5px solid #f0ddd7;box-shadow:none}
+.btn.sm{padding:13px;font-size:14.5px;border-radius:12px}
+.btns{display:flex;gap:10px}.btns .btn{flex:1}
+.pnum{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:7px;font-variant-numeric:tabular-nums}
+.pbar{height:6px;border-radius:99px;background:#f1e7dc;overflow:hidden;margin-bottom:18px}
+.pbar i{display:block;height:100%;border-radius:99px;width:0;background:linear-gradient(90deg,var(--rose2),var(--gold));transition:width .35s ease}
+.q{font-size:20px;line-height:1.55;font-weight:750;letter-spacing:-.2px;margin:2px 0 6px}
+.qhint{font-size:12.5px;color:var(--ink3);margin-bottom:16px}
+.opt{width:100%;text-align:left;font-family:inherit;font-size:15.5px;line-height:1.6;color:var(--ink);
+  background:#fff;border:1.5px solid #efe3d9;border-radius:14px;padding:14px 15px;margin-bottom:9px;
+  cursor:pointer;display:flex;gap:11px;align-items:flex-start;transition:border-color .15s,background .15s}
+.opt:active{background:#fffaf7}
+.opt .k{flex:0 0 21px;height:21px;border-radius:6px;background:#f7efe7;color:var(--ink3);font-size:11px;font-weight:800;display:grid;place-items:center;margin-top:2px}
+.opt.sel{border-color:var(--rose2);background:#fff7f4}
 .opt.sel .k{background:var(--rose);color:#fff}
-.back{background:none;border:0;color:var(--ink2);font-size:14px;font-family:inherit;
-  padding:9px 0;cursor:pointer}
-
-/* 输入 */
-label.fl{display:block;font-size:13px;color:var(--ink2);margin:16px 0 7px;letter-spacing:.03em}
-input.code{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:19px;
-  letter-spacing:.14em;text-align:center;padding:15px 12px;border-radius:14px;
-  border:1.5px solid #f0e2d8;background:#fff;color:var(--ink);outline:none;text-transform:uppercase;
-  transition:border-color .16s,box-shadow .16s}
-input.code:focus{border-color:var(--rose-2);box-shadow:0 0 0 4px #fff0ec}
-.err{color:#b3453f;font-size:13px;margin-top:9px;min-height:18px}
-
-/* 结果 */
-.score{text-align:center;padding:6px 0 2px}
-.score .num{font-size:62px;font-weight:800;letter-spacing:-3px;line-height:1;
-  background:linear-gradient(135deg,var(--rose),var(--gold));-webkit-background-clip:text;
-  background-clip:text;color:transparent}
-.score .num small{font-size:19px;font-weight:700;letter-spacing:0;margin-left:2px}
-.score .band{font-size:19px;font-weight:800;margin-top:8px;letter-spacing:.02em}
-.score .say{color:var(--ink2);font-size:14px;margin-top:7px;line-height:1.75}
-.chip{display:inline-block;font-size:12px;padding:5px 11px;border-radius:99px;
-  background:#f8efe8;color:var(--ink2);margin-top:12px;letter-spacing:.03em}
-.chip b{color:var(--deep)}
-
-h3.sec{font-size:13px;letter-spacing:.14em;color:var(--ink2);font-weight:700;margin:22px 0 12px}
-.dim{margin-bottom:13px}
-.dim .top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:6px}
-.dim .top b{font-weight:700}
-.dim .top span{color:var(--ink2);font-variant-numeric:tabular-nums;font-size:12.5px}
-.dim .track{height:8px;border-radius:99px;background:#f4e9e1;overflow:hidden}
-.dim .track i{display:block;height:100%;border-radius:99px;width:0;
-  transition:width .9s cubic-bezier(.25,.9,.3,1)}
-.dim .tag{font-size:11.5px;color:#a08e84;margin-top:5px}
-.dim.lo .track i{background:linear-gradient(90deg,#e08b6a,#d1604f)}
-.dim.mid .track i{background:linear-gradient(90deg,#e8b56a,#d9a24a)}
-.dim.hi .track i{background:linear-gradient(90deg,#8fbf9f,#6aa981)}
-
-.point{display:flex;gap:11px;margin-bottom:13px;font-size:14.5px;line-height:1.72;color:#4a3a33}
-.point .ic{flex:0 0 26px;height:26px;border-radius:9px;display:grid;place-items:center;
-  font-size:13px;font-weight:800;margin-top:1px;background:#f8efe8;color:var(--deep)}
-.point.warn .ic{background:#fdeee6;color:#b96a3f}
-.point.good .ic{background:#eaf5ee;color:#4f8a68}
-.point b{font-weight:750}
-
-.quote{background:linear-gradient(130deg,#fff5ee,#fff9f3);border:1px solid #f4e3d7;
-  border-radius:16px;padding:16px;font-size:14.5px;line-height:1.8;color:#5c463c}
-.quote b{color:var(--deep)}
-
-details.ref{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
-details.ref summary{font-size:13px;color:var(--ink2);cursor:pointer;letter-spacing:.04em;
-  list-style:none;display:flex;justify-content:space-between;align-items:center}
+.navrow{display:flex;gap:10px;align-items:center;margin-top:16px}
+.navrow .btn{flex:1}
+.tlink{background:none;border:0;color:var(--ink3);font-size:13.5px;font-family:inherit;padding:10px 4px;cursor:pointer;white-space:nowrap}
+label.fl{display:block;font-size:13px;color:var(--ink2);margin:2px 0 8px}
+input.code{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;letter-spacing:.1em;
+  text-align:center;padding:15px 8px;border-radius:13px;border:1.5px solid #efe3d9;background:#fff;
+  color:var(--ink);outline:none;text-transform:uppercase}
+input.code:focus{border-color:var(--rose2);box-shadow:0 0 0 4px #fff1ee}
+.err{color:#b0453f;font-size:13px;margin-top:9px;min-height:19px}
+.score{text-align:center;padding:4px 0 6px}
+.score .num{font-size:64px;font-weight:800;letter-spacing:-4px;line-height:1;
+  background:linear-gradient(135deg,var(--rose),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.score .num small{font-size:18px;font-weight:700;letter-spacing:0;margin-left:3px}
+.score .band{font-size:20px;font-weight:800;margin-top:10px}
+.score .say{color:var(--ink2);font-size:14px;line-height:1.8;margin-top:8px;text-align:left}
+.kpis{display:flex;gap:7px;margin-top:16px}
+.kpi{flex:1;background:#fdf7f2;border:1px solid #f2e6da;border-radius:12px;padding:10px 6px;text-align:center}
+.kpi b{display:block;font-size:17px;font-weight:800;letter-spacing:-.3px}
+.kpi span{font-size:10.5px;color:var(--ink3)}
+.kpi.good b{color:var(--green)}.kpi.warn b{color:var(--amber)}.kpi.bad b{color:var(--red)}
+h3.sec{font-size:12.5px;letter-spacing:.12em;color:var(--ink3);font-weight:700;margin:26px 0 13px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h3.sec i{font-style:normal;font-size:11px;letter-spacing:0;color:#bbaaa0;font-weight:400;text-align:right}
+.dim{margin-bottom:15px;padding-bottom:12px;border-bottom:1px dashed #f2e8dd}
+.dim:last-child{border-bottom:0;padding-bottom:0}
+.dim .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:6px}
+.dim .hd b{font-size:14.5px;font-weight:750}
+.dim .bars{display:flex;flex-direction:column;gap:4px}
+.dim .bl{display:flex;align-items:center;gap:7px}
+.dim .bl u{flex:0 0 26px;font-size:10.5px;color:var(--ink3);text-decoration:none;text-align:right}
+.dim .bl .tr{flex:1;height:7px;border-radius:99px;background:#f4ebe2;overflow:hidden}
+.dim .bl .tr i{display:block;height:100%;width:0;border-radius:99px;transition:width .8s cubic-bezier(.25,.9,.3,1)}
+.dim .bl.v1 .tr i{background:linear-gradient(90deg,#dd9189,#c4706a)}
+.dim .bl.v2 .tr i{background:linear-gradient(90deg,#9cc0a8,#6da57f)}
+.dim .bl n{flex:0 0 26px;font-size:11px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.dim .cmt{font-size:12.5px;color:#8b7a70;line-height:1.65;margin-top:7px}
+.tag{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:99px;background:#f6eee6;color:var(--ink3)}
+.tag.g{background:#eaf5ee;color:#4f8a68}
+.tag.w{background:#fbeee4;color:#b87339}
+.tag.r{background:#fbe9e7;color:#b04a3f}
+.item{display:flex;gap:11px;margin-bottom:14px}
+.item .ic{flex:0 0 24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:12px;
+  font-weight:800;margin-top:2px;background:#f7efe7;color:var(--deep)}
+.item.good .ic{background:#eaf5ee;color:#4f8a68}
+.item.warn .ic{background:#fbeee4;color:#b87339}
+.item.bad .ic{background:#fbe9e7;color:#b04a3f}
+.item .tx{font-size:14.5px;line-height:1.75;color:#4a3c35}
+.item .tx b{font-weight:750}
+.card-in{background:#fdf7f2;border:1px solid #f2e6da;border-radius:14px;padding:15px 16px;margin-bottom:14px}
+.card-in .h{font-size:13px;font-weight:750;margin-bottom:7px;display:flex;justify-content:space-between;align-items:baseline}
+.card-in .h em{font-style:normal;font-size:11.5px;color:var(--ink3);font-weight:400}
+.card-in p{font-size:13.5px;line-height:1.8;color:#5c4a41}
+.meter{height:9px;border-radius:99px;background:#f0e4d8;overflow:hidden;margin:9px 0 4px}
+.meter i{display:block;height:100%;border-radius:99px;width:0;transition:width .9s cubic-bezier(.25,.9,.3,1)}
+.meter.ok i{background:linear-gradient(90deg,#9cc0a8,#6da57f)}
+.meter.mid i{background:linear-gradient(90deg,#e8c07a,#c39a4a)}
+.meter.hi i{background:linear-gradient(90deg,#dd9189,#bf6157)}
+.mlbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink3)}
+.todo .ti{display:flex;gap:10px;padding:12px 0;border-bottom:1px dashed #f0e4d8;font-size:14px;line-height:1.7}
+.todo{background:#fdf7f2;border:1px solid #f2e6da;border-radius:14px;padding:4px 15px}
+.todo .ti:last-child{border-bottom:0}
+.todo .ti i{flex:0 0 20px;height:20px;border-radius:7px;background:#fff;border:1.5px solid #e6d5c6;margin-top:2px;
+  font-style:normal;display:grid;place-items:center;font-size:10px;color:#c39a4a}
+details.ref{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}
+details.ref summary{font-size:13px;color:var(--ink2);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
 details.ref summary::-webkit-details-marker{display:none}
-details.ref summary:after{content:'+';font-size:16px;color:var(--rose)}
+details.ref summary:after{content:'+';font-size:17px;color:var(--rose)}
 details.ref[open] summary:after{content:'−'}
-details.ref p{font-size:12.5px;line-height:1.85;color:#8b7a70;margin-top:11px}
-details.ref p b{color:#6d5b52}
-
-.codebox{background:#fdf7f2;border:1.5px dashed #e8cdbf;border-radius:16px;padding:18px;
-  text-align:center;margin:14px 0}
-.codebox .lbl{font-size:12px;color:var(--ink2);letter-spacing:.1em}
-.codebox .val{font-family:ui-monospace,Menlo,monospace;font-size:24px;font-weight:800;
-  letter-spacing:.08em;color:var(--deep);margin:9px 0 4px;word-break:break-all}
-.codebox .hint{font-size:11.5px;color:#a08e84}
-.note{font-size:12.5px;color:#a08e84;line-height:1.75;margin-top:14px}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(16px);
-  background:rgba(59,47,42,.95);color:#fff;font-size:13.5px;padding:11px 18px;border-radius:99px;
-  opacity:0;transition:.26s;z-index:99;pointer-events:none;white-space:nowrap}
+details.ref p{font-size:12.5px;line-height:1.9;color:#8b7a70;margin-top:11px}
+details.ref p b{color:#6b5b52}
+.codebox{background:#fdf7f2;border:1.5px dashed #e9d2c3;border-radius:15px;padding:18px 12px;text-align:center;margin:16px 0}
+.codebox .l{font-size:11.5px;color:var(--ink3);letter-spacing:.1em}
+.codebox .v{font-family:ui-monospace,Menlo,monospace;font-size:20px;font-weight:800;letter-spacing:.04em;
+  color:var(--deep);margin:10px 0 6px;word-break:break-all;line-height:1.4}
+.codebox .h{font-size:11.5px;color:var(--ink3)}
+.note{font-size:12.5px;color:var(--ink3);line-height:1.8;margin-top:14px}
+.warnbox{background:#fdf3ea;border:1px solid #f2ddc8;border-radius:12px;padding:13px 14px;margin-top:14px;
+  font-size:12.5px;line-height:1.8;color:#8a6a48}
+.foot{text-align:center;font-size:11.5px;color:#b8a89f;margin-top:24px;line-height:1.9}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(14px);
+  background:rgba(58,48,43,.96);color:#fff;font-size:13.5px;padding:11px 18px;border-radius:99px;
+  opacity:0;transition:.24s;z-index:99;pointer-events:none;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.foot{text-align:center;font-size:11.5px;color:#b0a099;margin-top:22px;line-height:1.9}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- 首页 -->
   <section id="s-home">
-    <div class="brand">
-      <div class="mark">♡</div>
-      <div><b>一起走很久</b><span>RELATIONSHIP CHECK</span></div>
-    </div>
+    <div class="brand"><div class="mark">◍</div>
+      <div><b>相处方式小调查</b><span>HOW WE WORK TOGETHER</span></div></div>
     <div class="card">
-      <h1>我们能走<em>很远</em>吗？</h1>
-      <p class="lead">两个人各做一次，一共 20 道生活里的小问题。<br>
-      做完你会拿到一个测试码，交给对方输入，就能看到你们合起来的答案。</p>
-      <div class="meta">
-        <div><b>20</b>道题</div>
-        <div><b>约 3</b>分钟</div>
-        <div><b>8</b>个维度</div>
-        <div><b>仅</b>本机计算</div>
+      <h1>我们<span style="color:var(--rose)">相处</span>得怎么样？</h1>
+      <p class="lead">38 个日常场景，两个人各答一次。<br>
+      做完拿到一个号码，交给对方输入，两边合起来才有完整分析。</p>
+      <div class="facts">
+        <div><b>38</b>个场景</div><div><b>5</b>分钟</div>
+        <div><b>16</b>个方面</div><div><b>不</b>上传</div>
       </div>
-      <div class="rule"></div>
-      <button class="btn" id="goStart">我先做，生成测试码</button>
-      <button class="btn ghost" id="goJoin" style="margin-top:10px">我有测试码</button>
-      <p class="note">没有注册、不上传、不保存。答案只编进你手里那串码里，别人的答案也在对方手机里算。</p>
+      <hr>
+      <button class="btn" id="goStart">我先做</button>
+      <button class="btn ghost" id="goJoin" style="margin-top:10px">我拿到号码了</button>
+      <p class="note">不用注册，答案不离开手机——它们只被编进你手里那串号码。</p>
     </div>
-    <div class="foot">依据公开的关系研究设计 · 结果仅供参考，不是预言</div>
+    <div class="foot">题目按公开的关系研究设计 · 结果只是参考</div>
   </section>
 
-  <!-- 答题 -->
   <section id="s-quiz" class="hide">
-    <div class="pnum"><span id="pStep">1 / 20</span><span id="pRole"></span></div>
+    <div class="pnum"><span id="pStep">1 / 38</span><span id="pRole"></span></div>
     <div class="pbar"><i id="pFill"></i></div>
-    <div class="card">
+    <div class="card in">
       <div class="q" id="qText"></div>
+      <div class="qhint" id="qHint"></div>
       <div id="opts"></div>
-      <button class="back" id="qBack">← 上一题</button>
+      <div class="navrow">
+        <button class="tlink" id="qBack">上一题</button>
+        <button class="btn" id="qNext" disabled>下一题</button>
+      </div>
     </div>
   </section>
 
-  <!-- 第一人完成：给码 -->
   <section id="s-code" class="hide">
     <div class="card">
-      <h1 style="font-size:22px">把你的码交给 TA</h1>
-      <p class="lead">对方打开同一个网址，选「我有测试码」，输进去做完，就能看到你们的结果。</p>
+      <h1 style="font-size:22px">把这串号码给 TA</h1>
+      <p class="lead">对方打开同一个网址，点「我拿到号码了」，输进来、答完，就能看到完整分析。</p>
       <div class="codebox">
-        <div class="lbl">你的测试码</div>
-        <div class="val" id="codeVal">····</div>
-        <div class="hint">不区分大小写，中间的横线可以不打</div>
+        <div class="l">你的号码</div>
+        <div class="v" id="codeVal">——</div>
+        <div class="h">不区分大小写，横线可以不打</div>
       </div>
       <div class="btns">
-        <button class="btn sm" id="copyCode">复制测试码</button>
-        <button class="btn ghost sm" id="copyInvite">复制邀请文字</button>
+        <button class="btn sm" id="copyCode">复制号码</button>
+        <button class="btn ghost sm" id="copyInvite">复制邀请</button>
       </div>
-      <div class="rule"></div>
+      <hr>
       <p class="note" id="selfPreview"></p>
     </div>
-    <div class="foot">码里只有你这 20 道题的选择，没有别的东西</div>
   </section>
 
-  <!-- 输入码 -->
   <section id="s-enter" class="hide">
     <div class="card">
-      <h1 style="font-size:22px">输入 TA 给你的码</h1>
-      <p class="lead">输完继续答 20 道题，最后直接出你们两个人的结果。</p>
-      <label class="fl" for="codeIn">测试码</label>
-      <input class="code" id="codeIn" maxlength="20" inputmode="text" autocomplete="off"
-             autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX">
-      <div class="err" id="codeErr"></div>
-      <button class="btn" id="doJoin" style="margin-top:8px">开始答题</button>
-      <button class="back" id="enterBack">← 返回</button>
+      <h1 style="font-size:22px">输入 TA 的号码</h1>
+      <p class="lead">输完继续答 38 个场景，最后直接看到你们两人的完整分析。</p>
+      <div style="margin-top:18px">
+        <label class="fl" for="codeIn">号码</label>
+        <input class="code" id="codeIn" maxlength="26" inputmode="text" autocomplete="off"
+               autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XX">
+        <div class="err" id="codeErr"></div>
+        <button class="btn" id="doJoin">核对并开始</button>
+        <button class="tlink" id="enterBack" style="display:block;margin:10px auto 0">返回</button>
+      </div>
     </div>
   </section>
 
-  <!-- 结果 -->
   <section id="s-result" class="hide">
     <div class="card">
       <div class="score">
-        <div class="num" id="rNum">0<small>/100</small></div>
+        <div class="num" id="rNum">—<small>/100</small></div>
         <div class="band" id="rBand"></div>
         <div class="say" id="rSay"></div>
-        <div class="chip" id="rChip"></div>
+        <div class="kpis" id="rKpis"></div>
       </div>
-      <div class="rule"></div>
-      <h3 class="sec">八个维度</h3>
+
+      <h3 class="sec">TA 眼中的你 <i>对方怎么描述你 vs 你怎么说自己</i></h3>
+      <div id="rSeeYou"></div>
+
+      <h3 class="sec">八个方面 <i>红 = 你 · 绿 = TA</i></h3>
       <div id="rDims"></div>
-      <h3 class="sec">值得注意的地方</h3>
-      <div id="rPoints"></div>
-      <h3 class="sec">一句话建议</h3>
-      <div class="quote" id="rAdvice"></div>
-      <details class="ref">
-        <summary>这个分数是怎么算的 · 依据</summary>
-        <div id="rRef"></div>
-      </details>
-      <div class="btns" style="margin-top:18px">
+
+      <h3 class="sec">关系风险 <i>脆弱性，不是证据</i></h3>
+      <div id="rRisk"></div>
+
+      <h3 class="sec">问题出在哪 <i>按影响排序</i></h3>
+      <div id="rProb"></div>
+
+      <h3 class="sec">最踏实的地方</h3>
+      <div id="rGood"></div>
+
+      <h3 class="sec">接下来七天可以做的</h3>
+      <div class="todo" id="rTodo"></div>
+
+      <details class="ref"><summary>分数怎么来的 · 依据</summary><div id="rRef"></div></details>
+
+      <div class="btns" style="margin-top:20px">
         <button class="btn sm" id="copyResult">复制结果</button>
         <button class="btn ghost sm" id="again">重新开始</button>
       </div>
-      <p class="note">这是一个自评工具，不预测任何具体结局。真正决定走多远的，是你们接下来怎么处理那几件一直没聊的事。</p>
+      <p class="note">这是自我报告，不是对关系的判决。它只说这个月你们在哪些地方顺、哪些地方在耗。</p>
     </div>
   </section>
-
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ================= 维度 ================= */
-var DIMS = {
-  rep:{ name:'冲突修复', w:.20, low:'吵完架能回到平常，是长期关系里最省力的一项能力。',
-        hi:'你们有能力把不愉快收尾，这比"不吵架"重要得多。' },
-  sec:{ name:'情绪安全感', w:.17, low:'一点点不确定就会被放大成"是不是不爱了"。',
-        hi:'你不用一直确认对方还在，这本身就是便宜的幸福。' },
-  rsp:{ name:'彼此回应', w:.15, low:'分享常常接不住，久了就不想说了。',
-        hi:'小事有人接住，日常才有温度。' },
-  pos:{ name:'正向时刻', w:.14, low:'开心的时候少了，剩下的就只剩事务。',
-        hi:'你们还在一起笑，这是感情的续命药。' },
-  com:{ name:'承诺投入', w:.13, low:'遇到事时，对方不是第一个想到的人。',
-        hi:'你们把彼此放进了"以后"里。' },
-  mea:{ name:'共同意义', w:.08, low:'你们还没有属于自己的小传统。',
-        hi:'专属习惯是关系的锚。' },
-  fut:{ name:'现实节奏', w:.07, low:'作息、家人、节奏上还有没对齐的地方。',
-        hi:'现实层面没太多磕碰，省下很多力气。' },
-  aut:{ name:'边界与自主', w:.06, low:'靠得越近，越需要一点各自的空间。',
-        hi:'你们能各自完整，也能在一起。' }
-};
-var DIM_ORDER = ['rep','sec','rsp','pos','com','mea','fut','aut'];
+"use strict";
 
-/* ================= 题库 ================= */
+/* ============================================================
+   维度定义
+   ============================================================ */
+var SELF = {
+  rep:{name:'摩擦之后',w:.17,hi:'不开心的事收得住，这是长期关系里最省力的能力。',lo:'小事容易积着，久了会变成"说了也没用"。'},
+  sec:{name:'心里有底',w:.15,hi:'不必一直确认对方还在，这本身就是一种轻松。',lo:'一点不确定就会被放大，很消耗自己。'},
+  rsp:{name:'日常回应',w:.13,hi:'小事有人接住，日子才有温度。',lo:'分享经常接不住，慢慢地就不想说了。'},
+  pos:{name:'开心的量',w:.12,hi:'还会一起笑，这是关系的续航。',lo:'相处中开心的部分被事务挤掉了。'},
+  com:{name:'往后的打算',w:.12,hi:'你们把对方放进"以后"里了。',lo:'目前更像各走各的，只是刚好同行。'},
+  mea:{name:'共同的习惯',w:.07,hi:'专属的小习惯是关系的锚。',lo:'还没有属于你们两个人的固定节目。'},
+  fut:{name:'现实节奏',w:.06,hi:'现实层面没什么磕碰，省下不少力气。',lo:'作息、家人、生活节奏还有没对齐的地方。'},
+  aut:{name:'各自的空间',w:.05,hi:'能各自完整，也能在一起。',lo:'靠得越近，越需要给彼此留一点缝。'}
+};
+var PERC = {
+  pwarm:{name:'TA 的温度',w:.30,hi:'你觉得他是暖的，这很可能真的是暖的。',lo:'你不太感受到他的在意，或他表达的方式你接不住。'},
+  pcom:{name:'TA 的投入',w:.28,hi:'你相信他把这段关系当回事。',lo:'你不太确定他有多认真——这是最该当面问清的一件事。'},
+  pstab:{name:'TA 的稳定',w:.22,hi:'他的情绪基本可预期，你不用小心翼翼地说话。',lo:'他的起伏让你需要常常揣摩气氛。'},
+  popen:{name:'TA 好不好谈',w:.20,hi:'有话能说，这是最值钱的一项。',lo:'你有一些话一直没敢讲，或讲了他也不接。'}
+};
+var RISK = {
+  ralt:{name:'外部引力',w:.30},
+  rbound:{name:'边界松动',w:.26},
+  rhide:{name:'隐瞒倾向',w:.26},
+  rbore:{name:'倦怠信号',w:.18}
+};
+var ORDER = ['rep','sec','rsp','pos','com','mea','fut','aut'];
+var PORDER = ['pwarm','pcom','pstab','popen'];
+var RORDER = ['ralt','rbound','rhide','rbore'];
+
+/* ============================================================
+   题库：32 题计分（编码）+ 6 题生活（不编码）
+   ============================================================ */
 var QS = [
-  { q:'对方一整天没回消息，你通常会：', o:[
-    { t:'各忙各的，没什么', s:{sec:3} },
-    { t:'会看一眼手机，但知道他在忙', s:{sec:2} },
-    { t:'忍不住反复刷新', s:{sec:1} },
-    { t:'会想是不是自己哪里做错了', s:{sec:0} } ]},
-  { q:'意见不合的时候，你心里更常出现的是：', o:[
-    { t:'说开就好了', s:{sec:3} },
-    { t:'有点难受，但不影响什么', s:{sec:2} },
-    { t:'不太敢讲真实想法', s:{sec:1} },
-    { t:'会怀疑我们是不是不合适', s:{sec:0} } ]},
-  { q:'上一次不太愉快，你们多久恢复平常说话？', o:[
-    { t:'当天就恢复了', s:{rep:3} },
-    { t:'第二天', s:{rep:2} },
-    { t:'要三四天', s:{rep:1} },
-    { t:'到现在还有点别扭', s:{rep:0} } ]},
-  { q:'有点僵的时候，通常是谁先递台阶（玩笑、递水、发个表情）？', o:[
-    { t:'经常互相递', s:{rep:3} },
-    { t:'有时会', s:{rep:2} },
-    { t:'很少，基本等时间冲淡', s:{rep:1} },
-    { t:'从来没有', s:{rep:0} } ]},
-  { q:'气头上，你会说出事后后悔的话吗？', o:[
-    { t:'几乎不会', s:{rep:3} },
-    { t:'偶尔', s:{rep:2} },
-    { t:'有时候会', s:{rep:1} },
-    { t:'经常', s:{rep:0} } ]},
-  { q:'你随手分享一件小事（路边的猫、工作的烦），他一般：', o:[
-    { t:'会接着问，聊下去', s:{rsp:3} },
-    { t:'有回应，但比较简短', s:{rsp:2} },
-    { t:'只听，不太接话', s:{rsp:1} },
-    { t:'常常没接住', s:{rsp:0} } ]},
-  { q:'你状态不好的时候，他能看出来吗？', o:[
-    { t:'基本都能', s:{rsp:3} },
-    { t:'有时候能', s:{rsp:2} },
-    { t:'得我说了他才知道', s:{rsp:1} },
-    { t:'说了也不太理解', s:{rsp:0} } ]},
-  { q:'他跟你讲话的时候，你通常：', o:[
-    { t:'放下手里的事认真听', s:{rsp:3} },
-    { t:'边听边做别的', s:{rsp:2} },
-    { t:'有时会走神', s:{rsp:1} },
-    { t:'常忍不住给建议或打断', s:{rsp:1} } ]},
-  { q:'过去一周，开心的时刻和闹心的时刻比：', o:[
-    { t:'开心多很多', s:{pos:3} },
-    { t:'差不多', s:{pos:2} },
-    { t:'闹心多一些', s:{pos:1} },
-    { t:'大多数时候都挺累', s:{pos:0} } ]},
-  { q:'你们最近一次一起笑到不行，是：', o:[
-    { t:'这两天', s:{pos:3} },
-    { t:'这一两周', s:{pos:2} },
-    { t:'一个月前', s:{pos:1} },
-    { t:'想不起来了', s:{pos:0} } ]},
-  { q:'你会主动说喜欢，或者谢谢吗？', o:[
-    { t:'经常', s:{pos:3} },
-    { t:'偶尔', s:{pos:2} },
-    { t:'很少', s:{pos:1} },
-    { t:'几乎不说', s:{pos:0} } ]},
-  { q:'想到接下来一年，你脑子里是：', o:[
-    { t:'有很多想一起做的事', s:{com:3} },
-    { t:'有点模糊，但有他', s:{com:2} },
-    { t:'走一步看一步', s:{com:1} },
-    { t:'不太确定那时候还在一起', s:{com:0} } ]},
-  { q:'遇到麻烦，你第一反应是：', o:[
-    { t:'先跟他说', s:{com:3} },
-    { t:'看是什么事', s:{com:2} },
-    { t:'自己先扛着', s:{com:1} },
-    { t:'更想找朋友', s:{com:0} } ]},
-  { q:'闹得厉害的时候，你会不会闪过"要不算了"的念头？', o:[
-    { t:'从来没有', s:{com:3} },
-    { t:'很少', s:{com:2} },
-    { t:'有过一两次', s:{com:1} },
-    { t:'不止一次', s:{com:0} } ]},
-  { q:'你们有没有自己的小习惯（专属称呼、睡前一句、固定节目）？', o:[
-    { t:'有好几个', s:{mea:3} },
-    { t:'有一两个', s:{mea:2} },
-    { t:'想不太起来', s:{mea:1} },
-    { t:'没有', s:{mea:0} } ]},
-  { q:'钱、节日、见家长这些事，你们聊过吗？', o:[
-    { t:'聊过，大致一致', s:{mea:3} },
-    { t:'聊过，有些不一样', s:{mea:2} },
-    { t:'只零散提过', s:{mea:1} },
-    { t:'没怎么聊过', s:{mea:0} } ]},
-  { q:'他有你不参与的爱好和朋友，你：', o:[
-    { t:'觉得挺好', s:{aut:3} },
-    { t:'无所谓', s:{aut:2} },
-    { t:'有点不安', s:{aut:1} },
-    { t:'希望他都带上我', s:{aut:0} } ]},
-  { q:'你们会互相查手机或者看定位吗？', o:[
-    { t:'不会', s:{aut:3} },
-    { t:'会主动给对方看', s:{aut:2} },
-    { t:'偶尔会想看', s:{aut:1} },
-    { t:'经常', s:{aut:0} } ]},
-  { q:'你们的作息和节奏：', o:[
-    { t:'挺合得来', s:{fut:3} },
-    { t:'需要协调，但还行', s:{fut:2} },
-    { t:'经常对不上', s:{fut:1} },
-    { t:'完全反着', s:{fut:0} } ]},
-  { q:'对方的家人和朋友，对你的态度：', o:[
-    { t:'挺好', s:{fut:3} },
-    { t:'一般', s:{fut:2} },
-    { t:'还没怎么接触', s:{fut:2} },
-    { t:'不太友好', s:{fut:0} } ]}
+  /* ---- 生活项 ---- */
+  {q:'空闲的一整个下午，你更想怎么过？',o:[
+    {t:'出门走走，随便逛逛'},{t:'在家躺着，什么都不干'},
+    {t:'约人吃饭聊天'},{t:'收拾屋子、做点手边的事'}]},
+  {q:'遇到心烦的事，你更习惯：',o:[
+    {t:'马上找人讲讲'},{t:'自己先消化一阵'},
+    {t:'做点别的事转移注意力'},{t:'睡一觉再说'}]},
+  {q:'吃饭这件事上，你属于：',o:[
+    {t:'很挑，但固定那几家'},{t:'什么都行，好吃就行'},
+    {t:'喜欢尝新的'},{t:'吃饱最重要'}]},
+  {q:'收到别人的消息，你通常：',o:[
+    {t:'看到就回'},{t:'想起来再回'},{t:'有空了集中回'},{t:'看是谁发的'}]},
+  {q:'你怎么看待"计划"？',o:[
+    {t:'喜欢提前安排好'},{t:'大概有个方向就行'},
+    {t:'临时决定更有意思'},{t:'都行，跟着感觉走'}]},
+  {q:'你更习惯用哪种方式表达在意？',o:[
+    {t:'直接说出来'},{t:'默默做点事'},{t:'送点东西'},{t:'多陪着'}]},
+
+  /* ---- 摩擦之后 ---- */
+  {q:'上次你们都不太高兴，后来是怎么回到正常说话的？',d:'rep',o:[
+    {t:'当天就聊开了，把那件事说清了',s:3},
+    {t:'没多久就自然好了，虽然没细聊',s:2},
+    {t:'花了几天，各自冷静下来才过去',s:1},
+    {t:'到现在那件事还悬着',s:0}]},
+  {q:'争起来的时候，你说话会变成什么样子？',d:'rep',o:[
+    {t:'还是就事论事',s:3},{t:'语气会冲，但不伤人',s:2},
+    {t:'会说一些过后后悔的话',s:1},{t:'容易翻旧账、说狠话',s:0}]},
+
+  /* ---- 心里有底 ---- */
+  {q:'对方半天没回消息，你那半天：',d:'sec',o:[
+    {t:'完全没在意，各忙各的',s:3},{t:'扫过一眼，知道他忙就算了',s:2},
+    {t:'会多看几次手机',s:1},{t:'会开始想很多',s:0}]},
+  {q:'有件事让你不太舒服，你会怎么处理？',d:'sec',o:[
+    {t:'直接说出来，不怕他不高兴',s:3},{t:'找机会说，措辞会想一下',s:2},
+    {t:'憋着，怕说了会吵起来',s:1},{t:'憋着，然后自己越想越难受',s:0}]},
+
+  /* ---- 日常回应 ---- */
+  {q:'你随口说件小事（路上的猫、工作上的烦），对方一般：',d:'rsp',o:[
+    {t:'会接话，还会追问两句',s:3},{t:'有回应，比较简短',s:2},
+    {t:'听着，但不太接',s:1},{t:'经常没听见，或者在忙别的',s:0}]},
+  {q:'对方跟你讲话的时候，你通常在：',d:'rsp',o:[
+    {t:'停下来认真听',s:3},{t:'边听边做自己的事',s:2},
+    {t:'经常会走神',s:1},{t:'忍不住先给建议，或者接过去讲自己的',s:1}]},
+
+  /* ---- 开心的量 ---- */
+  {q:'回想这一周，让你们都笑的时刻：',d:'pos',o:[
+    {t:'挺多的',s:3},{t:'有一些',s:2},{t:'不太多',s:1},{t:'几乎没有',s:0}]},
+  {q:'你们上一次一起笑到停不下来，是：',d:'pos',o:[
+    {t:'这两天的事',s:3},{t:'这一两周',s:2},{t:'有一个月了',s:1},{t:'想不起来了',s:0}]},
+
+  /* ---- 往后的打算 ---- */
+  {q:'想到接下来大半年，你脑子里浮现的是：',d:'com',o:[
+    {t:'有不少想一起去做的事',s:3},{t:'有点模糊，但画面里有他',s:2},
+    {t:'走一步看一步',s:1},{t:'不太确定那时候还在不在一起',s:0}]},
+  {q:'吵得厉害的时候，"要不算了"这种念头：',d:'com',o:[
+    {t:'从来没有过',s:3},{t:'很偶尔闪过一下',s:2},
+    {t:'有过一两次，认真的那种',s:1},{t:'不止一两次',s:0}]},
+
+  /* ---- 共同的习惯 ---- */
+  {q:'你们有自己的固定节目吗？（专属称呼、晚安、周末那顿饭）',d:'mea',o:[
+    {t:'有好几个',s:3},{t:'有一两个',s:2},{t:'想不太起来',s:1},{t:'没有',s:0}]},
+  {q:'钱、节日、见家人这类事，你们聊到过吗？',d:'mea',o:[
+    {t:'聊过，想法比较接近',s:3},{t:'聊过，有不一样的地方',s:2},
+    {t:'只零散提过',s:1},{t:'基本没聊过',s:0}]},
+
+  /* ---- 现实节奏 ---- */
+  {q:'你们的生活节奏：',d:'fut',o:[
+    {t:'挺合得来',s:3},{t:'需要协调，但还顺',s:2},
+    {t:'经常对不上',s:1},{t:'几乎是反着的',s:0}]},
+  {q:'对方的家人朋友对你：',d:'fut',o:[
+    {t:'挺友好',s:3},{t:'一般',s:2},{t:'还没怎么接触',s:2},{t:'不太友好，或者有为难',s:0}]},
+
+  /* ---- 各自的空间 ---- */
+  {q:'他有你不参与的爱好和朋友圈，你觉得：',d:'aut',o:[
+    {t:'挺好，各有各的',s:3},{t:'没什么感觉',s:2},
+    {t:'偶尔会有点不安',s:1},{t:'希望他都带上我',s:0}]},
+  {q:'两个人各自待着、各做各的，那种时间你们的感受：',d:'aut',o:[
+    {t:'很自然，各忙各的很舒服',s:3},{t:'能接受，偶尔有点空',s:2},
+    {t:'会想找点事一起做',s:1},{t:'安静下来就不太自在',s:0}]},
+
+  /* ---- 对 TA 的看法 ---- */
+  {q:'难过的时候，你觉得他会怎么反应？',d:'pwarm',o:[
+    {t:'会放下手里的事来陪我',s:3},{t:'会安慰，但有点笨拙',s:2},
+    {t:'会给建议，让我别想太多',s:1},{t:'好像不太知道怎么接',s:0}]},
+  {q:'关于你们的未来，他的态度让你觉得：',d:'pcom',o:[
+    {t:'他是认真在计划的',s:3},{t:'他是愿意的，但没具体说过',s:2},
+    {t:'他不太主动提',s:1},{t:'他好像在回避这个话题',s:0}]},
+  {q:'他心情不好的时候，通常：',d:'pstab',o:[
+    {t:'会说，也能自己缓过来',s:3},{t:'会说，但需要一阵',s:2},
+    {t:'看得出来，但问也不说',s:1},{t:'会明显影响我们两个',s:0}]},
+  {q:'如果有个问题你必须跟他谈，你会：',d:'popen',o:[
+    {t:'直接说，我知道他会听',s:3},{t:'会说，但要挑时机',s:2},
+    {t:'犹豫很久才开得了口',s:1},{t:'想想还是算了',s:0}]},
+
+  /* ---- 关系风险（脆弱性） ---- */
+  {q:'看到别人的恋爱（社交平台、朋友），你心里：',d:'ralt',o:[
+    {t:'没什么感觉，我这样挺好',s:0},{t:'偶尔会想"要是…"',s:1},
+    {t:'会有点羡慕',s:2},{t:'经常觉得别人的更好',s:3}]},
+  {q:'如果有个人对你明显示好，你会：',d:'rbound',o:[
+    {t:'立刻划清，还会告诉他',s:0},{t:'保持距离，但不会特意提',s:1},
+    {t:'会有点受用，先不动',s:2},{t:'大概会继续聊下去',s:3}]},
+  {q:'有些事你选择不告诉对方，这种情况：',d:'rhide',o:[
+    {t:'几乎没有',s:0},{t:'很少，都是不重要的小事',s:1},
+    {t:'有一些，觉得说了会麻烦',s:2},{t:'挺多的，各留各的空间',s:3}]},
+  {q:'你们的相处，最近：',d:'rbore',o:[
+    {t:'还常有新鲜的东西',s:0},{t:'稳定，但有点可预测',s:1},
+    {t:'差不多每次都一样',s:2},{t:'已经很久没有期待了',s:3}]},
+  {q:'如果未来半年完全不变，你会：',d:'ralt',o:[
+    {t:'挺愿意的',s:0},{t:'可以接受',s:1},
+    {t:'会有点不甘心',s:2},{t:'不太想这样下去',s:3}]},
+  {q:'关于手机、行程这些，你们之间：',d:'rhide',o:[
+    {t:'互相知道，也没什么要藏的',s:0},{t:'大致知道，细节不问',s:1},
+    {t:'各管各的，不太清楚',s:2},{t:'会想瞒一些事',s:3}]},
+
+  /* ---- 补充：让每个维度各 2 题 ---- */
+  {q:'你说累的时候，他一般会：',d:'pwarm',o:[
+    {t:'马上问怎么了，还会做点什么',s:3},{t:'会安慰几句',s:2},
+    {t:'说"那就早点睡"',s:1},{t:'好像没太在意',s:0}]},
+  {q:'关于"我们以后"，他主动提过吗？',d:'pcom',o:[
+    {t:'提过，还很具体',s:3},{t:'提过，比较笼统',s:2},
+    {t:'很少主动提',s:1},{t:'一次都没有',s:0}]},
+  {q:'他情绪上来的时候，你们的沟通：',d:'pstab',o:[
+    {t:'还是能讲道理',s:3},{t:'会先冷一下，然后能谈',s:2},
+    {t:'很难沟通，要等很久',s:1},{t:'会变成互相伤害',s:0}]},
+  {q:'你提出不同意见时，他通常：',d:'popen',o:[
+    {t:'会认真听，还会问为什么',s:3},{t:'会听，但不太回应',s:2},
+    {t:'容易当成指责',s:1},{t:'会直接结束对话',s:0}]},
+  {q:'你们各自的社交圈，重叠程度：',d:'rbound',o:[
+    {t:'基本都互相认识',s:0},{t:'认识一部分',s:1},
+    {t:'各玩各的，很少交叉',s:2},{t:'互相完全不知道对方在跟谁玩',s:3}]},
+  {q:'如果一个人出差/回老家几天，你们会：',d:'rbore',o:[
+    {t:'每天都会聊，很想对方',s:0},{t:'会聊，但不多',s:1},
+    {t:'各过各的，也挺好',s:2},{t:'反而觉得轻松',s:3}]}
 ];
 
-/* 每个维度的题数与满分 */
-var DIM_MAX = {};
-DIM_ORDER.forEach(function(k){ DIM_MAX[k] = 0; });
-QS.forEach(function(q){ DIM_ORDER.forEach(function(k){ DIM_MAX[k] += 3; }); });
-(function(){
-  DIM_ORDER.forEach(function(k){ DIM_MAX[k] = 0; });
-  QS.forEach(function(q){
-    var seen = {};
-    q.o.forEach(function(o){ for (var k in o.s) seen[k] = 1; });
-    for (var k in seen) DIM_MAX[k] += 3;
-  });
-})();
+var NQ = QS.length;                       /* 总题数（动态） */
+var SCORED = QS.filter(function(q){ return !!q.d; });
+var NS = SCORED.length;                   /* 计分题数（动态） */
+var LIFE = NQ - NS;                       /* 生活题数 */
 
-/* ================= 编码：答案 -> 测试码 ================= */
+/* 每个维度满分 */
+var DMAX = {};
+ORDER.concat(PORDER).concat(RORDER).forEach(function(k){ DMAX[k] = 0; });
+SCORED.forEach(function(q){ DMAX[q.d] += 3; });
+
+/* ============================================================
+   号码编解码：32 题 × 2bit = 64bit = 8 字节；+2 字节校验 = 20 位
+   ============================================================ */
 var HEX = '0123456789ABCDEF';
-function bytesToHex(bs){
-  var s = '';
-  for (var i=0;i<bs.length;i++) s += HEX[(bs[i]>>4)&15] + HEX[bs[i]&15];
-  return s;
-}
-function hexToBytes(h){
-  if (h.length % 2) return null;
-  var bs = [];
-  for (var i=0;i<h.length;i+=2){
-    var a = HEX.indexOf(h[i]), b = HEX.indexOf(h[i+1]);
-    if (a < 0 || b < 0) return null;
-    bs.push((a<<4)|b);
-  }
-  return bs;
-}
-function checksum(bs){
-  var lo = 0x5A, hi = 0xA5;
-  for (var i=0;i<bs.length;i++){
-    lo = (lo + bs[i] * (i+1)) & 0xFF;
-    hi = (hi ^ (bs[i] + i * 7)) & 0xFF;
-    hi = ((hi << 1) | (hi >> 7)) & 0xFF;
-  }
-  return [lo, hi];
-}
-function isHexChar(c){ return HEX.indexOf(c) >= 0; }
+function b2h(bs){var s='';for(var i=0;i<bs.length;i++)s+=HEX[(bs[i]>>4)&15]+HEX[bs[i]&15];return s;}
+function h2b(h){if(h.length%2)return null;var o=[];for(var i=0;i<h.length;i+=2){
+  var a=HEX.indexOf(h[i]),b=HEX.indexOf(h[i+1]);if(a<0||b<0)return null;o.push((a<<4)|b);}return o;}
+function cksum(bs){var lo=0x5A,hi=0xA5;for(var i=0;i<bs.length;i++){
+  lo=(lo+bs[i]*(i+1))&0xFF;hi=((hi^(bs[i]+i*7))&0xFF);hi=((hi<<1)|(hi>>7))&0xFF;}return [lo,hi];}
 
-/* 20 题，每题 0-3，共 40 bit = 5 字节 */
-function packAnswers(ans){
-  var b0=0,b1=0,b2=0,b3=0,b4=0;
-  for (var i=0;i<ans.length;i++){
-    var v = ans[i] & 3;
-    var bit = i*2;
-    if (bit < 8) b0 |= v << (6-bit);
-    else if (bit < 16) b1 |= v << (14-bit);
-    else if (bit < 24) b2 |= v << (22-bit);
-    else if (bit < 32) b3 |= v << (30-bit);
-    else b4 |= v << (38-bit);
+var PAD = [0x9E,0x37,0xC1,0x5A,0x6D,0xB2,0x4F,0xE8,0x13,0x77];
+var NBYTES = Math.ceil(NS*2/8);           /* 数据字节数 */
+var CHEX = (NBYTES + 2) * 2;              /* 校验 2 字节后的总位数 */
+function packScored(ans){
+  var bytes = [], n = NBYTES;
+  for (var i=0;i<n;i++) bytes.push(0);
+  var si = 0;
+  for (var i=0;i<NQ;i++){
+    if (!QS[i].d) continue;
+    var v = (ans[i]|0) & 3;
+    var bit = si*2, byteIdx = bit>>3, off = bit&7;
+    bytes[byteIdx] |= (v << (6-off)) & 0xFF;
+    si++;
   }
-  return [b0,b1,b2,b3,b4];
+  for (var i=0;i<n;i++) bytes[i] ^= PAD[i];
+  return bytes;
 }
-function unpackAnswers(bs){
-  var ans = [];
-  for (var i=0;i<20;i++){
-    var bit = i*2;
-    var byteIdx = bit >> 3, off = bit & 7;
-    var v = (bs[byteIdx] >> (6 - off)) & 3;
-    ans.push(v);
+function unpackScored(bytes){
+  var b = [];
+  for (var i=0;i<bytes.length;i++) b.push((bytes[i]^PAD[i])&0xFF);
+  var out = [], si = 0;
+  for (var i=0;i<NQ;i++){
+    if (!QS[i].d) continue;
+    var bit = si*2, byteIdx = bit>>3, off = bit&7;
+    out.push((b[byteIdx] >> (6-off)) & 3);
+    si++;
   }
-  return ans;
-}
-function makeCode(ans){
-  var data = packAnswers(ans);
-  var frame = [1].concat(data);
-  var ck = checksum(frame);
-  frame.push(ck[0]); frame.push(ck[1]);
-  var hex = bytesToHex(frame);
-  return hex.replace(/(.{4})(.{4})(.{4})(.{4})/, '$1-$2-$3-$4');
-}
-function parseCode(input){
-  var raw = (input||'').toUpperCase().replace(/[^0-9A-Z]/g,'');
-  if (raw.length !== 16) return { err:'测试码是 16 位，请再检查一下' };
-  for (var i=0;i<raw.length;i++) if (!isHexChar(raw[i])) return { err:'里面有不认识的字符' };
-  var bs = hexToBytes(raw);
-  if (bs[0] !== 1) return { err:'这串码不是这个测试的' };
-  var body = bs.slice(0,6), ck = checksum(body);
-  if (ck[0] !== bs[6] || ck[1] !== bs[7]) return { err:'测试码对不上，可能有字符打错了' };
-  return { ans: unpackAnswers(bs.slice(1,6)) };
-}
-
-/* ================= 评分 ================= */
-function scorePerson(ans){
-  var raw = {};
-  DIM_ORDER.forEach(function(k){ raw[k] = 0; });
-  for (var i=0;i<ans.length;i++){
-    var s = QS[i].o[ans[i]].s;
-    for (var k in s) raw[k] += s[k];
-  }
-  var out = {};
-  DIM_ORDER.forEach(function(k){ out[k] = Math.round(raw[k] / DIM_MAX[k] * 100); });
   return out;
 }
-function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+/* 返回给答题流程用的「完整答案数组」（生活题为 null） */
+function expandScored(scoredAns){
+  var full = [], si = 0;
+  for (var i=0;i<NQ;i++){
+    if (!QS[i].d){ full.push(null); }
+    else { full.push(scoredAns[si]); si++; }
+  }
+  return full;
+}
+function makeCode(ans){
+  var data = packScored(ans);
+  var ck = cksum(data);
+  var frame = data.concat([ck[0], ck[1]]);
+  var hex = b2h(frame);
+  return hex.replace(/(.{4})(?=.)/g,'$1-');
+}
+function parseCode(input){
+  var raw = String(input||'').toUpperCase().replace(/[^0-9A-Z]/g,'');
+  if (!raw.length) return {err:'请先输入对方给你的号码'};
+  for (var i=0;i<raw.length;i++){
+    if (HEX.indexOf(raw[i]) < 0) return {err:'号码里出现了「' + raw[i] + '」，只能是 0-9 和 A-F'};
+  }
+  if (raw.length !== CHEX) return {err:'号码是 ' + CHEX + ' 位，现在是 ' + raw.length + ' 位'};
+  var bs = h2b(raw);
+  if (!bs || bs.length !== NBYTES+2) return {err:'号码格式不对'};
+  var data = bs.slice(0, NBYTES);
+  var ck = cksum(data);
+  if (ck[0] !== bs[NBYTES] || ck[1] !== bs[NBYTES+1]) return {err:'号码对不上，可能有一两个字符打错了'};
+  return { ans: expandScored(unpackScored(data)) };
+}
+
+/* ============================================================
+   评分
+   ============================================================ */
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+function scorePerson(ans){
+  var raw = {};
+  ORDER.concat(PORDER).concat(RORDER).forEach(function(k){ raw[k]=0; });
+  for (var i=0;i<NQ;i++){
+    var q = QS[i];
+    if (!q.d) continue;
+    var idx = ans[i];
+    if (idx === null || idx === undefined || !q.o[idx]) continue;
+    var v = q.o[idx].s;
+    if (v === undefined) v = 0;
+    raw[q.d] += v;
+  }
+  var out = {};
+  ORDER.concat(PORDER).concat(RORDER).forEach(function(k){
+    out[k] = DMAX[k] ? Math.round(raw[k]/DMAX[k]*100) : 0;
+  });
+  return out;
+}
+
+function wavg(p, keys, table){
+  var s = 0, w = 0;
+  keys.forEach(function(k){ s += p[k]*table[k].w; w += table[k].w; });
+  return w ? s/w : 0;
+}
 
 function evaluate(a1, a2){
   var p1 = scorePerson(a1), p2 = scorePerson(a2);
-  var combo = {}, gap = {}, gapSum = 0;
-  DIM_ORDER.forEach(function(k){
-    combo[k] = Math.round((p1[k] + p2[k]) / 2);
-    gap[k] = Math.abs(p1[k] - p2[k]);
+
+  var self1 = wavg(p1, ORDER, SELF), self2 = wavg(p2, ORDER, SELF);
+  var perc1 = wavg(p1, PORDER, PERC), perc2 = wavg(p2, PORDER, PERC);
+  var risk1 = wavg(p1, RORDER, RISK), risk2 = wavg(p2, RORDER, RISK);
+
+  var combo = {}, gap = {}, wgap = 0, gapSum = 0;
+  ORDER.forEach(function(k){
+    combo[k] = Math.round((p1[k]+p2[k])/2);
+    gap[k] = Math.abs(p1[k]-p2[k]);
     gapSum += gap[k];
+    wgap += gap[k]*SELF[k].w;
   });
-  var avgGap = gapSum / DIM_ORDER.length;
-  var base = 0;
-  DIM_ORDER.forEach(function(k){ base += combo[k] * DIMS[k].w; });
-  /* 认知错位惩罚：两人对同一件事的感受差得越多，越容易各说各话 */
-  var penalty = avgGap * 0.16;
-  var total = clamp(Math.round(base - penalty), 8, 99);
+  var avgGap = gapSum/ORDER.length;
 
-  /* 薄弱项：combo 最低的 2 个；错位项：gap 最大的 1 个 */
-  var byLow = DIM_ORDER.slice().sort(function(x,y){ return combo[x] - combo[y]; });
-  var byGap = DIM_ORDER.slice().sort(function(x,y){ return gap[y] - gap[x]; });
+  var satisfaction = (self1 + self2)/2;
+  var bonds = (perc1 + perc2)/2;
+  var riskAvg = (risk1 + risk2)/2;
 
-  /* 正向锚点：最高的维度 */
-  var byHigh = byLow.slice().reverse();
+  /* 单方用力：一方投入很多、另一方很少 */
+  var asym = 0;
+  ['rep','sec','rsp','com'].forEach(function(k){
+    if (gap[k] >= 30) asym += (gap[k]-25)*0.11*SELF[k].w*6;
+  });
+
+  /* 期望与实际错位：你眼里的 TA，和 TA 自己说的，差得越多越容易失望 */
+  var mis1 = Math.abs(perc1 - self2);   /* 1 对 2 的看法 vs 2 自评 */
+  var mis2 = Math.abs(perc2 - self1);
+  var mismatch = (mis1 + mis2)/2;
+
+  var sorted = ORDER.slice().sort(function(x,y){return combo[x]-combo[y];});
+  var shortfall = 0;
+  sorted.slice(0,2).forEach(function(k){ if (combo[k] < 45) shortfall += (45-combo[k])*0.11; });
+
+  /* 综合：满足感 45% + 彼此评价 25% + 低风险 20% + 一致性修正 */
+  var total = 0.44*satisfaction + 0.26*bonds + 0.20*(100-riskAvg) + 3;
+  total = total - wgap*0.14 - asym - mismatch*0.07 - shortfall;
+  /* 以 55 为轴做一个温和的展开，让"很投入"和"明显不合"都能落到各自区间，
+     避免所有组合都挤在中间，读起来没区别 */
+  total = 55 + (total - 55) * 1.28;
+  total = clamp(Math.round(total), 8, 99);
 
   return {
     p1:p1, p2:p2, combo:combo, gap:gap,
-    total:total, avgGap:Math.round(avgGap),
-    agreement: clamp(100 - Math.round(avgGap*1.15), 20, 99),
-    low: byLow.slice(0,2), high: byHigh.slice(0,1), mismatch: byGap[0], mismatchGap: gap[byGap[0]]
+    self1:self1, self2:self2, perc1:perc1, perc2:perc2,
+    risk1:risk1, risk2:risk2,
+    satisfaction:satisfaction, bonds:bonds, riskAvg:riskAvg,
+    mis1:mis1, mis2:mis2, mismatch:mismatch,
+    total:total,
+    avgGap:Math.round(avgGap),
+    agreement: clamp(100 - Math.round(avgGap*1.1), 15, 99),
+    low: sorted.slice(0,3),
+    high: sorted.slice(-2).reverse(),
+    worstGap: ORDER.slice().sort(function(x,y){return gap[y]-gap[x];})[0],
+    riskTop: RORDER.slice().sort(function(x,y){
+      return Math.max(p1[y],p2[y]) - Math.max(p1[x],p2[x]);
+    })
   };
 }
 
-function band(total){
-  if (total >= 86) return { name:'很稳', say:'你们的日常运转得挺顺，遇到事也有退路。剩下的不是"能不能"，而是"想不想把日子过得更好一点"。' };
-  if (total >= 73) return { name:'底子不错', say:'大方向是一致的，偶尔会有几处磨损。把最卡的那一两件事聊透，能往上走一大截。' };
-  if (total >= 60) return { name:'还能修', say:'有在意，也有点累。现在不是判断要不要走，而是先补上那个一直在漏的地方。' };
-  if (total >= 45) return { name:'需要认真谈谈', say:'不只一个地方在耗着你。先别急着下结论，把差异摊开说清楚，比继续猜有用。' };
-  return { name:'先照顾好自己', say:'这段关系眼下给到你的支撑不多。比起追问结局，更值得先问自己：现在的你，还好吗？' };
+function band(t){
+  if (t >= 86) return {n:'很扎实',s:'你们已经把日子过成一套能自己运转的东西：有摩擦，收得住；有空间，还在一起。剩下的事不是"还能不能"，而是想不想再往前一点。'};
+  if (t >= 73) return {n:'基础不错',s:'大方向一致，只有少数地方在反复消耗。把最卡的那一两件事聊透，分数会明显上扬。'};
+  if (t >= 60) return {n:'还能修',s:'在意是有的，累也是真的。现在的重点不是判断要不要继续，而是先补上那个一直漏的地方。'};
+  if (t >= 45) return {n:'需要认真聊聊',s:'不止一个地方在耗你们。别急着下结论，先把各自的版本讲清楚，比继续猜有用。'};
+  return {n:'先照顾自己',s:'这段关系眼下给你的支撑不太多。比起追问结局，更值得先问：最近的你，还好吗？'};
 }
 
-/* ================= 结果文案 ================= */
-var ELIGIBLE = {
-  rep:'下次不舒服时，试着在 24 小时内开口，只说"我当时的感受"，不评价对方是什么人。',
-  sec:'把"你是不是不爱我"换成"我今天有点需要你"，同一件事，对方更容易接得住。',
-  rsp:'每天留十分钟，手机放远一点，互相讲一件今天发生的小事，只听不评价。',
-  pos:'睡前三分钟，各自说一件今天想谢谢对方的小事，再小都算。',
-  com:'把"以后再说"的事挑一件，这个月给它一个具体的时间和方案。',
-  mea:'定一个小仪式：每周固定一顿饭、一个专属称呼，或者一句只在你们之间说的话。',
-  fut:'把作息、家人、钱这三件事里最别扭的一件，找个不累的时间摊开聊。',
-  aut:'各自保留一件对方不参与的事，关系不会因此变远，反而更松快。'
+/* ============================================================
+   文案库
+   ============================================================ */
+var GOOD_TXT = {
+  rep:'你们有能力把不愉快收尾，这比"从来不吵架"重要得多。',
+  sec:'你在这段关系里是有底的，不用一直确认对方还在。',
+  rsp:'小事有人接住，日常才有温度。',
+  pos:'你们还在一起笑，这是关系的续航。',
+  com:'你们把对方放进了"以后"里，而不只是"现在"。',
+  mea:'专属的小习惯，是关系里最省力的黏合剂。',
+  fut:'现实层面没太多磕碰，等于省下了很多力气。',
+  aut:'你们能各自完整，也能在一起，这很难得。'
+};
+var RISK_TXT = {
+  rep:'小事容易积着，久了会变成"说了也没用"。',
+  sec:'一点不确定就会被放大，很消耗人。',
+  rsp:'分享经常接不住，慢慢地就不愿意说了。',
+  pos:'开心的部分被事务挤掉了，只剩下待办事项。',
+  com:'目前更像各走各的，只是刚好同行。',
+  mea:'还没有属于你们两个人的固定节目。',
+  fut:'作息、家人、生活节奏还有没对齐的地方。',
+  aut:'靠得越近，越需要给彼此留一点缝。'
+};
+/* 每个维度的「具体怎么做」 */
+var FIX = {
+  rep:[
+    '下次不舒服的时候，当天开口，只说"我当时的感觉"，不评价他是什么人。',
+    '定一个只有你们知道的暂停信号，谁先说出来，就都先停十分钟。',
+    '吵完别只等时间冲淡，加一句"我们下次怎么办"，把这次变成经验。'],
+  sec:[
+    '把"你是不是不在乎我"换成"我今天有点需要你"，同一件事，对方更容易接。',
+    '把担心的具体内容说出来（怕被忽略？怕不爱了？），比憋着猜容易解决。',
+    '每天固定一个简短的联系点，减少你反复确认的次数。'],
+  rsp:[
+    '每天留十分钟，手机放远，互相讲一件今天的小事，只听，不评价也不给建议。',
+    '对方分享时先回应情绪再给方案；你要分享时，先说清"我只是想讲讲"。',
+    '记住对方随口提过的小事，下次主动提起，效果很惊人。'],
+  pos:[
+    '睡前三分钟，各自说一件今天想谢谢对方的小事，再小都算。',
+    '每月留一次"没有目的"的相处，不办事、不解决问题，就是玩。',
+    '夸奖说具体："今天你处理那件事我很服"，比"你真好"有用。'],
+  com:[
+    '把"以后再说"的事挑一件，这个月给它一个具体的时间和方案。',
+    '各自写三个"明年想一起做的事"，交换看重叠的部分。',
+    '把自己的担心直接说出来，别用试探的方式让他猜。'],
+  mea:[
+    '定一个小仪式：每周固定一顿饭、一句只在你们之间说的话、一个专属称呼。',
+    '把钱、节日、见家人这三件事里最别扭的一件，找个都不累的时间摊开聊。',
+    '给你们的日常起个只有两人懂的名字，习惯会自己长出来。'],
+  fut:[
+    '把作息、家人、工作节奏里最冲突的一项，商量一个双方都能接受的做法。',
+    '和对方的家人朋友多创造一次轻松的接触，很多误会来自不了解。',
+    '把"异地/加班/家里"这类现实约束写在纸上一起看，比在脑子里想清楚。'],
+  aut:[
+    '各自保留一件对方不参与的事，关系不会因此变远，反而更松快。',
+    '把"我需要一点自己的时间"提前说，比事后解释有用得多。',
+    '约定不查手机，但主动分享让彼此安心的事，信任是攒出来的。']
+};
+var PERC_FIX = {
+  pwarm:{
+    hi:'你觉得他是暖的，那就把这份感受说给他听——被看见的付出才会持续。',
+    lo:'你不太感受到他的在意。先别下结论说"他不爱我"，而是告诉他具体的场景："上次我难过，你给建议的时候我其实想要的是陪着。"要的是行为，不是态度。'},
+  pcom:{
+    hi:'你相信他认真，这份确定感本身就在保护你们。',
+    lo:'你不确定他有多认真。这件事只能问，不能猜：直接说"我想知道你怎么看我们接下来的走向"，给他一个具体的、不用表态也能回答的问题。'},
+  pstab:{
+    hi:'他的情绪基本可预期，你不需要小心翼翼。',
+    lo:'他的起伏让你常常要揣摩气氛。可以约定一句"我现在不是针对你，我只是需要半小时"，把情绪和关系分开。'},
+  popen:{
+    hi:'有话能说，这是最值钱的一项。',
+    lo:'你有一些话一直没敢讲。挑一件最小的先说，成功一次比想十次有用。'}
+};
+var RISK_ADVICE = {
+  ralt:'外部引力偏高，通常不是"遇到更好的人"，而是当下这段关系给的东西不够。先把注意力放回"我缺什么"，再决定要不要在这个关系里补。',
+  rbound:'边界在松动。值得做的是提前约定而不是事后审问：什么算越界，两个人各自的标准讲清楚，比互相试探有效。',
+  rhide:'隐瞒变多时，关系会慢慢变成两个平行世界。可以先从一件"小事"开始说，试试说了会发生什么。',
+  rbore:'倦怠是最常见也最可修的。换一件你们都没做过的小事，比努力"找回感觉"更实际。'
+};
+var SEE_TXT = {
+  pwarm:['温度','TA 眼里你有多暖'],
+  pcom:['投入','TA 眼里你有多认真'],
+  pstab:['稳定','TA 眼里你的情绪是否可预期'],
+  popen:['好沟通','TA 眼里你是不是能谈事的人']
+};
+var PERC_MEANING = {
+  pwarm:'暖不暖，指的是难过时对方会不会靠近你、接住你。',
+  pcom:'投入，指的是对方对"你们的以后"是什么态度。',
+  pstab:'稳定，指的是对方情绪是否可预期，你会不会需要揣摩气氛。',
+  popen:'好沟通，指的是有话能不能说出口、说了有没有人接。'
 };
 
-/* ================= 状态 ================= */
-var state = {
-  role:null,        // 'starter' | 'joiner'
-  partnerAns:null,  // 对方答案（joiner 时）
-  ans:[], idx:0,
-  result:null, code:''
-};
-var $ = function(id){ return document.getElementById(id); };
+/* ============================================================
+   状态
+   ============================================================ */
+var S = {role:null, partnerAns:null, ans:[], idx:0, result:null, code:'', busy:false};
+function $(id){return document.getElementById(id);}
 var SECTIONS = ['s-home','s-quiz','s-code','s-enter','s-result'];
 function show(id){
-  SECTIONS.forEach(function(s){ $(s).classList.add('hide'); });
-  var el = $(id);
-  el.classList.remove('hide');
-  el.classList.remove('fade');
-  void el.offsetWidth;
-  el.classList.add('fade');
-  window.scrollTo({top:0, behavior:'auto'});
+  SECTIONS.forEach(function(s){ var e=$(s); if(e) e.classList.add('hide'); });
+  var el = $(id); if(!el) return;
+  el.classList.remove('hide'); el.classList.remove('in');
+  void el.offsetWidth; el.classList.add('in');
+  try{ window.scrollTo(0,0); }catch(_){}
 }
-
 var toastT;
-function toast(msg){
-  var t = $('toast');
-  t.textContent = msg;
-  t.classList.add('on');
-  clearTimeout(toastT);
-  toastT = setTimeout(function(){ t.classList.remove('on'); }, 1900);
+function toast(m){
+  var t=$('toast'); t.textContent=m; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(function(){t.classList.remove('on');},1900);
 }
-
-/* ================= 答题 ================= */
-var KEYS = ['A','B','C','D'];
-function renderQ(){
-  var q = QS[state.idx];
-  $('pStep').textContent = (state.idx+1) + ' / ' + QS.length;
-  $('pRole').textContent = state.role === 'starter' ? '你先做' : '现在轮到你';
-  $('pFill').style.width = (state.idx / QS.length * 100) + '%';
-  $('qText').textContent = q.q;
-  var box = $('opts');
-  box.innerHTML = '';
-  q.o.forEach(function(o, i){
-    var b = document.createElement('button');
-    b.className = 'opt' + (state.ans[state.idx] === i ? ' sel' : '');
-    b.innerHTML = '<span class="k">' + KEYS[i] + '</span><span>' + o.t + '</span>';
-    b.onclick = function(){
-      state.ans[state.idx] = i;
-      Array.prototype.forEach.call(box.children, function(c){ c.classList.remove('sel'); });
-      b.classList.add('sel');
-      setTimeout(function(){
-        if (state.idx < QS.length - 1){ state.idx++; renderQ(); }
-        else { finishQuiz(); }
-      }, 210);
-    };
-    box.appendChild(b);
-  });
-  $('qBack').style.visibility = state.idx === 0 ? 'hidden' : 'visible';
-  $('pFill').style.width = ((state.idx+1) / QS.length * 100) + '%';
-}
-
-function startQuiz(role, partnerAns){
-  state.role = role;
-  state.partnerAns = partnerAns || null;
-  state.ans = new Array(QS.length).fill(null);
-  state.idx = 0;
-  show('s-quiz');
-  renderQ();
-}
-
-function finishQuiz(){
-  if (state.role === 'starter'){
-    var mine = scorePerson(state.ans);
-    state.code = makeCode(state.ans);
-    $('codeVal').textContent = state.code;
-    var avg = 0;
-    DIM_ORDER.forEach(function(k){ avg += mine[k] * DIMS[k].w; });
-    avg = Math.round(avg);
-    $('selfPreview').innerHTML = '你自己这边的关系体感大概是 <b>' + avg + ' / 100</b>。' +
-      '这只是一个人的视角，合起来的分数要等对方也做完才会出现——两个人的答案放一起才有意义。';
-    show('s-code');
-  } else {
-    var r = evaluate(state.partnerAns, state.ans);
-    state.result = r;
-    renderResult(r);
-    show('s-result');
-  }
-}
-
-/* ================= 结果渲染 ================= */
-function renderResult(r){
-  $('rNum').innerHTML = r.total + '<small>/100</small>';
-  var b = band(r.total);
-  $('rBand').textContent = b.name;
-  $('rSay').textContent = b.say;
-  $('rChip').innerHTML = '你们的答案一致度 <b>' + r.agreement + '%</b>';
-
-  var dims = $('rDims');
-  dims.innerHTML = '';
-  DIM_ORDER.forEach(function(k, i){
-    var v = r.combo[k];
-    var cls = v >= 72 ? 'hi' : (v >= 48 ? 'mid' : 'lo');
-    var d = document.createElement('div');
-    d.className = 'dim ' + cls;
-    d.innerHTML = '<div class="top"><b>' + DIMS[k].name + '</b><span>' + v + '</span></div>' +
-      '<div class="track"><i></i></div>' +
-      (r.gap[k] >= 25 ? '<div class="tag">你们俩的感受差得比较多（相差 ' + r.gap[k] + ' 分）</div>' : '');
-    dims.appendChild(d);
-    setTimeout(function(){ d.querySelector('i').style.width = v + '%'; }, 90 + i*70);
-  });
-
-  var pts = $('rPoints');
-  pts.innerHTML = '';
-  function addPoint(cls, ic, html){
-    var p = document.createElement('div');
-    p.className = 'point ' + cls;
-    p.innerHTML = '<div class="ic">' + ic + '</div><div>' + html + '</div>';
-    pts.appendChild(p);
-  }
-  var strong = r.high[0];
-  if (r.combo[strong] >= 60){
-    addPoint('good', '✓', '<b>' + DIMS[strong].name + '是你们的强项。</b>' + DIMS[strong].hi);
-  }
-  r.low.forEach(function(k){
-    addPoint('warn', '!', '<b>' + DIMS[k].name + '偏低（' + r.combo[k] + '）。</b>' + DIMS[k].low);
-  });
-  if (r.mismatchGap >= 25){
-    addPoint('', '≠', '<b>关于' + DIMS[r.mismatch].name + '，你们的答案差了 ' + r.mismatchGap +
-      ' 分。</b>同一段关系，两个人记的不是同一件事，这类差异本身就值得聊一次。');
-  }
-  if (r.agreement >= 75){
-    addPoint('good', '≈', '<b>你们对这段关系的描述相当接近。</b>能站在同一个视角看问题，分歧就更容易收场。');
-  } else if (r.agreement <= 55){
-    addPoint('warn', '≠', '<b>你们对同一段关系的描述差得不小。</b>不是谁撒谎，而是各自在意的东西不同——先把各自的版本讲出来，比争谁对更有用。');
-  }
-
-  var adv = $('rAdvice');
-  var lowMain = r.low[0];
-  adv.innerHTML = '先动一件事：<b>' + ELIGIBLE[lowMain] + '</b>' +
-    (r.mismatchGap >= 25 ? '<br>另外，找个都不累的时候问对方一句：关于' + DIMS[r.mismatch].name + '，你是怎么想的？' : '');
-
-  var ref = $('rRef');
-  ref.innerHTML =
-    '<p><b>分数结构：</b>八个维度按权重加权（冲突修复 20%、情绪安全感 17%、彼此回应 15%、正向时刻 14%、承诺投入 13%、共同意义 8%、现实节奏 7%、边界与自主 6%），取两个人的平均分，再按你们答案的分歧程度做一次扣分。</p>' +
-    '<p><b>为什么看这几件事：</b><br>' +
-    '· 冲突怎么收尾，是长期关系里最稳定的预测指标之一。Gottman 的追踪研究里，稳定伴侣在冲突中的正向与负向互动比大致在 5:1 以上，且他们更常用"修复尝试"把争吵拉回来。<br>' +
-    '· 日常的"回应"比盛大的浪漫更持续地影响满意度。Reis 与 Shaver 的亲密关系模型指出，感到"被对方接住"，是亲密感的核心来源。<br>' +
-    '· 承诺可以用投入模型理解（Rusbult）：满意度、替代选择、已投入成本共同决定一个人留不留下。<br>' +
-    '· 依恋研究（Hazan & Shaver）显示，对伴侣回应的稳定预期，会影响一个人在关系里的安全感与冲突方式。<br>' +
-    '· 共同的小仪式、共享的意义系统，与关系稳定性正相关（Durkheim 传统下的"仪式感"研究、以及 Finkel 等人对日常小互动的综述）。</p>' +
-    '<p><b>它的局限：</b>这是自评，不是观测。人会低估自己的问题、高估对方的改变意愿；而且一次答题只能反映最近这段时间。分数只说明"当下这段关系在哪些地方顺、哪些地方在耗"，不预测任何具体结局。</p>';
-}
-
-/* ================= 复制 ================= */
-function copy(text, okMsg){
-  function fallback(){
-    var ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+function copy(text, ok){
+  function fb(){
+    var ta=document.createElement('textarea'); ta.value=text;
+    ta.style.position='fixed'; ta.style.opacity='0';
     document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); toast(okMsg); }
-    catch(e){ toast('复制失败，长按手动复制'); }
+    try{ document.execCommand('copy'); toast(ok); }catch(e){ toast('复制失败，长按手动选'); }
     ta.remove();
   }
   if (navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(function(){ toast(okMsg); }, fallback);
-  } else fallback();
+    navigator.clipboard.writeText(text).then(function(){toast(ok);}, fb);
+  } else fb();
 }
 
-/* ================= 事件 ================= */
-$('goStart').onclick = function(){ startQuiz('starter'); };
-$('goJoin').onclick = function(){ $('codeErr').textContent = ''; show('s-enter'); };
-$('enterBack').onclick = function(){ show('s-home'); };
-$('qBack').onclick = function(){ if (state.idx > 0){ state.idx--; renderQ(); } };
-$('again').onclick = function(){ state.result = null; show('s-home'); };
+/* ============================================================
+   答题流程
+   ============================================================ */
+var KEYS = ['A','B','C','D'];
+function startQuiz(role, partnerAns){
+  S.role = role; S.partnerAns = partnerAns || null;
+  S.ans = []; for (var i=0;i<NQ;i++) S.ans.push(null);
+  S.idx = 0; S.result = null;
+  show('s-quiz'); renderQ();
+}
+function renderQ(){
+  var q = QS[S.idx];
+  if (!q){ toast('题目出错了，请刷新'); return; }
+  $('pStep').textContent = (S.idx+1)+' / '+NQ;
+  $('pRole').textContent = (S.role==='starter')?'先做的这一位':'轮到你';
+  $('pFill').style.width = Math.round(S.idx/NQ*100)+'%';
+  $('qText').textContent = q.q;
+  var hint = '';
+  if (q.d && SELF[q.d]) hint = '关于你自己在这段关系里的情况';
+  else if (q.d && PERC[q.d]) hint = '关于你怎么看他';
+  else if (q.d && RISK[q.d]) hint = '关于你们现在的状态';
+  $('qHint').textContent = hint;
 
-$('doJoin').onclick = function(){
+  var box = $('opts'); box.innerHTML='';
+  for (var i=0;i<q.o.length;i++){
+    (function(i){
+      var b = document.createElement('button');
+      b.type='button';
+      b.className='opt'+(S.ans[S.idx]===i?' sel':'');
+      var k=document.createElement('span'); k.className='k'; k.textContent=KEYS[i];
+      var t=document.createElement('span'); t.textContent=q.o[i].t;
+      b.appendChild(k); b.appendChild(t);
+      b.addEventListener('click', function(){ choose(i); });
+      box.appendChild(b);
+    })(i);
+  }
+  var next = $('qNext');
+  next.disabled = (S.ans[S.idx]===null);
+  next.textContent = (S.idx===NQ-1)
+    ? (S.role==='starter'?'完成，生成号码':'完成，查看结果')
+    : '下一题';
+  $('qBack').style.visibility = (S.idx===0)?'hidden':'visible';
+}
+function choose(i){
+  S.ans[S.idx] = i;
+  var kids = $('opts').children;
+  for (var j=0;j<kids.length;j++) kids[j].classList.remove('sel');
+  if (kids[i]) kids[i].classList.add('sel');
+  $('qNext').disabled = false;
+}
+function nextQ(){
+  if (S.ans[S.idx] === null){ toast('先选一个再继续'); return; }
+  if (S.idx < NQ-1){ S.idx++; renderQ(); try{window.scrollTo(0,0);}catch(_){} }
+  else finishQuiz();
+}
+function finishQuiz(){
+  if (S.busy) return;
+  S.busy = true;
+  try{
+    for (var i=0;i<NQ;i++){
+      if (S.ans[i] === null){ S.busy=false; S.idx=i; renderQ(); toast('第 '+(i+1)+' 题还没选'); return; }
+    }
+    if (S.role === 'starter'){
+      var mine = scorePerson(S.ans);
+      S.code = makeCode(S.ans);
+      $('codeVal').textContent = S.code;
+      var selfAvg = wavg(mine, ORDER, SELF);
+      var best = ORDER.slice().sort(function(x,y){return mine[y]-mine[x];})[0];
+      $('selfPreview').innerHTML =
+        '按你一个人的答案，这段关系在你这里大概是 <b>'+Math.round(selfAvg)+' / 100</b>，'+
+        '最踏实的一项是「'+SELF[best].name+'」。<br>'+
+        '完整分数、TA 眼中的你、以及风险提示，都要等 TA 也做完才会出现——两个视角放一起才有意义。';
+      show('s-code');
+    } else {
+      var r = evaluate(S.partnerAns, S.ans);
+      S.result = r; renderResult(r); show('s-result');
+    }
+  } catch(e){
+    console.error(e);
+    alert('出了点问题：'+(e&&e.message?e.message:e)+'\n请刷新页面重试。');
+  } finally { S.busy = false; }
+}
+
+/* ============================================================
+   结果渲染
+   ============================================================ */
+function renderResult(r){
+  $('rNum').innerHTML = r.total+'<small>/100</small>';
+  var b = band(r.total);
+  $('rBand').textContent = b.n;
+  $('rSay').textContent = b.s;
+
+  var k = $('rKpis'); k.innerHTML='';
+  function kpi(label,val,cls){
+    var d=document.createElement('div');
+    d.className='kpi '+(cls||'');
+    d.innerHTML='<b>'+val+'</b><span>'+label+'</span>';
+    k.appendChild(d);
+  }
+  kpi('答案一致度', r.agreement+'%', r.agreement>=75?'good':(r.agreement<=55?'warn':''));
+  kpi('关系风险', Math.round(r.riskAvg), r.riskAvg>=55?'bad':(r.riskAvg>=35?'warn':'good'));
+  kpi('你的满足感', Math.round(r.self1), r.self1>=70?'good':(r.self1<45?'warn':''));
+
+  /* ---- TA 眼中的你 ---- */
+  var sy = $('rSeeYou'); sy.innerHTML='';
+  var intro = document.createElement('div');
+  intro.className='note';
+  intro.style.margin='0 0 12px';
+  intro.innerHTML = '这四项问的是「你怎么看 TA」。所以这里的分数，是 <b>TA 对你的看法</b>。'+
+    '下面还会标出：你对 TA 的看法，和 TA 对你的看法，哪边更暖。';
+  sy.appendChild(intro);
+
+  PORDER.forEach(function(key, i){
+    var heRatesMe = r.p2[key];     /* TA 眼里的你 */
+    var iRateHim  = r.p1[key];     /* 你眼里的 TA */
+    var info = SEE_TXT[key];
+    var d = document.createElement('div');
+    d.className='card-in';
+    var diff = heRatesMe - iRateHim;
+    var diffTxt = diff >= 12 ? 'TA 对你的评价，比你对他更高'
+                : (diff <= -12 ? '你对 TA 的评价，比他对你更高' : '两边看法接近');
+    d.innerHTML = '<div class="h"><span>'+info[1]+'</span><em>'+diffTxt+'</em></div>'+
+      '<div class="meter '+(heRatesMe>=70?'ok':(heRatesMe>=45?'mid':'hi'))+'"><i></i></div>'+
+      '<div class="mlbl"><span>TA 眼里的你：'+heRatesMe+'</span><span>你眼里的 TA：'+iRateHim+'</span></div>';
+    sy.appendChild(d);
+    setTimeout(function(){
+      var bar=d.querySelector('.meter i'); if(bar) bar.style.width=heRatesMe+'%';
+    }, 80+i*70);
+  });
+
+  /* 双向整体判断 */
+  var mutual = document.createElement('div');
+  mutual.className='card-in';
+  var mine2 = Math.round(r.perc1), theirs = Math.round(r.perc2);
+  var bal = Math.abs(mine2 - theirs);
+  mutual.innerHTML = '<div class="h"><span>互相评价的整体水平</span><em>'+
+    (bal<=10?'相当对称':(mine2>theirs?'你评价更高':'TA 评价更高'))+'</em></div>'+
+    '<p>你对 TA 的整体评价：<b>'+mine2+'</b>；TA 对你的整体评价：<b>'+theirs+'</b>。</p>'+
+    '<p style="margin-top:8px">'+
+    (bal > 18
+      ? '两边落差比较明显。这不一定是坏事，但值得想一想：是其中一方更会表达，还是确实有一方在关系里更用力。'
+      : '两边差不多，说明你们对彼此的感知基本在同一个水平线上，这本身就是一种稳定的信号。')+
+    '</p>';
+  sy.appendChild(mutual);
+
+  /* ---- 八个方面 ---- */
+  var box = $('rDims'); box.innerHTML='';
+  ORDER.forEach(function(key, i){
+    var v1=r.p1[key], v2=r.p2[key], g=r.gap[key];
+    var d=document.createElement('div'); d.className='dim';
+    var tag = g>=30?'<span class="tag r">差 '+g+' 分</span>'
+            :(g<=10?'<span class="tag g">很接近</span>':'<span class="tag">差 '+g+'</span>');
+    d.innerHTML = '<div class="hd"><b>'+SELF[key].name+'</b>'+tag+'</div>'+
+      '<div class="bars">'+
+        '<div class="bl v1"><u>你</u><div class="tr"><i></i></div><n>'+v1+'</n></div>'+
+        '<div class="bl v2"><u>TA</u><div class="tr"><i></i></div><n>'+v2+'</n></div>'+
+      '</div>'+
+      '<div class="cmt">'+(g>=30
+        ? '你们在这件事上的感受差得比较多，容易各说各话。值得单独聊一次：同一件事，你们各自记成了什么样。'
+        : (r.combo[key]>=70 ? SELF[key].hi : (r.combo[key]<45 ? SELF[key].lo : '中等水平，不拖后腿，也还有空间。')))+'</div>';
+    box.appendChild(d);
+    setTimeout(function(){
+      var is=d.querySelectorAll('.tr i');
+      if(is[0])is[0].style.width=v1+'%';
+      if(is[1])is[1].style.width=v2+'%';
+    }, 80+i*55);
+  });
+
+  /* ---- 关系风险 ---- */
+  var rk = $('rRisk'); rk.innerHTML='';
+  var overallWrap = document.createElement('div');
+  overallWrap.className='card-in';
+  var lvl = r.riskAvg>=55?'hi':(r.riskAvg>=35?'mid':'ok');
+  var lvlTxt = r.riskAvg>=55?'偏高':(r.riskAvg>=35?'中等':'偏低');
+  overallWrap.innerHTML = '<div class="h"><span>综合脆弱性</span><em>'+lvlTxt+'</em></div>'+
+    '<div class="meter '+lvl+'"><i style="width:'+Math.round(r.riskAvg)+'%"></i></div>'+
+    '<div class="mlbl"><span>0 = 很稳</span><span>'+Math.round(r.riskAvg)+' / 100</span></div>';
+  rk.appendChild(overallWrap);
+
+  RORDER.forEach(function(key, i){
+    var v = Math.max(r.p1[key], r.p2[key]);    /* 取较高的一方，风险按更担心的人算 */
+    var d=document.createElement('div'); d.className='dim';
+    var lv = v>=60?'hi':(v>=35?'mid':'ok');
+    d.innerHTML = '<div class="hd"><b>'+RISK[key].name+'</b>'+
+      '<span class="tag '+(v>=60?'r':(v>=35?'w':'g'))+'">'+(v>=60?'较高':(v>=35?'中等':'较低'))+'</span></div>'+
+      '<div class="meter '+lv+'"><i></i></div>';
+    rk.appendChild(d);
+    setTimeout(function(){
+      var bar=d.querySelector('.meter i'); if(bar) bar.style.width=v+'%';
+    }, 120+i*60);
+  });
+  var topRisk = r.riskTop[0];
+  var adv = document.createElement('div');
+  adv.className='item warn';
+  adv.innerHTML='<div class="ic">!</div><div class="tx"><b>'+RISK[topRisk].name+
+    '是四项里最需要留意的一项。</b>'+RISK_ADVICE[topRisk]+'</div>';
+  rk.appendChild(adv);
+  var wb = document.createElement('div');
+  wb.className='warnbox';
+  wb.innerHTML = '<b>关于"出轨概率"这件事，必须说清楚：</b>没有任何问卷能算出一个人会不会出轨。'+
+    '上面这四项衡量的是<b>关系本身的脆弱程度</b>（外部吸引、边界、隐瞒、倦怠），'+
+    '这些是研究里与关系不稳定相关的因素，但它们不是证据，也不能指向任何具体行为。'+
+    '如果你已经在担心具体的某件事，那份担心需要的是当面谈，不是一个分数。';
+  rk.appendChild(wb);
+
+  /* ---- 问题定位 ---- */
+  var pb = $('rProb'); pb.innerHTML='';
+  var probs = [];
+  r.low.forEach(function(key){
+    probs.push({w:(100-r.combo[key])*SELF[key].w, key:key, kind:'low'});
+  });
+  ORDER.forEach(function(key){
+    if (r.gap[key] >= 28) probs.push({w:r.gap[key]*SELF[key].w*0.9, key:key, kind:'gap'});
+  });
+  if (r.mismatch >= 20) probs.push({w:r.mismatch*0.5, key:null, kind:'mis'});
+  RORDER.forEach(function(key){
+    var v = Math.max(r.p1[key], r.p2[key]);
+    if (v >= 50) probs.push({w:v*RISK[key].w*0.8, key:key, kind:'risk'});
+  });
+  probs.sort(function(a,b){return b.w-a.w;});
+  var seen = {};
+  var shown = 0;
+  probs.forEach(function(p){
+    if (shown >= 4) return;
+    var id = p.kind+':'+p.key;
+    if (seen[id]) return;
+    seen[id] = 1; shown++;
+    var it = document.createElement('div');
+    if (p.kind==='low'){
+      it.className='item warn';
+      it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>'+SELF[p.key].name+
+        '偏低（'+r.combo[p.key]+'）。</b>'+RISK_TXT[p.key]+'</div>';
+    } else if (p.kind==='gap'){
+      it.className='item bad';
+      it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>在「'+SELF[p.key].name+
+        '」上你们差了 '+r.gap[p.key]+' 分。</b>同一段关系，两个人记的不是同一件事。'+
+        '这种差异本身不是问题，不说才是问题。</div>';
+    } else if (p.kind==='mis'){
+      it.className='item bad';
+      it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>你眼里的他，和他自己说的，差得比较多。</b>'+
+        '期望和实际的落差，往往比"他不够好"更让人失望。把你看到的告诉他，也听听他的版本。</div>';
+    } else {
+      it.className='item warn';
+      it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>'+RISK[p.key].name+
+        '偏高（'+Math.max(r.p1[p.key],r.p2[p.key])+'）。</b>'+RISK_ADVICE[p.key]+'</div>';
+    }
+    pb.appendChild(it);
+  });
+  if (!shown){
+    pb.innerHTML='<div class="item good"><div class="ic">✓</div><div class="tx">'+
+      '没有明显突出的问题项。这很少见——把现在的方式保持住就行。</div></div>';
+  }
+
+  /* ---- 优势 ---- */
+  var gd = $('rGood'); gd.innerHTML='';
+  var anyGood = false;
+  r.high.forEach(function(key){
+    if (r.combo[key] < 58) return;
+    anyGood = true;
+    var it=document.createElement('div');
+    it.className='item good';
+    it.innerHTML='<div class="ic">✓</div><div class="tx"><b>'+SELF[key].name+
+      '（'+r.combo[key]+'）</b>：'+GOOD_TXT[key]+'</div>';
+    gd.appendChild(it);
+  });
+  if (r.agreement >= 78){
+    anyGood = true;
+    var it2=document.createElement('div');
+    it2.className='item good';
+    it2.innerHTML='<div class="ic">≈</div><div class="tx"><b>你们对这段关系的描述很接近（一致度 '+
+      r.agreement+'%）。</b>能站在同一个视角看问题，分歧本来就更容易收场。</div>';
+    gd.appendChild(it2);
+  }
+  if (!anyGood){
+    gd.innerHTML='<div class="item"><div class="ic">·</div><div class="tx">'+
+      '暂时没有特别突出的一项。这不代表不好，只说明你们的力气分布比较平均——'+
+      '先把最弱的那个补上，比找优点更划算。</div></div>';
+  }
+
+  /* ---- 七天清单 ---- */
+  var td = $('rTodo'); td.innerHTML='';
+  var picks = [];
+  picks.push(FIX[r.low[0]][0]);
+  if (r.low[1]) picks.push(FIX[r.low[1]][0]);
+  if (r.gap[r.worstGap] >= 25){
+    picks.push('找个都不累的晚上，问对方一句：关于「'+SELF[r.worstGap].name+'」，你是怎么想的？先听完，不反驳。');
+  } else {
+    var pr = r.high[0];
+    picks.push(FIX[pr][1] || FIX[pr][0]);
+  }
+  picks.slice(0,3).forEach(function(txt,i){
+    var d=document.createElement('div');
+    d.className='ti';
+    d.innerHTML='<i>'+(i+1)+'</i><div>'+txt+'</div>';
+    td.appendChild(d);
+  });
+
+  /* ---- 依据 ---- */
+  $('rRef').innerHTML =
+    '<p><b>怎么算的：</b>你自评的八个方面按权重加权（摩擦之后 17%、心里有底 15%、日常回应 13%、'+
+    '开心的量 12%、往后的打算 12%、共同的习惯 7%、现实节奏 6%、各自的空间 5%），得到"满足感"；'+
+    '你对 TA 的四项评价（温度 30%、投入 28%、稳定 22%、好沟通 20%）得到"彼此评价"；'+
+    '四项风险（外部引力 30%、边界松动 26%、隐瞒倾向 26%、倦怠信号 18%）得到"脆弱性"。'+
+    '综合分 = 满足感 45% + 彼此评价 25% + 低脆弱性 20% − 分歧扣分 − 单方用力扣分 − 期望落差扣分 − 短板修正。</p>'+
+    '<p><b>为什么看这些：</b><br>'+
+    '· 冲突之后怎么收尾，是长期关系里最稳定的预测因素之一。Gottman 的追踪研究发现，稳定伴侣在冲突中的正向与负向互动比大致在 5:1 以上，并更常用「修复尝试」把争吵拉回来。<br>'+
+    '· 日常的「回应」比盛大的浪漫更持续地影响满意度。Reis 与 Shaver 的亲密关系模型指出，「感到被对方接住」是亲密感的核心来源。<br>'+
+    '· 去留的判断可用投入模型理解（Rusbult）：满意度、替代选择、已投入的成本共同决定一个人留不留下。'+
+    '风险部分对应它的「替代选择」这一项，以及依恋研究（Hazan & Shaver）中关于安全感的发现。<br>'+
+    '· 边界与隐瞒：关系研究里，「对潜在替代对象的主动回避」与关系稳定性正相关；'+
+    '相反，隐瞒增加通常意味着沟通成本上升。<br>'+
+    '· 倦怠：可预测性上升、新鲜感下降，是长期亲密关系中最普遍的侵蚀方式（Finkel 等人对日常小互动的综述）。</p>'+
+    '<p><b>它的局限：</b>这是自我报告，不是观测。人会低估自己的问题、高估对方的改变意愿；'+
+    '一次答题只反映最近这段时间；"TA 眼中的你"是你的推测与你自评的对比，真正的对方看法要靠谈。<br>'+
+    '<b>它绝不会告诉你</b>一个人有没有出轨、会不会出轨。那类判断需要事实，而不是分数。</p>';
+
+  bindCopy(r);
+}
+
+function bindCopy(r){
+  $('copyResult').onclick = function(){
+    var lines = ['【相处方式小调查】',
+      '综合：'+r.total+'/100 · '+band(r.total).n,
+      '答案一致度：'+r.agreement+'%',
+      '关系风险：'+Math.round(r.riskAvg)+'/100', ''];
+    ORDER.forEach(function(k){
+      lines.push(SELF[k].name+' 你'+r.p1[k]+' / TA'+r.p2[k]);
+    });
+    lines.push('');
+    lines.push('最踏实：'+SELF[r.high[0]].name);
+    lines.push('最需要补：'+SELF[r.low[0]]);
+    lines.push(FIX[r.low[0]][0]);
+    copy(lines.join('\n'),'结果已复制');
+  };
+}
+
+/* ============================================================
+   事件
+   ============================================================ */
+$('goStart').addEventListener('click', function(){ startQuiz('starter'); });
+$('goJoin').addEventListener('click', function(){ $('codeErr').textContent=''; show('s-enter'); });
+$('enterBack').addEventListener('click', function(){ show('s-home'); });
+$('qBack').addEventListener('click', function(){ if(S.idx>0){ S.idx--; renderQ(); } });
+$('qNext').addEventListener('click', nextQ);
+$('again').addEventListener('click', function(){ S.result=null; show('s-home'); });
+$('doJoin').addEventListener('click', function(){
   var r = parseCode($('codeIn').value);
   if (r.err){ $('codeErr').textContent = r.err; return; }
-  $('codeErr').textContent = '';
+  $('codeErr').textContent='';
   startQuiz('joiner', r.ans);
-};
-
+});
 $('codeIn').addEventListener('input', function(e){
-  var raw = e.target.value.toUpperCase().replace(/[^0-9A-F]/g,'').slice(0,16);
-  var out = raw.replace(/(.{4})(?=.)/g, '$1-');
-  e.target.value = out;
-  $('codeErr').textContent = '';
+  var raw = e.target.value.toUpperCase().replace(/[^0-9A-F]/g,'').slice(0,CHEX);
+  var out = raw.replace(/(.{4})(?=.)/g,'$1-');
+  if (e.target.value !== out) e.target.value = out;
+  $('codeErr').textContent='';
 });
-$('codeIn').addEventListener('keydown', function(e){
-  if (e.key === 'Enter') $('doJoin').click();
+$('codeIn').addEventListener('keydown', function(e){ if(e.key==='Enter') $('doJoin').click(); });
+$('copyCode').addEventListener('click', function(){ copy($('codeVal').textContent,'号码已复制'); });
+$('copyInvite').addEventListener('click', function(){
+  var txt = '我做了个相处方式小调查，想看看我们俩的答案放一起是什么样。\n'
+    + '网址：'+location.origin+location.pathname+'\n'
+    + '点「我拿到号码了」，输入：'+$('codeVal').textContent+'\n'
+    + '38 个日常场景，五分钟，答完直接出完整分析。';
+  copy(txt,'邀请已复制');
 });
-
-$('copyCode').onclick = function(){
-  copy($('codeVal').textContent, '测试码已复制');
-};
-$('copyInvite').onclick = function(){
-  var txt = '我做了个双人测试，想看看我们俩的答案合起来是什么样。\n网址：' + location.origin + location.pathname +
-    '\n进去选「我有测试码」，输入：' + $('codeVal').textContent + '\n20 道题，三分钟，做完直接出结果。';
-  copy(txt, '邀请文字已复制，去发给他');
-};
-$('copyResult').onclick = function(){
-  var r = state.result;
-  if (!r) return;
-  var lines = ['【我们一起走很久】', '长久指数：' + r.total + '/100 · ' + band(r.total).name,
-    '答案一致度：' + r.agreement + '%'];
-  lines.push('');
-  DIM_ORDER.forEach(function(k){ lines.push(DIMS[k].name + '：' + r.combo[k]); });
-  lines.push('');
-  lines.push('最需要补的：' + DIMS[r.low[0]].name);
-  lines.push(ELIGIBLE[r.low[0]]);
-  lines.push('');
-  lines.push('—— 一起走很久 · 双人自评');
-  copy(lines.join('\n'), '结果已复制');
-};
-
-/* 键盘辅助（桌面端） */
 document.addEventListener('keydown', function(e){
   if ($('s-quiz').classList.contains('hide')) return;
-  var i = KEYS.indexOf(e.key.toUpperCase());
-  if (i >= 0){
-    var opts = $('opts').children;
-    if (opts[i]) opts[i].click();
-  }
+  var i = KEYS.indexOf(String(e.key||'').toUpperCase());
+  if (i>=0 && QS[S.idx] && QS[S.idx].o[i]) choose(i);
+  if (e.key === 'Enter') nextQ();
 });
+window.__diag = function(){
+  return {NQ:NQ, NS:NS, DMAX:DMAX, code:makeCode(S.ans.map(function(v){return v===null?0:v;}))};
+};
 </script>
 </body>
 </html>
