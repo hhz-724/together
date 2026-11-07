@@ -148,11 +148,11 @@ details.ref p b{color:#6b5b52}
       <div><b>相处方式小调查</b><span>HOW WE WORK TOGETHER</span></div></div>
     <div class="card">
       <h1>我们<span style="color:var(--rose)">相处</span>得怎么样？</h1>
-      <p class="lead">38 个日常场景，两个人各答一次。<br>
+      <p class="lead">49 个日常场景，两个人各答一次。<br>
       做完拿到一个号码，交给对方输入，两边合起来才有完整分析。</p>
       <div class="facts">
-        <div><b>38</b>个场景</div><div><b>5</b>分钟</div>
-        <div><b>16</b>个方面</div><div><b>不</b>上传</div>
+        <div><b>49</b>个场景</div><div><b>7</b>分钟</div>
+        <div><b>21</b>个方面</div><div><b>不</b>上传</div>
       </div>
       <hr>
       <button class="btn" id="goStart">我先做</button>
@@ -163,7 +163,7 @@ details.ref p b{color:#6b5b52}
   </section>
 
   <section id="s-quiz" class="hide">
-    <div class="pnum"><span id="pStep">1 / 38</span><span id="pRole"></span></div>
+    <div class="pnum"><span id="pStep">1 / 49</span><span id="pRole"></span></div>
     <div class="pbar"><i id="pFill"></i></div>
     <div class="card in">
       <div class="q" id="qText"></div>
@@ -197,11 +197,11 @@ details.ref p b{color:#6b5b52}
   <section id="s-enter" class="hide">
     <div class="card">
       <h1 style="font-size:22px">输入 TA 的号码</h1>
-      <p class="lead">输完继续答 38 个场景，最后直接看到你们两人的完整分析。</p>
+      <p class="lead">输完继续答 49 个场景，最后直接看到你们两人的完整分析。</p>
       <div style="margin-top:18px">
         <label class="fl" for="codeIn">号码</label>
-        <input class="code" id="codeIn" maxlength="26" inputmode="text" autocomplete="off"
-               autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XX">
+        <input class="code" id="codeIn" maxlength="32" inputmode="text" autocomplete="off"
+               autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XX">
         <div class="err" id="codeErr"></div>
         <button class="btn" id="doJoin">核对并开始</button>
         <button class="tlink" id="enterBack" style="display:block;margin:10px auto 0">返回</button>
@@ -220,6 +220,9 @@ details.ref p b{color:#6b5b52}
 
       <h3 class="sec">TA 眼中的你 <i>对方怎么描述你 vs 你怎么说自己</i></h3>
       <div id="rSeeYou"></div>
+
+      <h3 class="sec">三观合不合 <i>不是好坏，是站得近不近</i></h3>
+      <div id="rValues"></div>
 
       <h3 class="sec">八个方面 <i>红 = 你 · 绿 = TA</i></h3>
       <div id="rDims"></div>
@@ -276,6 +279,17 @@ var RISK = {
   rhide:{name:'隐瞒倾向',w:.26},
   rbore:{name:'倦怠信号',w:.18}
 };
+/* ============================================================
+   三观轴：不分好坏，只看两个人站得近不近
+   ============================================================ */
+var AX = {
+  money:{name:'金钱观',   w:.22, l:'省着花',   r:'愿意花'},
+  close:{name:'亲密距离', w:.22, l:'各自有空间', r:'恨不得黏着'},
+  fam:  {name:'家庭观',   w:.22, l:'小家优先', r:'原生家庭优先'},
+  work: {name:'事业观',   w:.17, l:'生活优先', r:'事业优先'},
+  life: {name:'生活节奏', w:.17, l:'稳定规律', r:'随时会变'}
+};
+var VORDER = ['money','close','fam','work','life'];
 var ORDER = ['rep','sec','rsp','pos','com','mea','fut','aut'];
 var PORDER = ['pwarm','pcom','pstab','popen'];
 var RORDER = ['ralt','rbound','rhide','rbore'];
@@ -416,18 +430,78 @@ var QS = [
     {t:'各玩各的，很少交叉',s:2},{t:'互相完全不知道对方在跟谁玩',s:3}]},
   {q:'如果一个人出差/回老家几天，你们会：',d:'rbore',o:[
     {t:'每天都会聊，很想对方',s:0},{t:'会聊，但不多',s:1},
-    {t:'各过各的，也挺好',s:2},{t:'反而觉得轻松',s:3}]}
+    {t:'各过各的，也挺好',s:2},{t:'反而觉得轻松',s:3}]},
+
+  /* ============ 你们在一起多久（影响判读标准）============ */
+  {q:'你们在一起多久了？',d:'dur',o:[
+    {t:'不到三个月'},{t:'三个月到一年'},
+    {t:'一到三年'},{t:'三年以上'}]},
+
+  /* ============ 三观：金钱观（选项由省到花，无对错）============ */
+  {q:'如果突然多了一笔几万块的进账，你会：',d:'money',ax:1,o:[
+    {t:'先全部放着，不动'},{t:'大部分存起来，留一小部分给自己'},
+    {t:'一半花掉，一半存着'},{t:'心里早就想好要买什么了，花掉'}]},
+  {q:'想买一件一两千块的东西，你会：',d:'money',ax:1,o:[
+    {t:'想很久，最后多半还是不买'},{t:'比价很久，确定值才买'},
+    {t:'看当时的心情'},{t:'喜欢就买，不太纠结'}]},
+
+  /* ============ 三观：亲密距离 ============ */
+  {q:'理想中的相处频率大概是：',d:'close',ax:1,o:[
+    {t:'各过各的，一周见两三次就够了'},{t:'常见面，但各自也有自己的事'},
+    {t:'基本每天都要有联系'},{t:'恨不得每件事都一起做'}]},
+  {q:'对方和朋友出去玩一整天、没怎么回消息，你：',d:'close',ax:1,o:[
+    {t:'完全没问题，我也在忙'},{t:'还好，晚上聊两句就行'},
+    {t:'会希望他中途说一声'},{t:'会希望他早点回来'}]},
+
+  /* ============ 三观：家庭观 ============ */
+  {q:'结婚以后，和父母的距离：',d:'fam',ax:1,o:[
+    {t:'越远越好，各有各的生活'},{t:'同一个城市，但不住一起'},
+    {t:'住得近一点，方便互相照顾'},{t:'最好住一起，或者天天能见面'}]},
+  {q:'父母对你们的事有意见时：',d:'fam',ax:1,o:[
+    {t:'我们两个决定就好'},{t:'会听，但最后自己拿主意'},
+    {t:'会认真考虑他们的想法'},{t:'多半会按父母的意思来'}]},
+
+  /* ============ 三观：事业观 ============ */
+  {q:'如果有个很好的工作机会，但要异地两年：',d:'work',ax:1,o:[
+    {t:'不去，生活更重要'},{t:'会犹豫，先看能不能商量'},
+    {t:'会去，但想办法维持'},{t:'一定会去，机会难得'}]},
+  {q:'你更希望对方是什么样的事业状态：',d:'work',ax:1,o:[
+    {t:'稳定轻松就好，钱少点没关系'},{t:'稳定，但也别太闲'},
+    {t:'有上进心，忙一点没关系'},{t:'事业心强，我会支持他拼'}]},
+
+  /* ============ 三观：生活节奏 ============ */
+  {q:'你更喜欢哪种生活：',d:'life',ax:1,o:[
+    {t:'每天差不多，规律安稳'},{t:'大体规律，偶尔有点小变化'},
+    {t:'常有新鲜事'},{t:'说走就走，不喜欢被安排'}]},
+  {q:'计划好周末出门，突然下雨了：',d:'life',ax:1,o:[
+    {t:'那就改天，按原计划最舒服'},{t:'换个室内的安排'},
+    {t:'干脆在家，随机应变'},{t:'雨中散步也不错，反正都出来了'}]}
 ];
 
 var NQ = QS.length;                       /* 总题数（动态） */
+/* 需要编进号码的题：带 d 的（含三观与时长），生活题不编码 */
 var SCORED = QS.filter(function(q){ return !!q.d; });
-var NS = SCORED.length;                   /* 计分题数（动态） */
-var LIFE = NQ - NS;                       /* 生活题数 */
+var NS = SCORED.length;
+var LIFE = NQ - NS;
 
-/* 每个维度满分 */
+/* 只给"打分型"维度累计满分；三观(ax)与时长(dur)不参与高低分 */
+function isRating(q){
+  if (!q.d) return false;
+  if (q.ax) return false;
+  if (q.d === 'dur') return false;
+  return true;
+}
+var RATING = QS.filter(isRating);
+var MAXDUR = 3;
+
 var DMAX = {};
 ORDER.concat(PORDER).concat(RORDER).forEach(function(k){ DMAX[k] = 0; });
-SCORED.forEach(function(q){ DMAX[q.d] += 3; });
+RATING.forEach(function(q){ DMAX[q.d] += 3; });
+
+/* 三观轴题目的满分（每题 3） */
+var AMAX = {};
+VORDER.forEach(function(k){ AMAX[k] = 0; });
+QS.forEach(function(q){ if (q.ax) AMAX[q.d] += 3; });
 
 /* ============================================================
    号码编解码：32 题 × 2bit = 64bit = 8 字节；+2 字节校验 = 20 位
@@ -507,19 +581,36 @@ function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 function scorePerson(ans){
   var raw = {};
   ORDER.concat(PORDER).concat(RORDER).forEach(function(k){ raw[k]=0; });
+  var vraw = {};
+  VORDER.forEach(function(k){ vraw[k]=0; });
+
   for (var i=0;i<NQ;i++){
     var q = QS[i];
     if (!q.d) continue;
     var idx = ans[i];
     if (idx === null || idx === undefined || !q.o[idx]) continue;
+    /* 三观轴：选项位置就是坐标本身（0 左 → 3 右） */
+    if (q.ax){ vraw[q.d] += idx; continue; }
+    if (q.d === 'dur') continue;          /* 时长单独读 */
     var v = q.o[idx].s;
     if (v === undefined) v = 0;
     raw[q.d] += v;
   }
+
   var out = {};
   ORDER.concat(PORDER).concat(RORDER).forEach(function(k){
     out[k] = DMAX[k] ? Math.round(raw[k]/DMAX[k]*100) : 0;
   });
+  /* 三观坐标归一到 0-100（0 = 最左，100 = 最右） */
+  out.axis = {};
+  VORDER.forEach(function(k){
+    out.axis[k] = AMAX[k] ? Math.round(vraw[k]/AMAX[k]*100) : 50;
+  });
+  /* 在一起多久：0 = 不到三个月 … 3 = 三年以上 */
+  out.dur = 1;
+  for (var i=0;i<NQ;i++){
+    if (QS[i].d === 'dur' && ans[i] !== null && ans[i] !== undefined) out.dur = ans[i];
+  }
   return out;
 }
 
@@ -549,14 +640,26 @@ function evaluate(a1, a2){
   var bonds = (perc1 + perc2)/2;
   var riskAvg = (risk1 + risk2)/2;
 
-  /* 单方用力：一方投入很多、另一方很少 */
+  /* ---- 三观匹配 ---- */
+  var axGap = {}, axSum = 0, axW = 0, axisMid = {};
+  VORDER.forEach(function(k){
+    var g = Math.abs(p1.axis[k] - p2.axis[k]);
+    axGap[k] = g;
+    axSum += g * AX[k].w;
+    axW += AX[k].w;
+    axisMid[k] = Math.round((p1.axis[k] + p2.axis[k]) / 2);
+  });
+  var axAvg = axW ? axSum / axW : 0;              /* 0-100，越小越合 */
+  var valuesFit = clamp(Math.round(100 - axAvg * 1.25), 5, 100);
+
+  /* 单方用力 */
   var asym = 0;
   ['rep','sec','rsp','com'].forEach(function(k){
     if (gap[k] >= 30) asym += (gap[k]-25)*0.11*SELF[k].w*6;
   });
 
-  /* 期望与实际错位：你眼里的 TA，和 TA 自己说的，差得越多越容易失望 */
-  var mis1 = Math.abs(perc1 - self2);   /* 1 对 2 的看法 vs 2 自评 */
+  /* 期望与实际错位 */
+  var mis1 = Math.abs(perc1 - self2);
   var mis2 = Math.abs(perc2 - self1);
   var mismatch = (mis1 + mis2)/2;
 
@@ -564,12 +667,24 @@ function evaluate(a1, a2){
   var shortfall = 0;
   sorted.slice(0,2).forEach(function(k){ if (combo[k] < 45) shortfall += (45-combo[k])*0.11; });
 
-  /* 综合：满足感 45% + 彼此评价 25% + 低风险 20% + 一致性修正 */
-  var total = 0.44*satisfaction + 0.26*bonds + 0.20*(100-riskAvg) + 3;
-  total = total - wgap*0.14 - asym - mismatch*0.07 - shortfall;
-  /* 以 55 为轴做一个温和的展开，让"很投入"和"明显不合"都能落到各自区间，
-     避免所有组合都挤在中间，读起来没区别 */
-  total = 55 + (total - 55) * 1.28;
+  /* ---- 时长权重 ----
+     三个月内的关系，很多指标本来就不该用好坏判断（磨合期）；
+     一年以上还缺的东西，才更值得担心。 */
+  var dur = Math.max(p1.dur, p2.dur);            /* 0-3 */
+  var DURW = [
+    {k:0.55, n:'不到三个月'}, {k:0.80, n:'三个月到一年'},
+    {k:1.00, n:'一到三年'},   {k:1.10, n:'三年以上'}
+  ][dur];
+
+  var total = 0.30*satisfaction + 0.18*bonds + 0.15*(100-riskAvg) + 0.24*valuesFit + 3;
+  total = total - wgap*0.13 - asym - mismatch*0.06 - shortfall;
+  /* 三观是长期关系的地基：差距越大，额外扣得越多（非线性） */
+  /* 用平滑曲线而不是硬扣，避免三观差异把总分直接打到最低 */
+  var vPenalty = Math.pow(Math.max(0, 70 - valuesFit) / 70, 1.45) * 22;
+  total = total - vPenalty;
+  total = 55 + (total - 55) * 1.22;
+  /* 短期关系向中性收敛，长期关系让问题更显形 */
+  total = 55 + (total - 55) * DURW.k;
   total = clamp(Math.round(total), 8, 99);
 
   return {
@@ -578,12 +693,15 @@ function evaluate(a1, a2){
     risk1:risk1, risk2:risk2,
     satisfaction:satisfaction, bonds:bonds, riskAvg:riskAvg,
     mis1:mis1, mis2:mis2, mismatch:mismatch,
+    axGap:axGap, axisMid:axisMid, valuesFit:valuesFit, axAvg:Math.round(axAvg),
+    dur:dur, durName:DURW.n,
     total:total,
     avgGap:Math.round(avgGap),
     agreement: clamp(100 - Math.round(avgGap*1.1), 15, 99),
     low: sorted.slice(0,3),
     high: sorted.slice(-2).reverse(),
     worstGap: ORDER.slice().sort(function(x,y){return gap[y]-gap[x];})[0],
+    worstAxis: VORDER.slice().sort(function(x,y){return axGap[y]-axGap[x];})[0],
     riskTop: RORDER.slice().sort(function(x,y){
       return Math.max(p1[y],p2[y]) - Math.max(p1[x],p2[x]);
     })
@@ -675,6 +793,13 @@ var RISK_ADVICE = {
   rbound:'边界在松动。值得做的是提前约定而不是事后审问：什么算越界，两个人各自的标准讲清楚，比互相试探有效。',
   rhide:'隐瞒变多时，关系会慢慢变成两个平行世界。可以先从一件"小事"开始说，试试说了会发生什么。',
   rbore:'倦怠是最常见也最可修的。换一件你们都没做过的小事，比努力"找回感觉"更实际。'
+};
+var AX_FIX = {
+  money:'钱的默认设定不同，最容易在"该不该花"上反复起火。建议做一件很实际的事：约定一个金额线（比如 500 元），线以下各自决定不问，线以上一起商量。规则比默契可靠。',
+  close:'一个需要更多空间，一个需要更多贴近，这不是谁不爱谁。可以约定"最低陪伴量"（比如每天一条消息、每周一次完整相处），把需求变成可满足的条款。',
+  fam:'原生家庭的分量，是很多人婚后最大的摩擦源。趁现在把话说清楚：过年去谁家、父母能介入到什么程度、钱要不要给家里。谈这些不伤感情，不谈才伤。',
+  work:'一方想要拼、一方想要稳，本身可以互补，前提是双方都认这个分工。要谈的是：忙到什么程度算过分、谁承担家里的部分、以及"为了什么"要拼。',
+  life:'一个要规律、一个要变化，长期相处会互相消耗。有效的办法是分区：一部分生活固定下来给对方安全感，一部分留给变化给对方新鲜感。'
 };
 var SEE_TXT = {
   pwarm:['温度','TA 眼里你有多暖'],
@@ -821,7 +946,7 @@ function renderResult(r){
   }
   kpi('答案一致度', r.agreement+'%', r.agreement>=75?'good':(r.agreement<=55?'warn':''));
   kpi('关系风险', Math.round(r.riskAvg), r.riskAvg>=55?'bad':(r.riskAvg>=35?'warn':'good'));
-  kpi('你的满足感', Math.round(r.self1), r.self1>=70?'good':(r.self1<45?'warn':''));
+  kpi('三观匹配', r.valuesFit, r.valuesFit>=75?'good':(r.valuesFit<50?'warn':''));
 
   /* ---- TA 眼中的你 ---- */
   var sy = $('rSeeYou'); sy.innerHTML='';
@@ -864,6 +989,76 @@ function renderResult(r){
       : '两边差不多，说明你们对彼此的感知基本在同一个水平线上，这本身就是一种稳定的信号。')+
     '</p>';
   sy.appendChild(mutual);
+
+  /* ---- 三观合不合 ---- */
+  var vbox = $('rValues'); vbox.innerHTML='';
+
+  /* 总览 */
+  var vsum = document.createElement('div');
+  vsum.className='card-in';
+  var vlvl = r.valuesFit>=75?'ok':(r.valuesFit>=50?'mid':'hi');
+  var vtxt = r.valuesFit>=75?'很合':(r.valuesFit>=50?'有差异，能协调':'差得比较多');
+  vsum.innerHTML = '<div class="h"><span>三观匹配度</span><em>'+vtxt+'</em></div>'+
+    '<div class="meter '+vlvl+'"><i style="width:'+r.valuesFit+'%"></i></div>'+
+    '<div class="mlbl"><span>'+r.valuesFit+' / 100</span><span>越高越合</span></div>'+
+    '<p style="margin-top:10px">'+
+    (r.valuesFit>=75
+      ? '你们对钱、距离、家庭、事业、节奏的基本取向很接近。这类一致，能省下大量"解释自己"的力气。'
+      : (r.valuesFit>=50
+        ? '大部分取向能对上，个别地方差得明显。差距本身不是问题，问题是有没有为它准备一个说法。'
+        : '你们在好几件事上的默认设定是不一样的。这不代表不能在一起，但意味着这些事不能"顺其自然"，得谈。'))+
+    '</p>';
+  vbox.appendChild(vsum);
+
+  /* 五条轴：画成对照条 */
+  VORDER.forEach(function(key, i){
+    var a1 = r.p1.axis[key], a2 = r.p2.axis[key], g = r.axGap[key];
+    var info = AX[key];
+    var d = document.createElement('div');
+    d.className='dim';
+    var tag = g>=50?'<span class="tag r">差距大</span>'
+            :(g<=15?'<span class="tag g">很接近</span>':'<span class="tag">差 '+g+'</span>');
+    d.innerHTML = '<div class="hd"><b>'+info.name+'</b>'+tag+'</div>'+
+      '<div class="bars">'+
+        '<div class="bl v1"><u>你</u><div class="tr"><i></i></div><n>'+a1+'</n></div>'+
+        '<div class="bl v2"><u>TA</u><div class="tr"><i></i></div><n>'+a2+'</n></div>'+
+      '</div>'+
+      '<div class="cmt"><span style="color:#a8988e">'+info.l+' ←→ '+info.r+'</span><br>'+
+      (g>=50 ? '你们基本站在两端。这件事需要一次坦白：谁能退、退到哪，说清楚比互相将就好。'
+             : (g<=15 ? '你们在这条轴上几乎重合，不用解释也能懂对方的选择。'
+                      : '有一点距离，属于正常范围，偶尔需要解释一下对方的选择。'))+
+      '</div>';
+    vbox.appendChild(d);
+    setTimeout(function(){
+      var is=d.querySelectorAll('.tr i');
+      if(is[0])is[0].style.width=a1+'%';
+      if(is[1])is[1].style.width=a2+'%';
+    }, 100+i*60);
+  });
+
+  /* 差距最大的那条轴给具体建议 */
+  var wa = r.worstAxis;
+  if (r.axGap[wa] >= 35){
+    var axAdv = document.createElement('div');
+    axAdv.className='item warn';
+    axAdv.innerHTML='<div class="ic">!</div><div class="tx"><b>「'+AX[wa].name+
+      '」是你们差得最远的一条（相差 '+r.axGap[wa]+' 分）。</b>'+
+      AX_FIX[wa]+'</div>';
+    vbox.appendChild(axAdv);
+  }
+
+  /* 时长说明 */
+  var durBox = document.createElement('div');
+  durBox.className='note';
+  durBox.style.margin='4px 0 0';
+  durBox.innerHTML = '你们在一起 <b>'+r.durName+'</b>。'+
+    '这个长度会影响判读——时间越短，结果越往"还没定型"的方向拉；越长，现在的样子越接近它会一直的样子：'+
+    (r.dur<=1
+      ? '刚在一起，很多"不合"其实只是还没磨合出来。偏低的部分先当观察，别当结论。'
+      : (r.dur===2
+        ? '过了磨合期，已经能看出稳定的模式。这时候还反复卡住的地方，通常不会自己好。'
+        : '在一起这么久，现在的结果是长期沉淀下来的样子。改变需要的不是决心，是具体的做法。'));
+  vbox.appendChild(durBox);
 
   /* ---- 八个方面 ---- */
   var box = $('rDims'); box.innerHTML='';
@@ -939,6 +1134,10 @@ function renderResult(r){
     var v = Math.max(r.p1[key], r.p2[key]);
     if (v >= 50) probs.push({w:v*RISK[key].w*0.8, key:key, kind:'risk'});
   });
+  /* 三观差距也计入问题定位 */
+  VORDER.forEach(function(key){
+    if (r.axGap[key] >= 40) probs.push({w:r.axGap[key]*AX[key].w*0.85, key:key, kind:'axis'});
+  });
   probs.sort(function(a,b){return b.w-a.w;});
   var seen = {};
   var shown = 0;
@@ -961,6 +1160,11 @@ function renderResult(r){
       it.className='item bad';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>你眼里的他，和他自己说的，差得比较多。</b>'+
         '期望和实际的落差，往往比"他不够好"更让人失望。把你看到的告诉他，也听听他的版本。</div>';
+    } else if (p.kind==='axis'){
+      it.className='item warn';
+      it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>三观上「'+AX[p.key].name+
+        '」差得比较远（相差 '+r.axGap[p.key]+' 分）。</b>'+
+        '这不是对错问题，是默认设定不同。'+AX_FIX[p.key]+'</div>';
     } else {
       it.className='item warn';
       it.innerHTML='<div class="ic">'+shown+'</div><div class="tx"><b>'+RISK[p.key].name+
@@ -1032,6 +1236,14 @@ function renderResult(r){
     '· 边界与隐瞒：关系研究里，「对潜在替代对象的主动回避」与关系稳定性正相关；'+
     '相反，隐瞒增加通常意味着沟通成本上升。<br>'+
     '· 倦怠：可预测性上升、新鲜感下降，是长期亲密关系中最普遍的侵蚀方式（Finkel 等人对日常小互动的综述）。</p>'+
+    '<p><b>三观怎么算的：</b>五条轴（金钱观、亲密距离、家庭观、事业观、生活节奏）各 2 题，'+
+    '选项从左到右本身就是坐标，0 和 3 代表两个相反的取向——没有哪个是对的。'+
+    '匹配度看的是两人在同一条轴上的<b>距离</b>，不是谁分高。权重：金钱观、亲密距离、家庭观各 22%，'+
+    '事业观与生活节奏各 17%。<br>'+
+    '研究表明，价值观相似度与关系满意度正相关（Luo & Klohnen 对伴侣相似性的追踪研究），'+
+    '而"金钱"与"原生家庭介入程度"是长期关系中最常见的冲突源。<br>'+
+    '<b>时长权重：</b>在一起不到三个月的关系，结果会向中性收敛（乘以 0.55），因为很多差异只是还没磨合；'+
+    '三年以上则会放大（乘以 1.10），因为长期还卡住的地方通常不会自愈。</p>'+
     '<p><b>它的局限：</b>这是自我报告，不是观测。人会低估自己的问题、高估对方的改变意愿；'+
     '一次答题只反映最近这段时间；"TA 眼中的你"是你的推测与你自评的对比，真正的对方看法要靠谈。<br>'+
     '<b>它绝不会告诉你</b>一个人有没有出轨、会不会出轨。那类判断需要事实，而不是分数。</p>';
@@ -1083,7 +1295,7 @@ $('copyInvite').addEventListener('click', function(){
   var txt = '我做了个相处方式小调查，想看看我们俩的答案放一起是什么样。\n'
     + '网址：'+location.origin+location.pathname+'\n'
     + '点「我拿到号码了」，输入：'+$('codeVal').textContent+'\n'
-    + '38 个日常场景，五分钟，答完直接出完整分析。';
+    + '49 个日常场景，七分钟，答完直接出完整分析。';
   copy(txt,'邀请已复制');
 });
 document.addEventListener('keydown', function(e){
