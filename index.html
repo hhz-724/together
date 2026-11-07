@@ -273,12 +273,38 @@ details.ref p b{color:var(--ink2);font-weight:700}
   box-shadow:0 12px 32px rgba(46,39,35,.3);letter-spacing:.02em}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
 
-@keyframes optIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-.qin .q,.qin .qhint,.qin .opt{will-change:transform,opacity}
+@keyframes qfade{from{opacity:.35}to{opacity:1}}
+@keyframes optIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .autotip{text-align:center;font-size:11px;color:var(--ink4);margin-top:14px;letter-spacing:.03em}
 .navrow{justify-content:space-between}
 .navrow .tlink{flex:0 0 auto}
-.opt{animation:optIn .3s cubic-bezier(.2,.8,.3,1) both}
+
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{flex:1 1 0;min-width:72px;font-family:inherit;font-size:14px;font-weight:600;
+  color:var(--ink2);background:var(--card);border:1.5px solid var(--line2);border-radius:12px;
+  padding:13px 8px;cursor:pointer;transition:all .16s ease}
+.seg button:active{transform:scale(.98)}
+.seg button.on{background:var(--rose-bg);border-color:var(--rose-l);color:var(--rose-d);font-weight:700}
+
+/* ---------- 画像 ---------- */
+.portrait{background:var(--card2);border:1px solid var(--line2);border-radius:var(--r-md);
+  padding:15px 16px;margin-bottom:10px}
+.portrait .ph{display:flex;align-items:center;gap:11px;margin-bottom:9px}
+.portrait .pe{font-size:26px;line-height:1;flex:0 0 auto}
+.portrait .ph b{display:block;font-size:15px;font-weight:750;letter-spacing:-.1px}
+.portrait .ph em{display:block;font-style:normal;font-size:10.5px;color:var(--ink3);margin-top:2px}
+.portrait .pd{font-size:13px;line-height:1.75;color:var(--ink2);margin-bottom:10px}
+.portrait .kws{display:flex;gap:6px;flex-wrap:wrap}
+.portrait .kws span{font-size:10.5px;padding:3px 9px;border-radius:99px;
+  background:var(--rose-bg);color:var(--rose-d);font-weight:600}
+.couple{background:linear-gradient(150deg,#fdf7f3,#fdfaf7);border:1px solid #f0e0d4;
+  border-radius:var(--r-md);padding:16px;margin-top:4px}
+.couple .ch{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;gap:8px}
+.couple .ch b{font-size:15.5px;font-weight:800}
+.couple .ch em{font-style:normal;font-size:10.5px;color:var(--ink3)}
+.couple p{font-size:13px;line-height:1.78;color:var(--ink2)}
+.couple p.cr{margin-top:8px;padding-top:9px;border-top:1px dashed #eddbcd}
+.couple p.cr b{color:var(--rose-d)}
 
 @media (max-width:380px){
   .wrap{padding:18px 14px 40px}
@@ -316,10 +342,35 @@ details.ref p b{color:var(--ink2);font-weight:700}
     <div class="foot">题目按公开的关系研究设计 · 结果只是参考</div>
   </section>
 
+  <section id="s-profile" class="hide">
+    <div class="card">
+      <h1 style="font-size:22px">先了解一下你</h1>
+      <p class="lead">这两项只用来做常模参考，让画像更贴合你，不会上传。</p>
+
+      <label class="fl" style="margin-top:20px">你是</label>
+      <div class="seg" id="segGender">
+        <button data-v="m">男生</button>
+        <button data-v="f">女生</button>
+        <button data-v="x">不填</button>
+      </div>
+
+      <label class="fl" style="margin-top:18px">年龄</label>
+      <div class="seg" id="segAge">
+        <button data-v="0">18 以下</button>
+        <button data-v="1">18–24</button>
+        <button data-v="2">25–30</button>
+        <button data-v="3">30 以上</button>
+      </div>
+
+      <button class="btn" id="profileGo" style="margin-top:24px" disabled>继续答题</button>
+      <button class="tlink" id="profileBack" style="display:block;margin:10px auto 0">返回</button>
+    </div>
+  </section>
+
   <section id="s-quiz" class="hide">
     <div class="pnum"><span id="pStep">1 / 51</span><span id="pRole"></span></div>
     <div class="pbar"><i id="pFill"></i></div>
-    <div class="card qin" id="qCard">
+    <div class="card" id="qCard">
       <div class="q" id="qText"></div>
       <div class="qhint" id="qHint"></div>
       <div id="opts"></div>
@@ -407,6 +458,9 @@ details.ref p b{color:var(--ink2);font-weight:700}
         <div class="kpis" id="rKpis"></div>
       </div>
 
+      <h3 class="sec">你们是什么样的两个人 <i>各自的类型画像</i></h3>
+      <div id="rPortrait"></div>
+
       <h3 class="sec">TA 眼中的你 <i>对方怎么描述你 vs 你怎么说自己</i></h3>
       <div id="rSeeYou"></div>
 
@@ -492,192 +546,206 @@ var RORDER = ['ralt','rbound','rhide','rbore'];
    题库：32 题计分（编码）+ 6 题生活（不编码）
    ============================================================ */
 var QS = [
-  /* ---- 生活项 ---- */
-  {q:'空闲的一整个下午，你更想怎么过？',o:[
-    {t:'出门走走，随便逛逛'},{t:'在家躺着，什么都不干'},
-    {t:'约人吃饭聊天'},{t:'收拾屋子、做点手边的事'}]},
-  {q:'遇到心烦的事，你更习惯：',o:[
-    {t:'马上找人讲讲'},{t:'自己先消化一阵'},
-    {t:'做点别的事转移注意力'},{t:'睡一觉再说'}]},
-  {q:'吃饭这件事上，你属于：',o:[
-    {t:'很挑，但固定那几家'},{t:'什么都行，好吃就行'},
-    {t:'喜欢尝新的'},{t:'吃饱最重要'}]},
-  {q:'收到别人的消息，你通常：',o:[
-    {t:'看到就回'},{t:'想起来再回'},{t:'有空了集中回'},{t:'看是谁发的'}]},
-  {q:'你怎么看待"计划"？',o:[
-    {t:'喜欢提前安排好'},{t:'大概有个方向就行'},
-    {t:'临时决定更有意思'},{t:'都行，跟着感觉走'}]},
-  {q:'你更习惯用哪种方式表达在意？',o:[
-    {t:'直接说出来'},{t:'默默做点事'},{t:'送点东西'},{t:'多陪着'}]},
-
-  /* ---- 摩擦之后 ---- */
-  {q:'上次你们都不太高兴，后来是怎么回到正常说话的？',d:'rep',o:[
-    {t:'当天就聊开了，把那件事说清了',s:3},
-    {t:'没多久就自然好了，虽然没细聊',s:2},
-    {t:'花了几天，各自冷静下来才过去',s:1},
-    {t:'到现在那件事还悬着',s:0}]},
-  {q:'争起来的时候，你说话会变成什么样子？',d:'rep',o:[
-    {t:'还是就事论事',s:3},{t:'语气会冲，但不伤人',s:2},
-    {t:'会说一些过后后悔的话',s:1},{t:'容易翻旧账、说狠话',s:0}]},
-
-  /* ---- 心里有底 ---- */
-  {q:'对方半天没回消息，你那半天：',d:'sec',o:[
-    {t:'完全没在意，各忙各的',s:3},{t:'扫过一眼，知道他忙就算了',s:2},
-    {t:'会多看几次手机',s:1},{t:'会开始想很多',s:0}]},
-  {q:'有件事让你不太舒服，你会怎么处理？',d:'sec',o:[
-    {t:'直接说出来，不怕他不高兴',s:3},{t:'找机会说，措辞会想一下',s:2},
-    {t:'憋着，怕说了会吵起来',s:1},{t:'憋着，然后自己越想越难受',s:0}]},
-
-  /* ---- 日常回应 ---- */
-  {q:'你随口说件小事（路上的猫、工作上的烦），对方一般：',d:'rsp',o:[
-    {t:'会接话，还会追问两句',s:3},{t:'有回应，比较简短',s:2},
-    {t:'听着，但不太接',s:1},{t:'经常没听见，或者在忙别的',s:0}]},
-  {q:'对方跟你讲话的时候，你通常在：',d:'rsp',o:[
-    {t:'停下来认真听',s:3},{t:'边听边做自己的事',s:2},
-    {t:'经常会走神',s:1},{t:'忍不住先给建议，或者接过去讲自己的',s:1}]},
-
-  /* ---- 开心的量 ---- */
-  {q:'回想这一周，让你们都笑的时刻：',d:'pos',o:[
-    {t:'挺多的',s:3},{t:'有一些',s:2},{t:'不太多',s:1},{t:'几乎没有',s:0}]},
-  {q:'你们上一次一起笑到停不下来，是：',d:'pos',o:[
-    {t:'这两天的事',s:3},{t:'这一两周',s:2},{t:'有一个月了',s:1},{t:'想不起来了',s:0}]},
-
-  /* ---- 往后的打算 ---- */
-  {q:'想到接下来大半年，你脑子里浮现的是：',d:'com',o:[
-    {t:'有不少想一起去做的事',s:3},{t:'有点模糊，但画面里有他',s:2},
-    {t:'走一步看一步',s:1},{t:'不太确定那时候还在不在一起',s:0}]},
-  {q:'吵得厉害的时候，"要不算了"这种念头：',d:'com',o:[
-    {t:'从来没有过',s:3},{t:'很偶尔闪过一下',s:2},
-    {t:'有过一两次，认真的那种',s:1},{t:'不止一两次',s:0}]},
-
-  /* ---- 共同的习惯 ---- */
-  {q:'你们有自己的固定节目吗？（专属称呼、晚安、周末那顿饭）',d:'mea',o:[
-    {t:'有好几个',s:3},{t:'有一两个',s:2},{t:'想不太起来',s:1},{t:'没有',s:0}]},
-  {q:'钱、节日、见家人这类事，你们聊到过吗？',d:'mea',o:[
-    {t:'聊过，想法比较接近',s:3},{t:'聊过，有不一样的地方',s:2},
-    {t:'只零散提过',s:1},{t:'基本没聊过',s:0}]},
-
-  /* ---- 现实节奏 ---- */
-  {q:'你们的生活节奏：',d:'fut',o:[
-    {t:'挺合得来',s:3},{t:'需要协调，但还顺',s:2},
-    {t:'经常对不上',s:1},{t:'几乎是反着的',s:0}]},
-  {q:'对方的家人朋友对你：',d:'fut',o:[
-    {t:'挺友好',s:3},{t:'一般',s:2},{t:'还没怎么接触',s:2},{t:'不太友好，或者有为难',s:0}]},
-
-  /* ---- 各自的空间 ---- */
-  {q:'他有你不参与的爱好和朋友圈，你觉得：',d:'aut',o:[
-    {t:'挺好，各有各的',s:3},{t:'没什么感觉',s:2},
-    {t:'偶尔会有点不安',s:1},{t:'希望他都带上我',s:0}]},
-  {q:'两个人各自待着、各做各的，那种时间你们的感受：',d:'aut',o:[
-    {t:'很自然，各忙各的很舒服',s:3},{t:'能接受，偶尔有点空',s:2},
-    {t:'会想找点事一起做',s:1},{t:'安静下来就不太自在',s:0}]},
-
-  /* ---- 对 TA 的看法 ---- */
-  {q:'难过的时候，你觉得他会怎么反应？',d:'pwarm',o:[
-    {t:'会放下手里的事来陪我',s:3},{t:'会安慰，但有点笨拙',s:2},
-    {t:'会给建议，让我别想太多',s:1},{t:'好像不太知道怎么接',s:0}]},
-  {q:'关于你们的未来，他的态度让你觉得：',d:'pcom',o:[
-    {t:'他是认真在计划的',s:3},{t:'他是愿意的，但没具体说过',s:2},
-    {t:'他不太主动提',s:1},{t:'他好像在回避这个话题',s:0}]},
-  {q:'他心情不好的时候，通常：',d:'pstab',o:[
-    {t:'会说，也能自己缓过来',s:3},{t:'会说，但需要一阵',s:2},
-    {t:'看得出来，但问也不说',s:1},{t:'会明显影响我们两个',s:0}]},
-  {q:'如果有个问题你必须跟他谈，你会：',d:'popen',o:[
-    {t:'直接说，我知道他会听',s:3},{t:'会说，但要挑时机',s:2},
-    {t:'犹豫很久才开得了口',s:1},{t:'想想还是算了',s:0}]},
-
-  /* ---- 关系风险（脆弱性） ---- */
-  {q:'看到别人的恋爱（社交平台、朋友），你心里：',d:'ralt',o:[
-    {t:'没什么感觉，我这样挺好',s:0},{t:'偶尔会想"要是…"',s:1},
-    {t:'会有点羡慕',s:2},{t:'经常觉得别人的更好',s:3}]},
-  {q:'如果有个人对你明显示好，你会：',d:'rbound',o:[
-    {t:'立刻划清，还会告诉他',s:0},{t:'保持距离，但不会特意提',s:1},
-    {t:'会有点受用，先不动',s:2},{t:'大概会继续聊下去',s:3}]},
-  {q:'有些事你选择不告诉对方，这种情况：',d:'rhide',o:[
-    {t:'几乎没有',s:0},{t:'很少，都是不重要的小事',s:1},
-    {t:'有一些，觉得说了会麻烦',s:2},{t:'挺多的，各留各的空间',s:3}]},
-  {q:'你们的相处，最近：',d:'rbore',o:[
-    {t:'还常有新鲜的东西',s:0},{t:'稳定，但有点可预测',s:1},
-    {t:'差不多每次都一样',s:2},{t:'已经很久没有期待了',s:3}]},
-  {q:'如果未来半年完全不变，你会：',d:'ralt',o:[
-    {t:'挺愿意的',s:0},{t:'可以接受',s:1},
-    {t:'会有点不甘心',s:2},{t:'不太想这样下去',s:3}]},
-  {q:'关于手机、行程这些，你们之间：',d:'rhide',o:[
-    {t:'互相知道，也没什么要藏的',s:0},{t:'大致知道，细节不问',s:1},
-    {t:'各管各的，不太清楚',s:2},{t:'会想瞒一些事',s:3}]},
-
-  /* ---- 补充：让每个维度各 2 题 ---- */
-  {q:'你说累的时候，他一般会：',d:'pwarm',o:[
-    {t:'马上问怎么了，还会做点什么',s:3},{t:'会安慰几句',s:2},
-    {t:'说"那就早点睡"',s:1},{t:'好像没太在意',s:0}]},
-  {q:'关于"我们以后"，他主动提过吗？',d:'pcom',o:[
-    {t:'提过，还很具体',s:3},{t:'提过，比较笼统',s:2},
-    {t:'很少主动提',s:1},{t:'一次都没有',s:0}]},
-  {q:'他情绪上来的时候，你们的沟通：',d:'pstab',o:[
-    {t:'还是能讲道理',s:3},{t:'会先冷一下，然后能谈',s:2},
-    {t:'很难沟通，要等很久',s:1},{t:'会变成互相伤害',s:0}]},
-  {q:'你提出不同意见时，他通常：',d:'popen',o:[
-    {t:'会认真听，还会问为什么',s:3},{t:'会听，但不太回应',s:2},
-    {t:'容易当成指责',s:1},{t:'会直接结束对话',s:0}]},
-  {q:'你们各自的社交圈，重叠程度：',d:'rbound',o:[
-    {t:'基本都互相认识',s:0},{t:'认识一部分',s:1},
-    {t:'各玩各的，很少交叉',s:2},{t:'互相完全不知道对方在跟谁玩',s:3}]},
-  {q:'如果一个人出差/回老家几天，你们会：',d:'rbore',o:[
-    {t:'每天都会聊，很想对方',s:0},{t:'会聊，但不多',s:1},
-    {t:'各过各的，也挺好',s:2},{t:'反而觉得轻松',s:3}]},
-
-  /* 区分"当场爆发"与"压着记账" —— 冲突风格 */
-  {q:'吵完之后，你通常会：',d:'style',o:[
-    {t:'当场就说完了，说完就过去了',s:0},{t:'会不舒服一阵，但不至于记着',s:1},
-    {t:'表面没事，心里会记上一笔',s:2},{t:'会越想越气，下次一起算',s:3}]},
-  {q:'对方让你不满意的时候，你的第一反应：',d:'style',o:[
-    {t:'马上说出来',s:0},{t:'先忍一下，找机会提',s:1},
-    {t:'算了，不想吵',s:2},{t:'心里记下，但不说',s:3}]},
-
-  /* ============ 你们在一起多久（影响判读标准）============ */
+  /* -- 1 -- */
   {q:'你们在一起多久了？',d:'dur',o:[
-    {t:'不到三个月'},{t:'三个月到一年'},
-    {t:'一到三年'},{t:'三年以上'}]},
-
-  /* ============ 三观：金钱观（选项由省到花，无对错）============ */
+      {t:'不到三个月'},{t:'三个月到一年'},
+      {t:'一到三年'},{t:'三年以上'}]},
+  /* -- 2 -- */
+  {q:'空闲的一整个下午，你更想怎么过？',o:[
+      {t:'出门走走，随便逛逛'},{t:'在家躺着，什么都不干'},
+      {t:'约人吃饭聊天'},{t:'收拾屋子、做点手边的事'}]},
+  /* -- 3 -- */
+  {q:'上次你们都不太高兴，后来是怎么回到正常说话的？',d:'rep',o:[
+      {t:'当天就聊开了，把那件事说清了',s:3},
+      {t:'没多久就自然好了，虽然没细聊',s:2},
+      {t:'花了几天，各自冷静下来才过去',s:1},
+      {t:'到现在那件事还悬着',s:0}]},
+  /* -- 4 -- */
+  {q:'对方半天没回消息，你那半天：',d:'sec',o:[
+      {t:'完全没在意，各忙各的',s:3},{t:'扫过一眼，知道他忙就算了',s:2},
+      {t:'会多看几次手机',s:1},{t:'会开始想很多',s:0}]},
+  /* -- 5 -- */
+  {q:'遇到心烦的事，你更习惯：',o:[
+      {t:'马上找人讲讲'},{t:'自己先消化一阵'},
+      {t:'做点别的事转移注意力'},{t:'睡一觉再说'}]},
+  /* -- 6 -- */
+  {q:'你随口说件小事（路上的猫、工作上的烦），对方一般：',d:'rsp',o:[
+      {t:'会接话，还会追问两句',s:3},{t:'有回应，比较简短',s:2},
+      {t:'听着，但不太接',s:1},{t:'经常没听见，或者在忙别的',s:0}]},
+  /* -- 7 -- */
+  {q:'回想这一周，让你们都笑的时刻：',d:'pos',o:[
+      {t:'挺多的',s:3},{t:'有一些',s:2},{t:'不太多',s:1},{t:'几乎没有',s:0}]},
+  /* -- 8 -- */
   {q:'如果突然多了一笔几万块的进账，你会：',d:'money',ax:1,o:[
-    {t:'先全部放着，不动'},{t:'大部分存起来，留一小部分给自己'},
-    {t:'一半花掉，一半存着'},{t:'心里早就想好要买什么了，花掉'}]},
+      {t:'先全部放着，不动'},{t:'大部分存起来，留一小部分给自己'},
+      {t:'一半花掉，一半存着'},{t:'心里早就想好要买什么了，花掉'}]},
+  /* -- 9 -- */
   {q:'想买一件一两千块的东西，你会：',d:'money',ax:1,o:[
-    {t:'想很久，最后多半还是不买'},{t:'比价很久，确定值才买'},
-    {t:'看当时的心情'},{t:'喜欢就买，不太纠结'}]},
-
-  /* ============ 三观：亲密距离 ============ */
+      {t:'想很久，最后多半还是不买'},{t:'比价很久，确定值才买'},
+      {t:'看当时的心情'},{t:'喜欢就买，不太纠结'}]},
+  /* -- 10 -- */
+  {q:'想到接下来大半年，你脑子里浮现的是：',d:'com',o:[
+      {t:'有不少想一起去做的事',s:3},{t:'有点模糊，但画面里有他',s:2},
+      {t:'走一步看一步',s:1},{t:'不太确定那时候还在不在一起',s:0}]},
+  /* -- 11 -- */
+  {q:'你们有自己的固定节目吗？（专属称呼、晚安、周末那顿饭）',d:'mea',o:[
+      {t:'有好几个',s:3},{t:'有一两个',s:2},{t:'想不太起来',s:1},{t:'没有',s:0}]},
+  /* -- 12 -- */
+  {q:'吃饭这件事上，你属于：',o:[
+      {t:'很挑，但固定那几家'},{t:'什么都行，好吃就行'},
+      {t:'喜欢尝新的'},{t:'吃饱最重要'}]},
+  /* -- 13 -- */
+  {q:'难过的时候，你觉得他会怎么反应？',d:'pwarm',o:[
+      {t:'会放下手里的事来陪我',s:3},{t:'会安慰，但有点笨拙',s:2},
+      {t:'会给建议，让我别想太多',s:1},{t:'好像不太知道怎么接',s:0}]},
+  /* -- 14 -- */
+  {q:'关于你们的未来，他的态度让你觉得：',d:'pcom',o:[
+      {t:'他是认真在计划的',s:3},{t:'他是愿意的，但没具体说过',s:2},
+      {t:'他不太主动提',s:1},{t:'他好像在回避这个话题',s:0}]},
+  /* -- 15 -- */
+  {q:'你们的生活节奏：',d:'fut',o:[
+      {t:'挺合得来',s:3},{t:'需要协调，但还顺',s:2},
+      {t:'经常对不上',s:1},{t:'几乎是反着的',s:0}]},
+  /* -- 16 -- */
+  {q:'他有你不参与的爱好和朋友圈，你觉得：',d:'aut',o:[
+      {t:'挺好，各有各的',s:3},{t:'没什么感觉',s:2},
+      {t:'偶尔会有点不安',s:1},{t:'希望他都带上我',s:0}]},
+  /* -- 17 -- */
   {q:'理想中的相处频率大概是：',d:'close',ax:1,o:[
-    {t:'各过各的，一周见两三次就够了'},{t:'常见面，但各自也有自己的事'},
-    {t:'基本每天都要有联系'},{t:'恨不得每件事都一起做'}]},
+      {t:'各过各的，一周见两三次就够了'},{t:'常见面，但各自也有自己的事'},
+      {t:'基本每天都要有联系'},{t:'恨不得每件事都一起做'}]},
+  /* -- 18 -- */
   {q:'对方和朋友出去玩一整天、没怎么回消息，你：',d:'close',ax:1,o:[
-    {t:'完全没问题，我也在忙'},{t:'还好，晚上聊两句就行'},
-    {t:'会希望他中途说一声'},{t:'会希望他早点回来'}]},
-
-  /* ============ 三观：家庭观 ============ */
+      {t:'完全没问题，我也在忙'},{t:'还好，晚上聊两句就行'},
+      {t:'会希望他中途说一声'},{t:'会希望他早点回来'}]},
+  /* -- 19 -- */
+  {q:'看到别人的恋爱（社交平台、朋友），你心里：',d:'ralt',o:[
+      {t:'没什么感觉，我这样挺好',s:0},{t:'偶尔会想"要是…"',s:1},
+      {t:'会有点羡慕',s:2},{t:'经常觉得别人的更好',s:3}]},
+  /* -- 20 -- */
+  {q:'如果有个人对你明显示好，你会：',d:'rbound',o:[
+      {t:'立刻划清，还会告诉他',s:0},{t:'保持距离，但不会特意提',s:1},
+      {t:'会有点受用，先不动',s:2},{t:'大概会继续聊下去',s:3}]},
+  /* -- 21 -- */
   {q:'结婚以后，和父母的距离：',d:'fam',ax:1,o:[
-    {t:'越远越好，各有各的生活'},{t:'同一个城市，但不住一起'},
-    {t:'住得近一点，方便互相照顾'},{t:'最好住一起，或者天天能见面'}]},
+      {t:'越远越好，各有各的生活'},{t:'同一个城市，但不住一起'},
+      {t:'住得近一点，方便互相照顾'},{t:'最好住一起，或者天天能见面'}]},
+  /* -- 22 -- */
   {q:'父母对你们的事有意见时：',d:'fam',ax:1,o:[
-    {t:'我们两个决定就好'},{t:'会听，但最后自己拿主意'},
-    {t:'会认真考虑他们的想法'},{t:'多半会按父母的意思来'}]},
-
-  /* ============ 三观：事业观 ============ */
+      {t:'我们两个决定就好'},{t:'会听，但最后自己拿主意'},
+      {t:'会认真考虑他们的想法'},{t:'多半会按父母的意思来'}]},
+  /* -- 23 -- */
+  {q:'他心情不好的时候，通常：',d:'pstab',o:[
+      {t:'会说，也能自己缓过来',s:3},{t:'会说，但需要一阵',s:2},
+      {t:'看得出来，但问也不说',s:1},{t:'会明显影响我们两个',s:0}]},
+  /* -- 24 -- */
+  {q:'如果有个问题你必须跟他谈，你会：',d:'popen',o:[
+      {t:'直接说，我知道他会听',s:3},{t:'会说，但要挑时机',s:2},
+      {t:'犹豫很久才开得了口',s:1},{t:'想想还是算了',s:0}]},
+  /* -- 25 -- */
   {q:'如果有个很好的工作机会，但要异地两年：',d:'work',ax:1,o:[
-    {t:'不去，生活更重要'},{t:'会犹豫，先看能不能商量'},
-    {t:'会去，但想办法维持'},{t:'一定会去，机会难得'}]},
+      {t:'不去，生活更重要'},{t:'会犹豫，先看能不能商量'},
+      {t:'会去，但想办法维持'},{t:'一定会去，机会难得'}]},
+  /* -- 26 -- */
   {q:'你更希望对方是什么样的事业状态：',d:'work',ax:1,o:[
-    {t:'稳定轻松就好，钱少点没关系'},{t:'稳定，但也别太闲'},
-    {t:'有上进心，忙一点没关系'},{t:'事业心强，我会支持他拼'}]},
-
-  /* ============ 三观：生活节奏 ============ */
+      {t:'稳定轻松就好，钱少点没关系'},{t:'稳定，但也别太闲'},
+      {t:'有上进心，忙一点没关系'},{t:'事业心强，我会支持他拼'}]},
+  /* -- 27 -- */
+  {q:'吵完之后，你通常会：',d:'style',o:[
+      {t:'当场就说完了，说完就过去了',s:0},{t:'会不舒服一阵，但不至于记着',s:1},
+      {t:'表面没事，心里会记上一笔',s:2},{t:'会越想越气，下次一起算',s:3}]},
+  /* -- 28 -- */
+  {q:'收到别人的消息，你通常：',o:[
+      {t:'看到就回'},{t:'想起来再回'},{t:'有空了集中回'},{t:'看是谁发的'}]},
+  /* -- 29 -- */
+  {q:'对方让你不满意的时候，你的第一反应：',d:'style',o:[
+      {t:'马上说出来',s:0},{t:'先忍一下，找机会提',s:1},
+      {t:'算了，不想吵',s:2},{t:'心里记下，但不说',s:3}]},
+  /* -- 30 -- */
+  {q:'有些事你选择不告诉对方，这种情况：',d:'rhide',o:[
+      {t:'几乎没有',s:0},{t:'很少，都是不重要的小事',s:1},
+      {t:'有一些，觉得说了会麻烦',s:2},{t:'挺多的，各留各的空间',s:3}]},
+  /* -- 31 -- */
+  {q:'你们的相处，最近：',d:'rbore',o:[
+      {t:'还常有新鲜的东西',s:0},{t:'稳定，但有点可预测',s:1},
+      {t:'差不多每次都一样',s:2},{t:'已经很久没有期待了',s:3}]},
+  /* -- 32 -- */
   {q:'你更喜欢哪种生活：',d:'life',ax:1,o:[
-    {t:'每天差不多，规律安稳'},{t:'大体规律，偶尔有点小变化'},
-    {t:'常有新鲜事'},{t:'说走就走，不喜欢被安排'}]},
+      {t:'每天差不多，规律安稳'},{t:'大体规律，偶尔有点小变化'},
+      {t:'常有新鲜事'},{t:'说走就走，不喜欢被安排'}]},
+  /* -- 33 -- */
   {q:'计划好周末出门，突然下雨了：',d:'life',ax:1,o:[
-    {t:'那就改天，按原计划最舒服'},{t:'换个室内的安排'},
-    {t:'干脆在家，随机应变'},{t:'雨中散步也不错，反正都出来了'}]}
+      {t:'那就改天，按原计划最舒服'},{t:'换个室内的安排'},
+      {t:'干脆在家，随机应变'},{t:'雨中散步也不错，反正都出来了'}]},
+  /* -- 34 -- */
+  {q:'争起来的时候，你说话会变成什么样子？',d:'rep',o:[
+      {t:'还是就事论事',s:3},{t:'语气会冲，但不伤人',s:2},
+      {t:'会说一些过后后悔的话',s:1},{t:'容易翻旧账、说狠话',s:0}]},
+  /* -- 35 -- */
+  {q:'有件事让你不太舒服，你会怎么处理？',d:'sec',o:[
+      {t:'直接说出来，不怕他不高兴',s:3},{t:'找机会说，措辞会想一下',s:2},
+      {t:'憋着，怕说了会吵起来',s:1},{t:'憋着，然后自己越想越难受',s:0}]},
+  /* -- 36 -- */
+  {q:'对方跟你讲话的时候，你通常在：',d:'rsp',o:[
+      {t:'停下来认真听',s:3},{t:'边听边做自己的事',s:2},
+      {t:'经常会走神',s:1},{t:'忍不住先给建议，或者接过去讲自己的',s:1}]},
+  /* -- 37 -- */
+  {q:'你们上一次一起笑到停不下来，是：',d:'pos',o:[
+      {t:'这两天的事',s:3},{t:'这一两周',s:2},{t:'有一个月了',s:1},{t:'想不起来了',s:0}]},
+  /* -- 38 -- */
+  {q:'吵得厉害的时候，"要不算了"这种念头：',d:'com',o:[
+      {t:'从来没有过',s:3},{t:'很偶尔闪过一下',s:2},
+      {t:'有过一两次，认真的那种',s:1},{t:'不止一两次',s:0}]},
+  /* -- 39 -- */
+  {q:'钱、节日、见家人这类事，你们聊到过吗？',d:'mea',o:[
+      {t:'聊过，想法比较接近',s:3},{t:'聊过，有不一样的地方',s:2},
+      {t:'只零散提过',s:1},{t:'基本没聊过',s:0}]},
+  /* -- 40 -- */
+  {q:'对方的家人朋友对你：',d:'fut',o:[
+      {t:'挺友好',s:3},{t:'一般',s:2},{t:'还没怎么接触',s:2},{t:'不太友好，或者有为难',s:0}]},
+  /* -- 41 -- */
+  {q:'两个人各自待着、各做各的，那种时间你们的感受：',d:'aut',o:[
+      {t:'很自然，各忙各的很舒服',s:3},{t:'能接受，偶尔有点空',s:2},
+      {t:'会想找点事一起做',s:1},{t:'安静下来就不太自在',s:0}]},
+  /* -- 42 -- */
+  {q:'你说累的时候，他一般会：',d:'pwarm',o:[
+      {t:'马上问怎么了，还会做点什么',s:3},{t:'会安慰几句',s:2},
+      {t:'说"那就早点睡"',s:1},{t:'好像没太在意',s:0}]},
+  /* -- 43 -- */
+  {q:'关于"我们以后"，他主动提过吗？',d:'pcom',o:[
+      {t:'提过，还很具体',s:3},{t:'提过，比较笼统',s:2},
+      {t:'很少主动提',s:1},{t:'一次都没有',s:0}]},
+  /* -- 44 -- */
+  {q:'他情绪上来的时候，你们的沟通：',d:'pstab',o:[
+      {t:'还是能讲道理',s:3},{t:'会先冷一下，然后能谈',s:2},
+      {t:'很难沟通，要等很久',s:1},{t:'会变成互相伤害',s:0}]},
+  /* -- 45 -- */
+  {q:'你提出不同意见时，他通常：',d:'popen',o:[
+      {t:'会认真听，还会问为什么',s:3},{t:'会听，但不太回应',s:2},
+      {t:'容易当成指责',s:1},{t:'会直接结束对话',s:0}]},
+  /* -- 46 -- */
+  {q:'你怎么看待"计划"？',o:[
+      {t:'喜欢提前安排好'},{t:'大概有个方向就行'},
+      {t:'临时决定更有意思'},{t:'都行，跟着感觉走'}]},
+  /* -- 47 -- */
+  {q:'你更习惯用哪种方式表达在意？',o:[
+      {t:'直接说出来'},{t:'默默做点事'},{t:'送点东西'},{t:'多陪着'}]},
+  /* -- 48 -- */
+  {q:'如果未来半年完全不变，你会：',d:'ralt',o:[
+      {t:'挺愿意的',s:0},{t:'可以接受',s:1},
+      {t:'会有点不甘心',s:2},{t:'不太想这样下去',s:3}]},
+  /* -- 49 -- */
+  {q:'你们各自的社交圈，重叠程度：',d:'rbound',o:[
+      {t:'基本都互相认识',s:0},{t:'认识一部分',s:1},
+      {t:'各玩各的，很少交叉',s:2},{t:'互相完全不知道对方在跟谁玩',s:3}]},
+  /* -- 50 -- */
+  {q:'关于手机、行程这些，你们之间：',d:'rhide',o:[
+      {t:'互相知道，也没什么要藏的',s:0},{t:'大致知道，细节不问',s:1},
+      {t:'各管各的，不太清楚',s:2},{t:'会想瞒一些事',s:3}]},
+  /* -- 51 -- */
+  {q:'如果一个人出差/回老家几天，你们会：',d:'rbore',o:[
+      {t:'每天都会聊，很想对方',s:0},{t:'会聊，但不多',s:1},
+      {t:'各过各的，也挺好',s:2},{t:'反而觉得轻松',s:3}]}
 ];
 
 var NQ = QS.length;                       /* 总题数（动态） */
@@ -1066,6 +1134,113 @@ var RISK_ADVICE = {
   rbore:'倦怠是最常见也最可修的。换一件你们都没做过的小事，比努力"找回感觉"更实际。'
 };
 /* ============================================================
+   双方画像
+   ============================================================ */
+var TYPES = {
+  sun:   {name:'小太阳', emoji:'☀️', one:'把自己的温度分给别人，自己却常常最后一个被照顾。'},
+  moon:  {name:'月亮型', emoji:'🌙', one:'不吵不闹，但心里有一整片海，只有靠得很近的人才看得见。'},
+  rock:  {name:'岩石型', emoji:'⛰️', one:'稳定的那一个，出事了所有人都会先想到你。'},
+  wind:  {name:'风型',   emoji:'🌬️', one:'自由、有趣、变化多，最怕被日子磨平。'},
+  fire:  {name:'火焰型', emoji:'🔥', one:'热得快也冷得快，但在爱里从来不用力过猛以外的方式。'},
+  water: {name:'水型',   emoji:'💧', one:'会随容器变形，能配合，也常常委屈自己。'},
+  star:  {name:'星辰型', emoji:'✨', one:'有自己的世界，独立、清醒，爱是选择而不是需要。'},
+  forest:{name:'森林型', emoji:'🌲', one:'慢热、扎实，一旦扎根就很难被移走。'}
+};
+
+var COUPLE = {
+  mirror:{name:'同频型', one:'你们像同一种语言的两个使用者，很多话不用说完整。',
+    risk:'风险是过度自洽——两个人都不说，就真的没人说了。'},
+  complement:{name:'互补型', one:'你缺的正好他有，他缺的正好你有，配合起来很省力。',
+    risk:'风险是分工固化——久了会变成"这本来就该你做"。'},
+  teacher:{name:'某一方带着走', one:'一个人在前面拉，另一个人在后面跟。走的时候很快，但会累。',
+    risk:'风险是拉开太久——前面的人回头，发现后面的人已经不想走了。'},
+  parallel:{name:'并行型', one:'各有各的轨道，偶尔交汇一下。自由，但需要主动找交集。',
+    risk:'风险是慢慢变成室友——没有冲突，也没有温度。'},
+  spark:{name:'火花型', one:'相处有张力，也有火气。不会无聊，但也需要更多修复。',
+    risk:'风险是消耗——高强度的关系需要高强度的补给，否则会烧完。'},
+  steady:{name:'长跑型', one:'不快，但稳。日子是一天一天攒出来的那种关系。',
+    risk:'风险是太稳了会失去心动——需要刻意制造一点不确定。'}
+};
+
+/* 单人画像：按最强的几项维度判断类型 */
+function profileOf(p){
+  var sc = {
+    sun:   p.pwarm*0.35 + p.pos*0.35 + (100-p.aut)*0.15 + p.rsp*0.15,
+    moon:  (100-p.sec)*0.30 + p.rsp*0.30 + p.mea*0.20 + (100-p.axis.close)*0.20,
+    rock:  p.com*0.35 + p.rep*0.30 + (100-p.axis.life)*0.20 + p.pstab*0.15,
+    wind:  p.axis.life*0.40 + p.aut*0.30 + (100-p.mea)*0.15 + p.popen*0.15,
+    fire:  p.axis.close*0.30 + (100-p.axis.work)*0.25 + p.pos*0.25 + (100-p.rep)*0.20,
+    water: p.axis.close*0.25 + (100-p.aut)*0.30 + (100-p.popen)*0.25 + p.pstab*0.20,
+    star:  p.aut*0.40 + p.axis.work*0.30 + (100-p.axis.close)*0.20 + p.pcom*0.10,
+    forest:p.mea*0.35 + p.rep*0.30 + (100-p.axis.life)*0.20 + p.fut*0.15
+  };
+  var best = null, bv = -1;
+  for (var k in sc){ if (sc[k] > bv){ bv = sc[k]; best = k; } }
+  var t = TYPES[best];
+
+  /* 三个关键词 */
+  var kw = [];
+  if (p.sec >= 65) kw.push('安全感足'); else kw.push('需要确认');
+  if (p.rep >= 65) kw.push('会收场'); else kw.push('容易积压');
+  if (p.axis.close >= 60) kw.push('想贴近'); else kw.push('要空间');
+  if (p.axis.work >= 60) kw.push('事业心'); else kw.push('生活优先');
+  if (p.aut <= 40) kw.push('黏人'); else if (p.aut >= 70) kw.push('独立');
+
+  return { key:best, type:t, key3:kw.slice(0,3), score:Math.round(bv) };
+}
+
+/* 双人关系类型 */
+function coupleOf(r){
+  /* 各指标先映射到"相对同类人群的高低"，再组合判断。
+     直接用绝对值会失真：一致度和满意度在正常人群里本来就集中在中间区间。 */
+  function rel(v, p10, p50, p90){
+    if (v <= p10) return 12 + (v/Math.max(p10,1))*8;
+    if (v <= p50) return 20 + (v-p10)/Math.max(p50-p10,1)*30;
+    if (v <= p90) return 50 + (v-p50)/Math.max(p90-p50,1)*30;
+    return 80 + Math.min((v-p90)/Math.max(100-p90,1)*20, 20);
+  }
+  var RvalGap = rel(r.axAvg, 17, 29, 43);          /* 三观距离 */
+  var Rsame   = rel(r.agreement, 56, 68, 79);      /* 描述一致度 */
+  var Rsat    = rel(r.satisfaction, 42, 51, 60);   /* 满足感 */
+  var Rrisk   = rel(r.riskAvg, 38, 50, 62);        /* 脆弱性 */
+  var Rgap    = rel(r.avgGap, 19, 29, 40);         /* 自评差距 */
+
+  var avgRep   = (r.p1.rep + r.p2.rep) / 2;
+  var avgAut   = (r.p1.aut + r.p2.aut) / 2;
+  var avgClose = (r.p1.axis.close + r.p2.axis.close) / 2;
+  var avgMea   = (r.p1.mea + r.p2.mea) / 2;
+  var avgRsp   = (r.p1.rsp + r.p2.rsp) / 2;
+  var investGap = Math.abs(r.self1 - r.self2);
+
+  var sc = {};
+
+  /* 同频：三观近 + 描述像 + 都满意 */
+  sc.mirror = (100-RvalGap)*0.38 + Rsame*0.34 + Rsat*0.28;
+
+  /* 互补：三观差 + 但不难受（差异被容纳了） */
+  sc.complement = RvalGap*0.40 + Rsat*0.36 + (100-Rrisk)*0.24;
+
+  /* 某一方带着走：投入差 + 满足感差 */
+  sc.teacher = clamp(investGap*1.5, 0, 100)*0.52 + (100-Rsat)*0.28 + Rgap*0.20;
+
+  /* 并行：都独立 + 都低亲密需求 + 回应一般 */
+  sc.parallel = avgAut*0.40 + (100-avgClose)*0.32 + (100-avgRsp)*0.28;
+
+  /* 火花：修复偏低 + 但亲密需求还在（有张力） */
+  sc.spark = Math.max(0, 70-avgRep)*0.62 + avgClose*0.24 + (100-Rrisk)*0.14;
+
+  /* 长跑：稳定 + 有仪式 + 风险低 */
+  sc.steady = avgRep*0.28 + avgMea*0.26 + (100-Rrisk)*0.26 + (100-Rgap)*0.20;
+
+  var keys = Object.keys(sc).sort(function(x,y){ return sc[y]-sc[x]; });
+  var best = keys[0];
+  var margin = sc[keys[0]] - sc[keys[1]];
+  var fit = clamp(Math.round(48 + margin*0.9), 46, 93);
+
+  return { key:best, type:COUPLE[best], fit:fit, second:COUPLE[keys[1]] };
+}
+
+/* ============================================================
    冲突模式推演库
    依据：Gottman 的"四骑士"与修复尝试、依恋取向（焦虑/回避）、
    Rusbult 的破坏性反应（退出/忽视）与建设性反应（表达/忠诚）
@@ -1144,9 +1319,11 @@ var PERC_MEANING = {
 /* ============================================================
    状态
    ============================================================ */
-var S = {role:null, partnerAns:null, ans:[], idx:0, result:null, code:'', busy:false};
+var S = {role:null, partnerAns:null, ans:[], idx:0, result:null, code:'', busy:false,
+         gender:'', age:null, ageLabel:''};
+var AGE_LABELS = ['18 以下','18–24','25–30','30 以上'];
 function $(id){return document.getElementById(id);}
-var SECTIONS = ['s-home','s-quiz','s-code','s-enter','s-both','s-result'];
+var SECTIONS = ['s-home','s-profile','s-quiz','s-code','s-enter','s-both','s-result'];
 function show(id){
   SECTIONS.forEach(function(s){ var e=$(s); if(e) e.classList.add('hide'); });
   var el = $(id); if(!el) return;
@@ -1180,7 +1357,7 @@ function copy(text, ok){
    - 底部常驻进度，随时知道还剩多少
    ============================================================ */
 var KEYS = ['A','B','C','D'];
-var ADV_DELAY = 190;      /* 自动前进延迟，够看到选中反馈 */
+var ADV_DELAY = 140;      /* 自动前进延迟：够看到选中高亮，又不拖沓 */
 var advTimer = null;
 
 function startQuiz(role, partnerAns){
@@ -1200,6 +1377,28 @@ function answerCount(){
   return n;
 }
 
+var OPT_POOL = [];   /* 复用的选项按钮，避免每次重建导致动画重播 */
+
+function buildOptPool(){
+  var box = $('opts');
+  box.innerHTML = '';
+  OPT_POOL = [];
+  for (var i=0;i<4;i++){
+    (function(i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt';
+      b.style.display = 'none';
+      var k = document.createElement('span'); k.className='k'; k.textContent=KEYS[i];
+      var t = document.createElement('span'); t.className='t';
+      b.appendChild(k); b.appendChild(t);
+      b.addEventListener('click', function(){ choose(i); });
+      box.appendChild(b);
+      OPT_POOL.push(b);
+    })(i);
+  }
+}
+
 function renderQ(){
   var q = QS[S.idx];
   if (!q){ toast('题目出错了，请刷新'); return; }
@@ -1208,14 +1407,7 @@ function renderQ(){
   $('pRole').textContent = (S.role==='starter') ? '先做的这一位' : '轮到你';
   $('pFill').style.width = Math.round((S.idx+1)/NQ*100)+'%';
 
-  /* 题目切换动画 */
-  var card = $('qCard');
-  if (card){
-    card.classList.remove('qin');
-    void card.offsetWidth;
-    card.classList.add('qin');
-  }
-
+  /* 文字只替换内容，不重建节点 —— 不会有闪动 */
   $('qText').textContent = q.q;
   var hint = '';
   if (q.d && SELF[q.d]) hint = '关于你自己在这段关系里';
@@ -1225,21 +1417,28 @@ function renderQ(){
   else if (q.ax) hint = '没有对错，选更像你的那个';
   $('qHint').textContent = hint;
 
-  var box = $('opts');
-  box.innerHTML = '';
-  for (var i=0;i<q.o.length;i++){
-    (function(i){
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'opt' + (S.ans[S.idx] === i ? ' sel' : '');
-      b.style.animationDelay = (i*34)+'ms';
-      b.style.animation = 'optIn .3s cubic-bezier(.2,.8,.3,1) both';
-      var k = document.createElement('span'); k.className='k'; k.textContent=KEYS[i];
-      var t = document.createElement('span'); t.textContent=q.o[i].t;
-      b.appendChild(k); b.appendChild(t);
-      b.addEventListener('click', function(){ choose(i); });
-      box.appendChild(b);
-    })(i);
+  /* 复用按钮：只改文案和状态 */
+  if (!OPT_POOL.length || OPT_POOL.length !== 4) buildOptPool();
+  var cur = S.ans[S.idx];
+  for (var i=0;i<OPT_POOL.length;i++){
+    var b = OPT_POOL[i];
+    if (i < q.o.length){
+      b.style.display = '';
+      b.querySelector('.t').textContent = q.o[i].t;
+      if (cur === i) b.classList.add('sel');
+      else b.classList.remove('sel');
+    } else {
+      b.style.display = 'none';
+      b.classList.remove('sel');
+    }
+  }
+
+  /* 题目区域做一次极轻的透明度过渡（不位移、不重排） */
+  var card = $('qCard');
+  if (card){
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = 'qfade .18s ease both';
   }
 
   updateNav();
@@ -1286,17 +1485,24 @@ function restoreProgress(){
 
 function choose(i){
   if (S.busy) return;
+  if (!QS[S.idx] || !QS[S.idx].o[i]) return;
+
   S.ans[S.idx] = i;
   saveProgress();
-  var kids = $('opts').children;
-  for (var j=0;j<kids.length;j++) kids[j].classList.remove('sel');
-  if (kids[i]) kids[i].classList.add('sel');
 
-  /* 轻微震动反馈（支持的设备） */
-  if (navigator.vibrate) { try { navigator.vibrate(8); } catch(_){} }
+  /* 只在复用按钮上切换选中态，不重建、不重播动画 */
+  for (var j=0;j<OPT_POOL.length;j++){
+    if (j === i) OPT_POOL[j].classList.add('sel');
+    else OPT_POOL[j].classList.remove('sel');
+  }
 
+  if (navigator.vibrate){ try{ navigator.vibrate(8); }catch(_){} }
+
+  var atIdx = S.idx;
   clearTimeout(advTimer);
   advTimer = setTimeout(function(){
+    /* 如果在等待期间用户已经翻页，就不再自动前进 */
+    if (S.idx !== atIdx) return;
     if (S.idx < NQ-1){
       S.idx++;
       renderQ();
@@ -1384,6 +1590,34 @@ function renderResult(r){
   kpi('答案一致度', r.agreement+'%', r.agreement>=75?'good':(r.agreement<=55?'warn':''));
   kpi('关系风险', Math.round(r.riskAvg), r.riskAvg>=55?'bad':(r.riskAvg>=35?'warn':'good'));
   kpi('三观匹配', r.valuesFit, r.valuesFit>=75?'good':(r.valuesFit<50?'warn':''));
+
+  /* ---- 双方画像 ---- */
+  var pb2 = $('rPortrait'); pb2.innerHTML = '';
+  var pa = profileOf(r.p1), pbb = profileOf(r.p2);
+  var cp = coupleOf(r);
+
+  function portraitCard(label, p, meta){
+    var d = document.createElement('div');
+    d.className = 'portrait';
+    d.innerHTML =
+      '<div class="ph"><span class="pe">'+p.type.emoji+'</span>'+
+        '<div><b>'+label+'：'+p.type.name+'</b><em>'+meta+'</em></div></div>'+
+      '<p class="pd">'+p.type.one+'</p>'+
+      '<div class="kws">'+p.key3.map(function(k){ return '<span>'+k+'</span>'; }).join('')+'</div>';
+    return d;
+  }
+  pb2.appendChild(portraitCard('这一位', pa, (S.gender==='f'?'女生':(S.gender==='m'?'男生':'未填'))+' · '+(S.ageLabel||'年龄未填')));
+  pb2.appendChild(portraitCard('另一位', pbb, '从 TA 的答案读出来'));
+
+  var cbox = document.createElement('div');
+  cbox.className = 'couple';
+  cbox.innerHTML =
+    '<div class="ch"><b>你们这一对：'+cp.type.name+'</b><em>契合 '+cp.fit+'</em></div>'+
+    '<p>'+cp.type.one+'</p>'+
+    '<p class="cr"><b>要注意：</b>'+cp.type.risk+'</p>'+
+    '<p class="cr" style="border-top:0;padding-top:4px;color:var(--ink3);font-size:12px">'+
+    '如果读起来不太像，另一种可能：'+cp.second.name+'——'+cp.second.one+'</p>';
+  pb2.appendChild(cbox);
 
   /* ---- 冲突模式 ---- */
   var pp = predictPattern(r);
@@ -1740,7 +1974,36 @@ function bindCopy(r){
 /* ============================================================
    事件
    ============================================================ */
-$('goStart').addEventListener('click', function(){ startQuiz('starter'); });
+/* ---- 性别 / 年龄选择 ---- */
+function bindSeg(id, key){
+  var wrap = $(id);
+  wrap.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('button') : null;
+    if (!btn) return;
+    var kids = wrap.querySelectorAll('button');
+    for (var i=0;i<kids.length;i++) kids[i].classList.remove('on');
+    btn.classList.add('on');
+    if (key === 'gender'){
+      S.gender = btn.getAttribute('data-v');
+    } else {
+      var v = parseInt(btn.getAttribute('data-v'), 10);
+      S.age = v;
+      S.ageLabel = AGE_LABELS[v];
+    }
+    $('profileGo').disabled = !(S.gender && S.age !== null);
+  });
+}
+bindSeg('segGender','gender');
+bindSeg('segAge','age');
+
+$('profileGo').addEventListener('click', function(){
+  startQuiz('starter');
+});
+$('profileBack').addEventListener('click', function(){ show('s-home'); });
+
+$('goStart').addEventListener('click', function(){
+  show('s-profile');
+});
 $('goJoin').addEventListener('click', function(){ $('codeErr').textContent=''; show('s-enter'); });
 $('goBoth').addEventListener('click', function(){
   $('bothErr').textContent='';
